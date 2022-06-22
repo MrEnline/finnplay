@@ -1,18 +1,25 @@
-//const Role = require('./models/Role.js');
-//const User = require('./models/User.js');
-//const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-//const { validationResult } = require('express-validator');
-const { secret } = require('./config.js');
+require('dotenv').config();
 const { Users } = require('./Users');
 
-const generateAccessToken = (id, role) => {
+const generateTokens = (id, adminRole) => {
     const payLoad = {
         id,
-        role,
+        adminRole,
     };
-    return jwt.sign(payLoad, secret, { expiresIn: '24h' });
+    const accessToken = jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
+        expiresIn: '15s',
+    });
+    const refreshToken = jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
+        expiresIn: '30s',
+    });
+    return {
+        accessToken,
+        refreshToken,
+    };
 };
+
+let refreshTokenFromDB = '';
 
 class authController {
     async login(req, res) {
@@ -24,30 +31,62 @@ class authController {
                     .status(400)
                     .json({ message: `${user} with this name not found` });
             }
-            const validPassword = await (password === user.password);
+            const validPassword = password === user.password;
             if (!validPassword) {
                 return res
                     .status(400)
                     .json({ message: 'Wrong password entered' });
             }
-            const token = generateAccessToken(user.id, user.adminRole);
-            const role = user.adminRole;
-            return res.json({ token, role });
+            const tokens = generateTokens(user.id, user.adminRole);
+            const adminRole = user.adminRole;
+            res.cookie('refreshToken', tokens.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+            });
+            const token = tokens.accessToken;
+            refreshTokenFromDB = tokens.refreshToken;
+            return res.json({ token, adminRole });
         } catch (error) {
             res.status(400).json({ message: 'Login error', e: error.message });
         }
     }
 
-    async checkAuth(req, res) {}
-
-    async logout(req, res, next) {
+    async checkAuth(req, res) {
         try {
             const { refreshToken } = req.cookies;
-            const token = await userService.logout(refreshToken);
+            const user = jwt.verify(
+                refreshToken,
+                process.env.JWT_REFRESH_SECRET
+            );
+            const tokenFromDb = refreshToken === refreshTokenFromDB;
+            if (!user || !tokenFromDb) {
+                return res
+                    .status(400)
+                    .json({ message: 'Login error', e: error.message });
+            }
+            const tokens = generateTokens(user.id, user.adminRole);
+            const adminRole = user.adminRole;
+            res.cookie('refreshToken', tokens.refreshToken, {
+                maxAge: 30 * 24 * 60 * 60 * 1000,
+                httpOnly: true,
+            });
+            const token = tokens.accessToken;
+            refreshTokenFromDB = tokens.refreshToken;
+            return res.json({ token, adminRole });
+        } catch (e) {
+            res.status(400).json({ message: 'Login error', e: error.message });
+        }
+    }
+
+    async logout(req, res) {
+        try {
+            const { refreshToken } = req.cookies;
+            refreshTokenFromDB = '';
             res.clearCookie('refreshToken');
+            const token = '';
             return res.json(token);
         } catch (e) {
-            next(e);
+            res.status(400).json({ message: 'Logout error', e: error.message });
         }
     }
 }

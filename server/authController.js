@@ -43,9 +43,9 @@ class authController {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             });
-            const token = tokens.accessToken;
+            //const token = tokens.accessToken;
             refreshTokenFromDB = tokens.refreshToken;
-            return res.json({ token, adminRole });
+            return res.json({ ...tokens, adminRole });
         } catch (error) {
             res.status(400).json({ message: 'Login error', e: error.message });
         }
@@ -70,9 +70,9 @@ class authController {
                 maxAge: 30 * 24 * 60 * 60 * 1000,
                 httpOnly: true,
             });
-            const token = tokens.accessToken;
+            //const token = tokens.accessToken;
             refreshTokenFromDB = tokens.refreshToken;
-            return res.json({ token, adminRole });
+            return res.json({ ...tokens, adminRole });
         } catch (e) {
             res.status(400).json({ message: 'Login error', e: error.message });
         }

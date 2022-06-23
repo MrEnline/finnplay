@@ -1,0 +1,127 @@
+.login {
+    position: relative;
+    width: 1920px;
+    height: 1024px;
+    background: #fdfdfd;
+}
+
+.loginform {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    gap: 20px;
+    position: absolute;
+    width: 412px;
+    height: 362px;
+    left: 754px;
+    top: 331px;
+}
+
+.loginform__logo {
+    width: 70px;
+    height: 70px;
+    background: #dc0b35;
+    flex: none;
+    order: 0;
+    flex-grow: 0;
+}
+
+.inputs__textfield {
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 16px;
+    gap: 16px;
+
+    width: 412px;
+    height: 64px;
+
+    background: #ffffff;
+
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.textfield_content {
+    width: 380px;
+    height: 35px;
+}
+
+.textfield_content input {
+    width: 100%; /* Ширина поля */
+    box-sizing: border-box; /* Ширина не учитывает padding */
+    padding: 0.5rem 0; /* Поля вокруг текста */
+    border: none; /* Убираем рамку */
+    background: transparent; /* Прозрачный фон */
+}
+
+.textfield_content input:focus {
+    outline: none; /* Убираем контур */
+    border-color: #1976d2; /* Синяя линия снизу */
+}
+
+.textfield_content label {
+    display: block; /* Блочный элемент */
+    color: #aaa; /* Цвет подсказки */
+    transform: translateY(-1.5rem); /* Сдвигаем вверх */
+    line-height: 1rem; /* Межстрочный интервал */
+    transition: 0.5s; /* Время трансформации */
+}
+
+.textfield_content input:focus + label,
+.textfield_content input:valid + label {
+    font-size: 10px; /* Размер шрифта */
+    transform: translateY(-2.5rem); /* Сдвигаем вверх */
+}
+
+.textfield_content img {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 18.75%;
+    bottom: 18.75%;
+
+    background: #808080;
+}
+
+.loginform__button {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    gap: 10px;
+
+    width: 412px;
+    height: 64px;
+
+    background: #fdbc11;
+
+    box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
+    border-radius: 4px;
+
+    flex: none;
+    order: 2;
+    flex-grow: 0;
+
+    border: none;
+}
+
+.loginform__spinner_loading {
+    animation: rotate 3.5s linear infinite;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}

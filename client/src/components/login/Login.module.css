@@ -71,6 +71,7 @@
 
 .textfield_content label {
     display: block; /* Блочный элемент */
+    text-align: left;
     color: #aaa; /* Цвет подсказки */
     transform: translateY(-1.5rem); /* Сдвигаем вверх */
     line-height: 1rem; /* Межстрочный интервал */

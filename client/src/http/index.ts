@@ -1,13 +1,13 @@
 import axios from 'axios';
-import { URL } from '../utils/Constants';
+import { API_URL } from '../utils/Constants';
 
 const $api = axios.create({
     withCredentials: true,
-    baseURL: URL,
+    baseURL: API_URL,
 });
 
 $api.interceptors.request.use((config) => {
-    config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+    config!.headers!.Authorization = `Bearer ${localStorage.getItem('token')}`;
     return config;
 });
 

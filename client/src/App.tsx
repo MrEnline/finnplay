@@ -13,9 +13,17 @@ function App() {
         }
     }, []);
 
-    // if (!store.isAuth) {
-    //     <Login />;
-    // }
+    if (!store.isAuth) {
+        return <Login />;
+    }
+
+    if (store.isAuth && store.adminRole) {
+        return <div>Admin panel</div>;
+    }
+
+    if (store.isAuth && !store.adminRole) {
+        return <div>Player panel</div>;
+    }
 
     return (
         <div className="App">

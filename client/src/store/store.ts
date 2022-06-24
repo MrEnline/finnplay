@@ -2,6 +2,7 @@ import axios from 'axios';
 import { makeAutoObservable } from 'mobx';
 import { AuthResponse } from '../models/response/AuthResponse';
 import AuthService from '../services/AuthService';
+import { API_URL } from '../utils/Constants';
 
 export default class Store {
     adminRole = false;
@@ -25,6 +26,8 @@ export default class Store {
     }
 
     async login(username: string, password: string) {
+        this.setLoading(true);
+        console.log(this.isLoading);
         try {
             const response = await AuthService.login(username, password);
             console.log(response);
@@ -33,6 +36,9 @@ export default class Store {
             this.setAdminRole(response.data.adminRole);
         } catch (error: any) {
             console.log(error.response?.data?.message);
+        } finally {
+            this.setLoading(false);
+            console.log(this.isLoading);
         }
     }
 
@@ -50,10 +56,13 @@ export default class Store {
     async checkAuth() {
         this.setLoading(true);
         try {
-            const response = await axios.get<AuthResponse>(`${URL}/checkAuth`, {
-                withCredentials: true,
-            });
-            console.log(response);
+            const response = await axios.get<AuthResponse>(
+                `${API_URL}/checkAuth`,
+                {
+                    withCredentials: true,
+                }
+            );
+            console.log(`response store - ${response}`);
             localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setAdminRole(response.data.adminRole);

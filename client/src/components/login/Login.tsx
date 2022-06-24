@@ -4,12 +4,11 @@ import Logo from '../assets/img/finnplay-logo.svg';
 import VisiblePassword from '../assets/img/visible-password.svg';
 import Spinner from '../assets/img/spinner.svg';
 import { Context } from '../../index';
-import { ADMIN, PLAYER } from '../../utils/Constants';
+import { observer } from 'mobx-react-lite';
 
 const Login = () => {
     const [username, setUsername] = useState<string>('');
     const [password, setPassword] = useState<string>('');
-    const [visibleSpinner, setVisibleSpinner] = useState<boolean>(false);
     const { store } = useContext(Context);
 
     function showHidePassword() {
@@ -19,18 +18,6 @@ const Login = () => {
             input.setAttribute('type', 'text');
         } else {
             input.setAttribute('type', 'password');
-        }
-    }
-
-    function runAuth() {
-        setVisibleSpinner(!visibleSpinner);
-        store.login(username, password);
-        if (localStorage.getItem(username)) {
-            setUsername(username);
-            setPassword(password);
-        } else {
-            setUsername('');
-            setPassword('');
         }
     }
 
@@ -74,8 +61,11 @@ const Login = () => {
                         onClick={showHidePassword}
                     />
                 </div>
-                <button className={styles.loginform__button} onClick={runAuth}>
-                    {visibleSpinner ? (
+                <button
+                    className={styles.loginform__button}
+                    onClick={() => store.login(username, password)}
+                >
+                    {store.isLoading ? (
                         <img
                             src={Spinner}
                             alt="download"
@@ -90,4 +80,4 @@ const Login = () => {
     );
 };
 
-export default Login;
+export default observer(Login);

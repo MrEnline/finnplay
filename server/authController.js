@@ -8,10 +8,10 @@ const generateTokens = (id, adminRole) => {
         adminRole,
     };
     const accessToken = jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: '15s',
+        expiresIn: '115s',
     });
     const refreshToken = jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: '30s',
+        expiresIn: '130s',
     });
     return {
         accessToken,
@@ -54,6 +54,8 @@ class authController {
     async checkAuth(req, res) {
         try {
             const { refreshToken } = req.cookies;
+            console.log(`refreshTokenFromDB - ${refreshTokenFromDB}`);
+            console.log(`refreshToken - ${refreshToken}`);
             const user = jwt.verify(
                 refreshToken,
                 process.env.JWT_REFRESH_SECRET

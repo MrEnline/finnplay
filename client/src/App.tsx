@@ -1,31 +1,35 @@
-import React, { useEffect, useContext } from "react";
-import { Context } from ".";
-import "./App.css";
-import Login from "./components/login/Login";
-import { observer } from "mobx-react-lite";
+import React, { useEffect, useContext } from 'react';
+import { Context } from '.';
+import './App.css';
+import Login from './components/login/Login';
+import { observer } from 'mobx-react-lite';
+import AppHeader from './components/appHeader/AppHeader';
 
 function App() {
     const { store } = useContext(Context);
 
     useEffect(() => {
-        if (localStorage.getItem("token")) {
+        if (localStorage.getItem('token')) {
             store.checkAuth();
         }
+        console.log('useEffect');
     }, []);
 
-    if (!store.isAuth) {
-        return <Login />;
-    } else if (store.isAuth && store.adminRole) {
-        return <div>Admin panel</div>;
-    } else if (store.isAuth && !store.adminRole) {
-        return <div>Player panel</div>;
+    if (store.isAuth && store.adminRole) {
+        return (
+            <div>
+                <div>Admin panel</div>
+                <button onClick={() => store.logout()}>Logout</button>
+            </div>
+        );
+    }
+
+    if (store.isAuth && !store.adminRole) {
+        return <AppHeader />;
     }
 
     return (
         <div className="App">
-            <h1>
-                {store.isAuth ? "Пользователь авторизован" : "Авторизуйтесь"}
-            </h1>
             <Login />
         </div>
     );

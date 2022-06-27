@@ -1,6 +1,8 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const { Users } = require("./Users");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const { Users } = require('./Users');
+const fs = require('fs');
+const ApiError = require('./api-error');
 
 const generateTokens = (id, adminRole) => {
     const payLoad = {
@@ -8,10 +10,10 @@ const generateTokens = (id, adminRole) => {
         adminRole,
     };
     const accessToken = jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: "115s",
+        expiresIn: '12h',
     });
     const refreshToken = jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: "24h",
+        expiresIn: '72h',
     });
     return {
         accessToken,
@@ -19,79 +21,59 @@ const generateTokens = (id, adminRole) => {
     };
 };
 
-let refreshTokenFromDB = "";
-
 class authController {
     async login(req, res) {
-        try {
-            const { username, password } = req.body;
-            const user = await Users[username];
-            if (!user) {
-                return res
-                    .status(400)
-                    .json({ message: `${user} with this name not found` });
-            }
-            const validPassword = password === user.password;
-            if (!validPassword) {
-                return res
-                    .status(400)
-                    .json({ message: "Wrong password entered" });
-            }
-            const tokens = generateTokens(user.id, user.adminRole);
-            const adminRole = user.adminRole;
-            res.cookie("refreshToken", tokens.refreshToken, {
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-            });
-            //const token = tokens.accessToken;
-            refreshTokenFromDB = tokens.refreshToken;
-            return res.json({ ...tokens, adminRole });
-        } catch (error) {
-            res.status(400).json({ message: "Login error", e: error.message });
+        const { username, password } = req.body;
+        const user = await Users[username];
+        if (!user) {
+            throw ApiError.UnauthorizedError();
         }
+        const validPassword = password === user.password;
+        if (!validPassword) {
+            throw ApiError.UnauthorizedError();
+        }
+        const tokens = generateTokens(user.id, user.adminRole);
+        const adminRole = user.adminRole;
+        res.cookie('refreshToken', tokens.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+        });
+        fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
+        return res.json({ ...tokens, adminRole });
     }
 
     async checkAuth(req, res) {
-        try {
-            const { refreshToken } = req.cookies;
-            const user = jwt.verify(
-                refreshToken,
-                process.env.JWT_REFRESH_SECRET,
-            );
-            const tokenFromDb = refreshToken === refreshTokenFromDB;
-            if (!user || !tokenFromDb) {
-                return res
-                    .status(400)
-                    .json({ message: "Login error", e: error.message });
-            }
-
-            const tokens = generateTokens(user.id, user.adminRole);
-
-            const adminRole = user.adminRole;
-
-            res.cookie("refreshToken", tokens.refreshToken, {
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-            });
-
-            //const token = tokens.accessToken;
-
-            refreshTokenFromDB = tokens.refreshToken;
-            return res.json({ ...tokens, adminRole });
-        } catch (e) {
-            res.status(400).json({ message: "Login error", e: error.message });
+        const { refreshToken } = req.cookies;
+        if (!refreshToken) {
+            fs.writeFileSync('refreshToken.txt', '');
+            throw ApiError.UnauthorizedError();
         }
+        const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const refreshTokenFromDB = fs.readFileSync('refreshToken.txt', 'utf-8');
+        const isTokensEquals = refreshToken === refreshTokenFromDB;
+        if (!user || !isTokensEquals) {
+            fs.writeFileSync('refreshToken.txt', '');
+            throw ApiError.UnauthorizedError();
+        }
+        const tokens = generateTokens(user.id, user.adminRole);
+        const adminRole = user.adminRole;
+        res.cookie('refreshToken', tokens.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+        });
+        fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
+        return res.json({ ...tokens, adminRole });
     }
 
     async logout(req, res) {
         try {
             const { refreshToken } = req.cookies;
-            refreshTokenFromDB = "";
-            res.clearCookie("refreshToken");
-            const token = "";
+            fs.writeFileSync('refreshToken.txt', '');
+            res.clearCookie('refreshToken');
+            const token = '';
             return res.json(token);
         } catch (e) {
-            res.status(400).json({ message: "Logout error", e: error.message });
+            res.status(400).json({ message: 'Logout error', e: error.message });
         }
     }
 }

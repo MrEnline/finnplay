@@ -62,10 +62,6 @@ export default class Store {
                     withCredentials: true,
                 },
             );
-            // const response = await AuthService.checkAuth();
-            console.log(
-                `response.data - ${response.data.accessToken}- ${response.data.refreshToken} - ${response.data.adminRole}`,
-            );
             localStorage.setItem("token", response.data.accessToken);
             this.setAuth(true);
             this.setAdminRole(response.data.adminRole);

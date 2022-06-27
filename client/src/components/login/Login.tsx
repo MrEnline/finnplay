@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import styles from './Login.module.css';
-import Logo from '../assets/img/finnplay-logo.svg';
-import VisiblePassword from '../assets/img/visible-password.svg';
-import Spinner from '../assets/img/spinner.svg';
+import Logo from '../../assets/img/finnplay-logo.svg';
+import VisiblePassword from '../../assets/img/visible-password.svg';
+import Spinner from '../../assets/img/spinner.svg';
 import { Context } from '../../index';
 import { observer } from 'mobx-react-lite';
 

@@ -3,6 +3,7 @@ require('dotenv').config();
 const { Users } = require('./Users');
 const fs = require('fs');
 const ApiError = require('./api-error');
+const data = require('./data.json');
 
 const generateTokens = (id, adminRole) => {
     const payLoad = {
@@ -63,6 +64,14 @@ class authController {
         });
         fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
         return res.json({ ...tokens, adminRole });
+    }
+
+    async getData(req, res) {
+        try {
+            if (data) {
+                return res.json(data);
+            }
+        } catch (error) {}
     }
 
     async logout(req, res) {

@@ -11,13 +11,17 @@ const AppHeader = () => {
     return (
         <header className={styles.app__header}>
             <img src={Logo} alt="download" className={styles.app__logo} />
-            <div className={styles.app__test} onClick={() => store.logout()}>
+            <div className={styles.logoutblock} onClick={() => store.logout()}>
                 <img
                     src={IconUser}
                     alt="iconuser"
-                    className={styles.app__iconuser}
+                    className={styles.logoutblock__iconuser}
                 />
-                <img src={Logout} alt="logout" className={styles.app__logout} />
+                <img
+                    src={Logout}
+                    alt="logout"
+                    className={styles.logoutblock__logout}
+                />
             </div>
         </header>
     );

@@ -3,7 +3,8 @@ import { Context } from '.';
 import './App.css';
 import Login from './components/login/Login';
 import { observer } from 'mobx-react-lite';
-import AppHeader from './components/appHeader/AppHeader';
+import PlayerPage from './components/pages/PlayerPage';
+import AdminPage from './components/pages/AdminPage';
 
 function App() {
     const { store } = useContext(Context);
@@ -12,7 +13,7 @@ function App() {
         if (localStorage.getItem('token')) {
             store.checkAuth();
         }
-        console.log('useEffect');
+        //console.log('useEffect');
     }, []);
 
     if (store.isAuth && store.adminRole) {
@@ -25,7 +26,7 @@ function App() {
     }
 
     if (store.isAuth && !store.adminRole) {
-        return <AppHeader />;
+        return <PlayerPage />;
     }
 
     return (

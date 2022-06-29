@@ -1,13 +1,19 @@
-import axios from "axios";
-import { makeAutoObservable } from "mobx";
-import { AuthResponse } from "../models/response/AuthResponse";
-import AuthService from "../services/AuthService";
-import { API_URL } from "../utils/Constants";
+import axios from 'axios';
+import { makeAutoObservable } from 'mobx';
+import { AuthResponse } from '../models/response/AuthResponse';
+import AuthService from '../services/AuthService';
+
+// interface TypeJSONData {
+//     games: [];
+//     providers: [];
+//     groups: [];
+// }
 
 export default class Store {
     adminRole = false;
     isAuth = false;
     isLoading = false;
+    dataJSON = {};
 
     constructor() {
         makeAutoObservable(this);
@@ -25,13 +31,17 @@ export default class Store {
         this.isLoading = value;
     }
 
+    setDataJSON(data: {}) {
+        this.dataJSON = data;
+    }
+
     async login(username: string, password: string) {
         this.setLoading(true);
         console.log(this.isLoading);
         try {
             const response = await AuthService.login(username, password);
             console.log(response);
-            localStorage.setItem("token", response.data.accessToken);
+            localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setAdminRole(response.data.adminRole);
         } catch (error: any) {
@@ -44,8 +54,8 @@ export default class Store {
 
     async logout() {
         try {
-            const response = await AuthService.logout();
-            localStorage.removeItem("token");
+            await AuthService.logout();
+            localStorage.removeItem('token');
             this.setAuth(false);
             this.setAdminRole(false);
         } catch (error: any) {
@@ -60,9 +70,9 @@ export default class Store {
                 `http://localhost:5000/checkAuth`,
                 {
                     withCredentials: true,
-                },
+                }
             );
-            localStorage.setItem("token", response.data.accessToken);
+            localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setAdminRole(response.data.adminRole);
         } catch (error: any) {
@@ -71,4 +81,16 @@ export default class Store {
             this.setLoading(false);
         }
     }
+
+    // async getData() {
+    //     this.setLoading(true);
+    //     try {
+    //         const response = await axios.get(`http://localhost:5000/getData`);
+    //         this.setDataJSON(response.data);
+    //     } catch (error: any) {
+    //         console.log(error.response);
+    //     } finally {
+    //         this.setLoading(false);
+    //     }
+    // }
 }

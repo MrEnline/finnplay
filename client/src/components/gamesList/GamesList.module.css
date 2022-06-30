@@ -1,0 +1,23 @@
+.games__list {
+    width: 884px;
+    left: 82px;
+    top: 145px;
+
+    position: absolute;
+    width: 844px;
+    height: 785px;
+
+    top: 145px;
+}
+
+.games__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 196px);
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.games__img {
+    width: 196px;
+    height: 141px;
+}

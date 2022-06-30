@@ -18,7 +18,7 @@ function App() {
 
     if (store.isAuth && store.adminRole) {
         return (
-            <div>
+            <div className="App">
                 <div>Admin panel</div>
                 <button onClick={() => store.logout()}>Logout</button>
             </div>
@@ -26,7 +26,11 @@ function App() {
     }
 
     if (store.isAuth && !store.adminRole) {
-        return <PlayerPage />;
+        return (
+            <div className="App">
+                <PlayerPage />
+            </div>
+        );
     }
 
     return (

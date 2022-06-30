@@ -1,7 +1,7 @@
 .login {
-    position: relative;
-    width: 1920px;
+    width: 1440px;
     height: 1024px;
+
     background: #fdfdfd;
 }
 
@@ -15,8 +15,8 @@
     position: absolute;
     width: 412px;
     height: 362px;
-    left: 754px;
-    top: 331px;
+    left: 514px;
+    top: 330px;
 }
 
 .loginform__logo {

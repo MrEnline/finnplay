@@ -37,7 +37,7 @@
 .filters__search input {
     width: 100%;
     height: 19px;
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -53,28 +53,55 @@
 
 .filters__providers {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
+    align-items: flex-start;
     position: absolute;
     top: 128px;
     left: 32px;
-    border: 1px solid red;
 
     width: 355px;
     height: 195px;
 
     padding: 10px;
     gap: 10px;
+
+    border: 1px solid red;
 }
 
-.filters__providers div:first-child {
+.filters__list {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 5px 10px;
+    gap: 20px;
+    flex-wrap: wrap;
+
+    width: 300px;
+    height: 195px;
+}
+
+.filters__title {
     width: 73px;
     height: 19px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
     line-height: 120%;
 
     color: #808080;
+}
+
+.filters__item {
+    height: 19px;
+
+    font-family: "Prompt";
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 120%;
+
+    color: #2b2b2b;
 }

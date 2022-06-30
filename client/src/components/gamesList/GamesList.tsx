@@ -20,7 +20,7 @@ const GamesList = () => {
     });
 
     const createListGames = (arr: Array<TypeGame>) => {
-        const newArrImgs = arr.map((item, index) => {
+        const newArrImgs = arr.map((item) => {
             return (
                 <img
                     src={item.cover}

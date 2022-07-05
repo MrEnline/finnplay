@@ -20,4 +20,6 @@
 .games__img {
     width: 196px;
     height: 141px;
+
+    border-radius: 8px;
 }

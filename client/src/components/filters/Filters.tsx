@@ -1,7 +1,12 @@
 import { useState, useEffect } from 'react';
 import useJSONService from '../../services/JSONService';
 import styles from './Filters.module.css';
+import classNames from 'classnames';
 import IconSearch from '../../assets/img/icon-search.svg';
+import {
+    NUMBER_ELEMENT_PROVIDERS_FLEX,
+    NUMBER_ELEMENT_GROUPS_FLEX,
+} from '../../utils/Constants';
 
 interface TypeProvider {
     id: number;
@@ -15,6 +20,39 @@ interface TypeGroup {
     games: [];
 }
 
+const createListElements = (
+    arr: Array<TypeProvider | TypeGroup>,
+    countElementInFlex: number
+) => {
+    const divItemsArr = arr.map((item) => {
+        return <div className={styles.filters__item}>{item.name}</div>;
+    });
+
+    const divGroupItemsArr = [];
+    for (
+        let index = 0;
+        index < divItemsArr.length;
+        index += countElementInFlex
+    ) {
+        divGroupItemsArr.push(
+            divItemsArr.slice(index, index + countElementInFlex)
+        );
+    }
+
+    return divGroupItemsArr.map((item) => {
+        return (
+            <div
+                className={classNames(
+                    styles.filters__items,
+                    styles.filters__button_reset
+                )}
+            >
+                {item}
+            </div>
+        );
+    });
+};
+
 const Filters = () => {
     const [search, setSearch] = useState('');
     const { getAllProviders, getAllGroups } = useJSONService();
@@ -26,33 +64,12 @@ const Filters = () => {
         getAllGroups().then((groups) => setGroups(groups));
     }, []);
 
-    const createListProviders = (arr: Array<TypeProvider>) => {
-        return arr.map((item) => {
-            return <div className={styles.filters__item}>{item.name}</div>;
-        });
-        // const newArrItems =  arr.map((item) => {
-        //     return (
-        //         <div className={styles.filters__item}>{item.name}</div>
-        //     );
-        // });
-        // const countElementInFlex = 3
-        // let countFlexBox = newArrItems.length / countElementInFlex;
-        // const listProviders = [];
-        // while (countFlexBox > 0) {
-        //     let
-        //     countFlexBox--;
-        // }
-    };
+    const listProviders = createListElements(
+        providers,
+        NUMBER_ELEMENT_PROVIDERS_FLEX
+    );
 
-    const listProviders = createListProviders(providers);
-
-    const createListGroups = (arr: Array<TypeGroup>) => {
-        return arr.map((item) => {
-            return <div className={styles.filters__item}>{item.name}</div>;
-        });
-    };
-
-    const listGroups = createListGroups(groups);
+    const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX);
 
     return (
         <div className={styles.app__filters}>
@@ -67,17 +84,41 @@ const Filters = () => {
                 />
                 <img src={IconSearch} alt="search" />
             </div>
-            <div className={styles.filters__providersblock}>
+            <div className={styles.filters__providers}>
                 <div className={styles.filters__title}>Providers</div>
-                <div className={styles.filters__providers}>{listProviders}</div>
+                {listProviders}
             </div>
-            <div className={styles.filters__gamegroupblock}>
+            <div className={styles.filters__gamegroup}>
                 <div className={styles.filters__title}>Game groups</div>
-                <div className={styles.filters__gamegroup}>{listGroups}</div>
+                {listGroups}
             </div>
-            <div className={styles.filters__sorting}></div>
-            <div className={styles.filters__columns}></div>
-            <div className={styles.filters__control}></div>
+            <div className={styles.filters__sorting}>
+                <div className={styles.filters__title}>Sorting</div>
+                <div className={styles.filters__items}>
+                    <div className={styles.filters__item}>A-Z</div>
+                    <div className={styles.filters__item}>Z-A</div>
+                    <div className={styles.filters__item}>Newest</div>
+                </div>
+            </div>
+            <div className={styles.filters__columns}>
+                <div className={styles.filters__title}>Columns</div>
+                <div className={styles.filters__switch}>
+                    <input type="radio" />
+                    <div className={styles.filters__box}></div>
+                    <input type="radio" />
+                    <div className={styles.filters__box}></div>
+                    <input type="radio" />
+                </div>
+            </div>
+            <div className={styles.filters__control}>
+                <div className={styles.filters__title}>Games amount: {100}</div>
+                <div
+                    className={styles.filters__button}
+                    onClick={() => console.log('test')}
+                >
+                    <div className={styles.filters__buttontext}>Reset</div>
+                </div>
+            </div>
         </div>
     );
 };

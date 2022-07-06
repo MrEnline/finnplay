@@ -103,11 +103,66 @@ const Filters = () => {
             <div className={styles.filters__columns}>
                 <div className={styles.filters__title}>Columns</div>
                 <div className={styles.filters__switch}>
-                    <input type="radio" />
-                    <div className={styles.filters__box}></div>
-                    <input type="radio" />
-                    <div className={styles.filters__box}></div>
-                    <input type="radio" />
+                    <div
+                        className={classNames(
+                            styles.filters__radio2,
+                            styles.filters__radio
+                        )}
+                    >
+                        <input
+                            id="radio-2"
+                            type="radio"
+                            name="radio"
+                            value="2"
+                        />
+                        <label htmlFor="radio-2">
+                            <span>2</span>
+                        </label>
+                    </div>
+                    <div
+                        className={classNames(
+                            styles.filters__box,
+                            styles.filters__box23
+                        )}
+                    ></div>
+                    <div
+                        className={classNames(
+                            styles.filters__radio3,
+                            styles.filters__radio
+                        )}
+                    >
+                        <input
+                            id="radio-3"
+                            type="radio"
+                            name="radio"
+                            value="3"
+                        />
+                        <label htmlFor="radio-3">
+                            <span>3</span>
+                        </label>
+                    </div>
+                    <div
+                        className={classNames(
+                            styles.filters__box,
+                            styles.filters__box34
+                        )}
+                    ></div>
+                    <div
+                        className={classNames(
+                            styles.filters__radio4,
+                            styles.filters__radio
+                        )}
+                    >
+                        <input
+                            id="radio-4"
+                            type="radio"
+                            name="radio"
+                            value="4"
+                        />
+                        <label htmlFor="radio-4">
+                            <span>4</span>
+                        </label>
+                    </div>
                 </div>
             </div>
             <div className={styles.filters__control}>

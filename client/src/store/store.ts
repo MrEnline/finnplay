@@ -66,12 +66,9 @@ export default class Store {
     async checkAuth() {
         this.setLoading(true);
         try {
-            const response = await axios.get<AuthResponse>(
-                `http://localhost:5000/checkAuth`,
-                {
-                    withCredentials: true,
-                }
-            );
+            const response = await axios.get<AuthResponse>(`http://localhost:5000/checkAuth`, {
+                withCredentials: true,
+            });
             localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setAdminRole(response.data.adminRole);
@@ -81,16 +78,4 @@ export default class Store {
             this.setLoading(false);
         }
     }
-
-    // async getData() {
-    //     this.setLoading(true);
-    //     try {
-    //         const response = await axios.get(`http://localhost:5000/getData`);
-    //         this.setDataJSON(response.data);
-    //     } catch (error: any) {
-    //         console.log(error.response);
-    //     } finally {
-    //         this.setLoading(false);
-    //     }
-    // }
 }

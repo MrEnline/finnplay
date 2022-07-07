@@ -89,7 +89,7 @@
     gap: 40px;
     padding-left: 10px;
 
-    width: 340px;
+    width: 350px;
     height: 29px;
 
     border: 1px solid green;
@@ -102,7 +102,15 @@
     font-size: 16px;
     line-height: 120%;
 
+    cursor: pointer;
+
     color: #2b2b2b;
+    padding: 2px;
+}
+
+.filters__item_color {
+    border-radius: 2px;
+    background: #fdbc11;
 }
 
 .filters__gamegroup {

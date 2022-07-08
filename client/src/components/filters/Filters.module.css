@@ -294,6 +294,10 @@
 .filters__box {
     width: 200px;
     height: 10px;
-    background: #fdbc11;
+    background: #f2f2f2;
     z-index: 1;
+}
+
+.filters__box_color {
+    background: #fdbc11;
 }

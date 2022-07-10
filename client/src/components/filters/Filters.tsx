@@ -1,26 +1,10 @@
-import React, { useState, useEffect, FC } from "react";
-import useJSONService from "../../services/JSONService";
+import React, { FC } from "react";
 import styles from "./Filters.module.css";
 import classNames from "classnames";
 import IconSearch from "../../assets/img/icon-search.svg";
 import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from "../../utils/Constants";
 
-interface TypeData {
-    id: number;
-    name: string;
-}
-
-interface TypeProvider extends TypeData {
-    logo: string;
-}
-
-interface TypeGroup extends TypeData {
-    games: [];
-}
-
-interface TypeFilter {
-    [index: string]: boolean;
-}
+interface TypeProp {}
 
 const dataSorting = [
     { id: 1, name: "A-Z" },
@@ -28,25 +12,8 @@ const dataSorting = [
     { id: 3, name: "Newest" },
 ];
 
-const Filters: FC = () => {
-    const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
-    const [providers, setProviders] = useState(Array<TypeProvider>);
-    const [groups, setGroups] = useState(Array<TypeGroup>);
-    const [search, setSearch] = useState("");
-    const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
-    const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
-    const [filterSorting, setFilterSorting] = useState<TypeFilter>({});
-    const [boxColor23, setBoxColor23] = useState<boolean>(true);
-    const [boxColor34, setBoxColor34] = useState<boolean>(true);
-
-    useEffect(() => {
-        getAllProviders().then((providers) => setProviders(providers));
-        getAllGroups().then((groups) => setGroups(groups));
-    }, []);
-
+const Filters: FC<TypeProp> = () => {
     const onChangeValueFilter = (name: string, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
-        // const newFilter = { ...currFilter };
-        // newFilter[name] = !newFilter[name];
         setFilter({ ...currFilter, [name]: !currFilter[name] });
     };
 
@@ -94,14 +61,6 @@ const Filters: FC = () => {
                 setBoxColor34(true);
                 break;
         }
-    };
-
-    const onResetAllFilters = () => {
-        setFilterProviders({});
-        setFilterGroups({});
-        setFilterSorting({});
-        setBoxColor23(true);
-        setBoxColor34(true);
     };
 
     const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, setFilterProviders);

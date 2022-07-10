@@ -1,33 +1,10 @@
-import { useState, useEffect } from 'react';
-import useJSONService from '../../services/JSONService';
-import styles from './GamesList.module.css';
+import { FC } from "react";
+import styles from "./GamesList.module.css";
 
-interface TypeGame {
-    id: number;
-    name: string;
-    provider: number;
-    cover: string;
-    coverLarge: string;
-    date: string;
-}
-
-const GamesList = () => {
-    const { getAllGames } = useJSONService();
-    const [games, setGames] = useState(Array<TypeGame>);
-
-    useEffect(() => {
-        getAllGames().then((games) => setGames(games));
-    });
-
+const GamesList: FC = () => {
     const createListGames = (arr: Array<TypeGame>) => {
         const newArrImgs = arr.map((item) => {
-            return (
-                <img
-                    src={item.cover}
-                    alt={item.name}
-                    className={styles.games__img}
-                />
-            );
+            return <img src={item.cover} alt={item.name} className={styles.games__img} />;
         });
 
         return <div className={styles.games__grid}>{newArrImgs}</div>;

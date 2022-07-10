@@ -1,9 +1,9 @@
-import React, { useState, useEffect, FC } from 'react';
-import useJSONService from '../../services/JSONService';
-import styles from './Filters.module.css';
-import classNames from 'classnames';
-import IconSearch from '../../assets/img/icon-search.svg';
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from '../../utils/Constants';
+import React, { useState, useEffect, FC } from "react";
+import useJSONService from "../../services/JSONService";
+import styles from "./Filters.module.css";
+import classNames from "classnames";
+import IconSearch from "../../assets/img/icon-search.svg";
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from "../../utils/Constants";
 
 interface TypeData {
     id: number;
@@ -23,43 +23,43 @@ interface TypeFilter {
 }
 
 const dataSorting = [
-    { id: 1, name: 'A-Z' },
-    { id: 2, name: 'Z-A' },
-    { id: 3, name: 'Newest' },
+    { id: 1, name: "A-Z" },
+    { id: 2, name: "Z-A" },
+    { id: 3, name: "Newest" },
 ];
 
 const Filters: FC = () => {
-    const [search, setSearch] = useState('');
     const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
     const [providers, setProviders] = useState(Array<TypeProvider>);
     const [groups, setGroups] = useState(Array<TypeGroup>);
+    const [search, setSearch] = useState("");
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [filterSorting, setFilterSorting] = useState<TypeFilter>({});
-    const [boxColor23, setBoxColor23] = useState<boolean>(false);
-    const [boxColor34, setBoxColor34] = useState<boolean>(false);
+    const [boxColor23, setBoxColor23] = useState<boolean>(true);
+    const [boxColor34, setBoxColor34] = useState<boolean>(true);
 
     useEffect(() => {
         getAllProviders().then((providers) => setProviders(providers));
         getAllGroups().then((groups) => setGroups(groups));
     }, []);
 
-    const changeValueFilter = (name: string, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
-        const newFilter = { ...currFilter };
-        newFilter[name] = !newFilter[name];
-        setFilter(newFilter);
+    const onChangeValueFilter = (name: string, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
+        // const newFilter = { ...currFilter };
+        // newFilter[name] = !newFilter[name];
+        setFilter({ ...currFilter, [name]: !currFilter[name] });
     };
 
     const createListElements = (
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        setFilter: (filter: TypeFilter) => void
+        setFilter: (filter: TypeFilter) => void,
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
                 <div
-                    onClick={() => changeValueFilter(item.name, currFilter, setFilter)}
+                    onClick={() => onChangeValueFilter(item.name, currFilter, setFilter)}
                     className={classNames(styles.filters__item, {
                         [styles.filters__item_color]: currFilter[item.name],
                     })}
@@ -77,6 +77,31 @@ const Filters: FC = () => {
         return divGroupItemsArr.map((item) => {
             return <div className={classNames(styles.filters__items)}>{item}</div>;
         });
+    };
+
+    const onChangeColorBox = (numCol: number) => {
+        switch (numCol) {
+            case 2:
+                setBoxColor23(false);
+                setBoxColor34(false);
+                break;
+            case 3:
+                setBoxColor23(true);
+                setBoxColor34(false);
+                break;
+            case 4:
+                setBoxColor23(true);
+                setBoxColor34(true);
+                break;
+        }
+    };
+
+    const onResetAllFilters = () => {
+        setFilterProviders({});
+        setFilterGroups({});
+        setFilterSorting({});
+        setBoxColor23(true);
+        setBoxColor34(true);
     };
 
     const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, setFilterProviders);
@@ -115,7 +140,15 @@ const Filters: FC = () => {
                 <div className={styles.filters__switch}>
                     <div className={classNames(styles.filters__radio2, styles.filters__radio)}>
                         <input id="radio-2" type="radio" name="radio" value="2" />
-                        <label htmlFor="radio-2">
+                        <label
+                            htmlFor="radio-2"
+                            className={classNames(
+                                styles.filters__label,
+                                { [styles.filters__radio_color]: boxColor23 },
+                                { [styles.filters__radio_color]: boxColor34 },
+                            )}
+                            onClick={() => onChangeColorBox(2)}
+                        >
                             <span>2</span>
                         </label>
                     </div>
@@ -126,7 +159,11 @@ const Filters: FC = () => {
                     ></div>
                     <div className={classNames(styles.filters__radio3, styles.filters__radio)}>
                         <input id="radio-3" type="radio" name="radio" value="3" />
-                        <label htmlFor="radio-3">
+                        <label
+                            htmlFor="radio-3"
+                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: boxColor34 })}
+                            onClick={() => onChangeColorBox(3)}
+                        >
                             <span>3</span>
                         </label>
                     </div>
@@ -137,7 +174,11 @@ const Filters: FC = () => {
                     ></div>
                     <div className={classNames(styles.filters__radio4, styles.filters__radio)}>
                         <input id="radio-4" type="radio" name="radio" value="4" />
-                        <label htmlFor="radio-4">
+                        <label
+                            htmlFor="radio-4"
+                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: boxColor34 })}
+                            onClick={() => onChangeColorBox(4)}
+                        >
                             <span>4</span>
                         </label>
                     </div>
@@ -145,10 +186,7 @@ const Filters: FC = () => {
             </div>
             <div className={styles.filters__control}>
                 <div className={styles.filters__title}>Games amount: {100}</div>
-                <div
-                    className={classNames(styles.filters__button, styles.filters__button_reset)}
-                    onClick={() => console.log('test')}
-                >
+                <div className={classNames(styles.filters__button, styles.filters__button_reset)} onClick={onResetAllFilters}>
                     <div className={styles.filters__buttontext}>Reset</div>
                 </div>
             </div>

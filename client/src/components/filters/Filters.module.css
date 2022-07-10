@@ -37,7 +37,7 @@
 .filters__search input {
     width: 100%;
     height: 19px;
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -48,6 +48,7 @@
 }
 
 .filters__search input:focus {
+    color: #2b2b2b;
     outline: none;
 }
 
@@ -64,15 +65,13 @@
 
     padding: 10px;
     gap: 10px;
-
-    border: 1px solid red;
 }
 
 .filters__title {
     width: 150px;
     height: 19px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -91,12 +90,10 @@
 
     width: 350px;
     height: 29px;
-
-    border: 1px solid green;
 }
 
 .filters__item {
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -126,8 +123,6 @@
 
     padding: 10px;
     gap: 10px;
-
-    border: 1px solid red;
 }
 
 .filters__sorting {
@@ -143,8 +138,6 @@
 
     width: 235px;
     height: 78px;
-
-    border: 1px solid red;
 }
 
 .filters__columns {
@@ -161,8 +154,6 @@
 
     width: 348px;
     height: 64px;
-
-    border: 1px solid red;
 }
 
 .filters__control {
@@ -178,10 +169,8 @@
     top: 749px;
     left: 32px;
 
-    width: 348px;
+    width: 365px;
     height: 42px;
-
-    border: 1px solid red;
 }
 
 .filters__button {
@@ -204,7 +193,7 @@
     width: 43px;
     height: 19px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -220,6 +209,7 @@
 .filters__button {
     background: #ffffff;
     box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
+    cursor: pointer;
 }
 
 .filters__button_reset:hover {
@@ -245,15 +235,24 @@
     display: inline-block;
 }
 
-.filters__radio input[type='radio'] {
+.filters__radio input[type="radio"] {
     display: none;
 }
 
-.filters__radio input[type='radio']:checked + label {
-    background: #fdbc11;
-}
+/* .filters__radio label {
+    display: inline-block;
+    cursor: pointer;
+    width: 1.1em;
+    height: 1.1em;
 
-.filters__radio label {
+    border-radius: 50%;
+    user-select: none;
+
+    background: #f2f2f2;
+    padding: 1px;
+} */
+
+.filters__label {
     display: inline-block;
     cursor: pointer;
     width: 1.1em;
@@ -297,7 +296,16 @@
     background: #f2f2f2;
     z-index: 1;
 }
+/* 
+.filters__box_color {
+    background: #fdbc11;
+}
 
+.filters__radio_color {
+    background: #fdbc11;
+} */
+.filters__radio input[type="radio"]:checked + label,
+.filters__radio_color,
 .filters__box_color {
     background: #fdbc11;
 }

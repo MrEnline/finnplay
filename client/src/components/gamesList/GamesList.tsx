@@ -1,7 +1,20 @@
-import { FC } from "react";
-import styles from "./GamesList.module.css";
+import { FC } from 'react';
+import styles from './GamesList.module.css';
 
-const GamesList: FC = () => {
+interface TypeGame {
+    id: number;
+    name: string;
+    provider: number;
+    cover: string;
+    coverLarge: string;
+    date: string;
+}
+
+interface TypeProp {
+    games: Array<TypeGame>;
+}
+
+const GamesList: FC<TypeProp> = ({ games }) => {
     const createListGames = (arr: Array<TypeGame>) => {
         const newArrImgs = arr.map((item) => {
             return <img src={item.cover} alt={item.name} className={styles.games__img} />;

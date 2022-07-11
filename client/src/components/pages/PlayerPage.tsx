@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import useJSONService from "../../services/JSONService";
-import AppHeader from "../appHeader/AppHeader";
-import GamesList from "../gamesList/GamesList";
-import Filters from "../filters/Filters";
+import { useState, useEffect, useCallback } from 'react';
+import useJSONService from '../../services/JSONService';
+import AppHeader from '../appHeader/AppHeader';
+import GamesList from '../gamesList/GamesList';
+import Filters from '../filters/Filters';
 
 interface TypeData {
     id: number;
@@ -33,34 +33,54 @@ interface TypeGame {
 const PlayerPages = () => {
     const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
     const [games, setGames] = useState(Array<TypeGame>);
+
+    //const [filtersGames, setFiltersGames] = useState(Array<TypeGame>);
+
     const [providers, setProviders] = useState(Array<TypeProvider>);
     const [groups, setGroups] = useState(Array<TypeGroup>);
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [filterSorting, setFilterSorting] = useState<TypeFilter>({});
-    const [boxColor23, setBoxColor23] = useState<boolean>(true);
-    const [boxColor34, setBoxColor34] = useState<boolean>(true);
-
-    const onResetAllFilters = () => {
-        setFilterProviders({});
-        setFilterGroups({});
-        setFilterSorting({});
-        setBoxColor23(true);
-        setBoxColor34(true);
-    };
 
     useEffect(() => {
-        getAllGames().then((games) => setGames(games));
+        getAllGames().then((games) => {
+            setGames(games);
+        });
         getAllProviders().then((providers) => setProviders(providers));
         getAllGroups().then((groups) => setGroups(groups));
-    });
+    }, []);
+
+    const handleFilterProviders = () => {
+        const arrProviders = Object.keys(filterProviders);
+        if (arrProviders.length === 0) return [];
+        let newArrProvidersGames = Array<TypeGame>();
+        for (let i = 0; i < arrProviders.length; i++) {
+            newArrProvidersGames = [...newArrProvidersGames, ...games.filter((game) => game.provider === +arrProviders[i])];
+        }
+        return newArrProvidersGames;
+    };
+
+    const handleFilterGroup = (arrGames: Array<TypeGame>) => {};
+
+    let filtersGames = handleFilterProviders();
 
     return (
         <>
             <AppHeader />
-            <GamesList />
-            <Filters />
+            <GamesList games={filtersGames?.length === 0 ? games : filtersGames} />
+            <Filters
+                providers={providers}
+                groups={groups}
+                search={search}
+                setSearch={setSearch}
+                filterProviders={filterProviders}
+                setFilterProviders={setFilterProviders}
+                filterGroups={filterGroups}
+                setFilterGroups={setFilterGroups}
+                filterSorting={filterSorting}
+                setFilterSorting={setFilterSorting}
+            />
         </>
     );
 };

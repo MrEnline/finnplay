@@ -1,34 +1,83 @@
-import React, { FC } from "react";
-import styles from "./Filters.module.css";
-import classNames from "classnames";
-import IconSearch from "../../assets/img/icon-search.svg";
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from "../../utils/Constants";
+import React, { FC, useState } from 'react';
+import styles from './Filters.module.css';
+import classNames from 'classnames';
+import IconSearch from '../../assets/img/icon-search.svg';
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from '../../utils/Constants';
 
-interface TypeProp {}
+interface TypeData {
+    id: number;
+    name: string;
+}
+
+interface TypeProvider extends TypeData {
+    logo: string;
+}
+
+interface TypeGroup extends TypeData {
+    games: [];
+}
+
+interface TypeFilter {
+    [index: string]: boolean;
+}
+
+interface TypeProp {
+    providers: Array<TypeProvider>;
+    groups: Array<TypeGroup>;
+    search: string;
+    setSearch: (search: string) => void;
+    filterProviders: {};
+    setFilterProviders: (filter: TypeFilter) => void;
+    filterGroups: {};
+    setFilterGroups: (filter: TypeFilter) => void;
+    filterSorting: {};
+    setFilterSorting: (filter: TypeFilter) => void;
+}
 
 const dataSorting = [
-    { id: 1, name: "A-Z" },
-    { id: 2, name: "Z-A" },
-    { id: 3, name: "Newest" },
+    { id: 1, name: 'A-Z' },
+    { id: 2, name: 'Z-A' },
+    { id: 3, name: 'Newest' },
 ];
 
-const Filters: FC<TypeProp> = () => {
-    const onChangeValueFilter = (name: string, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
-        setFilter({ ...currFilter, [name]: !currFilter[name] });
+const Filters: FC<TypeProp> = ({
+    providers,
+    groups,
+    search,
+    setSearch,
+    filterProviders,
+    setFilterProviders,
+    filterGroups,
+    setFilterGroups,
+    filterSorting,
+    setFilterSorting,
+}) => {
+    const [boxColor23, setBoxColor23] = useState<boolean>(true);
+    const [boxColor34, setBoxColor34] = useState<boolean>(true);
+
+    const onSetValueFilter = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
+        const newFilter = { ...currFilter };
+        if (newFilter[id]) {
+            delete newFilter[id];
+        } else {
+            newFilter[id] = true;
+        }
+        setFilter(newFilter);
+        //setFilter({ ...currFilter, [name]: !currFilter[name] });
     };
 
     const createListElements = (
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        setFilter: (filter: TypeFilter) => void,
+        setFilter: (filter: TypeFilter) => void
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
                 <div
-                    onClick={() => onChangeValueFilter(item.name, currFilter, setFilter)}
+                    onClick={() => onSetValueFilter(item.id, currFilter, setFilter)}
                     className={classNames(styles.filters__item, {
-                        [styles.filters__item_color]: currFilter[item.name],
+                        [styles.filters__item_color]: currFilter[item.id],
                     })}
                 >
                     {item.name}
@@ -46,21 +95,30 @@ const Filters: FC<TypeProp> = () => {
         });
     };
 
+    const handleChangeStateBoxColor = (isBox23: boolean, isBox34: boolean) => {
+        setBoxColor23(isBox23);
+        setBoxColor34(isBox34);
+    };
+
     const onChangeColorBox = (numCol: number) => {
         switch (numCol) {
             case 2:
-                setBoxColor23(false);
-                setBoxColor34(false);
+                handleChangeStateBoxColor(false, false);
                 break;
             case 3:
-                setBoxColor23(true);
-                setBoxColor34(false);
+                handleChangeStateBoxColor(true, false);
                 break;
             case 4:
-                setBoxColor23(true);
-                setBoxColor34(true);
+                handleChangeStateBoxColor(true, true);
                 break;
         }
+    };
+
+    const onResetAllFilters = () => {
+        setFilterProviders({});
+        setFilterGroups({});
+        setFilterSorting({});
+        handleChangeStateBoxColor(true, true);
     };
 
     const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, setFilterProviders);
@@ -104,7 +162,7 @@ const Filters: FC<TypeProp> = () => {
                             className={classNames(
                                 styles.filters__label,
                                 { [styles.filters__radio_color]: boxColor23 },
-                                { [styles.filters__radio_color]: boxColor34 },
+                                { [styles.filters__radio_color]: boxColor34 }
                             )}
                             onClick={() => onChangeColorBox(2)}
                         >

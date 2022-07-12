@@ -30,8 +30,8 @@ interface TypeProp {
     setFilterProviders: (filter: TypeFilter) => void;
     filterGroups: {};
     setFilterGroups: (filter: TypeFilter) => void;
-    filterSorting: {};
-    setFilterSorting: (filter: TypeFilter) => void;
+    sorting: {};
+    setSorting: (filter: TypeFilter) => void;
 }
 
 const dataSorting = [
@@ -49,8 +49,8 @@ const Filters: FC<TypeProp> = ({
     setFilterProviders,
     filterGroups,
     setFilterGroups,
-    filterSorting,
-    setFilterSorting,
+    sorting,
+    setSorting,
 }) => {
     const [boxColor23, setBoxColor23] = useState<boolean>(true);
     const [boxColor34, setBoxColor34] = useState<boolean>(true);
@@ -117,7 +117,7 @@ const Filters: FC<TypeProp> = ({
     const onResetAllFilters = () => {
         setFilterProviders({});
         setFilterGroups({});
-        setFilterSorting({});
+        setSorting({});
         handleChangeStateBoxColor(true, true);
     };
 
@@ -125,7 +125,7 @@ const Filters: FC<TypeProp> = ({
 
     const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX, filterGroups, setFilterGroups);
 
-    const listSorting = createListElements(dataSorting, dataSorting.length, filterSorting, setFilterSorting);
+    const listSorting = createListElements(dataSorting, dataSorting.length, sorting, setSorting);
 
     return (
         <div className={styles.app__filters}>

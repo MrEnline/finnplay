@@ -55,7 +55,7 @@ const Filters: FC<TypeProp> = ({
     const [boxColor23, setBoxColor23] = useState<boolean>(true);
     const [boxColor34, setBoxColor34] = useState<boolean>(true);
 
-    const onSetValueFilter = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
+    const onSetValuesFilter = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
         const newFilter = { ...currFilter };
         if (newFilter[id]) {
             delete newFilter[id];
@@ -66,16 +66,25 @@ const Filters: FC<TypeProp> = ({
         //setFilter({ ...currFilter, [name]: !currFilter[name] });
     };
 
+    const onSetValuesSorting = (id: number, currFilter: TypeFilter, setSorting: (filter: TypeFilter) => void) => {
+        if (currFilter[id]) {
+            setSorting({});
+            return;
+        }
+        setSorting({ [id]: true });
+    };
+
     const createListElements = (
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        setFilter: (filter: TypeFilter) => void
+        setNewValues: (filter: TypeFilter) => void,
+        onSetValues: (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => void
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
                 <div
-                    onClick={() => onSetValueFilter(item.id, currFilter, setFilter)}
+                    onClick={() => onSetValues(item.id, currFilter, setNewValues)}
                     className={classNames(styles.filters__item, {
                         [styles.filters__item_color]: currFilter[item.id],
                     })}
@@ -121,11 +130,17 @@ const Filters: FC<TypeProp> = ({
         handleChangeStateBoxColor(true, true);
     };
 
-    const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, setFilterProviders);
+    const listProviders = createListElements(
+        providers,
+        NUMBER_ELEMENT_PROVIDERS_FLEX,
+        filterProviders,
+        setFilterProviders,
+        onSetValuesFilter
+    );
 
-    const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX, filterGroups, setFilterGroups);
+    const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX, filterGroups, setFilterGroups, onSetValuesFilter);
 
-    const listSorting = createListElements(dataSorting, dataSorting.length, sorting, setSorting);
+    const listSorting = createListElements(dataSorting, dataSorting.length, sorting, setSorting, onSetValuesSorting);
 
     return (
         <div className={styles.app__filters}>

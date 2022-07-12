@@ -52,13 +52,15 @@ const PlayerPages = () => {
     const handleSearch = () => {
         if (search.length === 0) return [];
         let newArrGames = Array<TypeGame>();
+        //фильтрация по названию игры
         newArrGames = games.filter((item) => {
             return item.name.indexOf(search) > -1;
-        }); //фильтрация по названию игры
+        });
         //if (newArrGames.length > 0) return newArrGames;
+        //фильтрация по имени провайдера
         const arrProvidersGames = providers.filter((item) => {
             return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
-        }); //фильтрация по имени провайдера
+        });
         if (arrProvidersGames.length > 0) {
             for (let provider of arrProvidersGames) {
                 newArrGames = [...newArrGames, ...games.filter((game) => provider.id === game.provider)];
@@ -116,9 +118,44 @@ const PlayerPages = () => {
         return newArrGroupsGames;
     };
 
+    const handleSorting = (arrGames: Array<TypeGame>) => {
+        const idSort = +Object.keys(sorting)?.[0];
+        if (!idSort) return arrGames;
+        const currArrForSorting = arrGames.length ? arrGames : games;
+        let newArrGames = Array<TypeGame>();
+        switch (idSort) {
+            case 1:
+                newArrGames = currArrForSorting.sort((a, b) => {
+                    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                        return -1;
+                    }
+                    if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                        return 1;
+                    }
+                    return 0;
+                });
+                break;
+            case 2:
+                newArrGames = currArrForSorting.sort((a, b) => {
+                    if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                        return 1;
+                    }
+                    if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                        return -1;
+                    }
+                    return 0;
+                });
+                break;
+            case 3:
+                break;
+        }
+        return newArrGames;
+    };
+
     let filtersGames = handleSearch();
     filtersGames = handleFilterProviders(filtersGames);
     filtersGames = handleFilterGroup(filtersGames);
+    filtersGames = handleSorting(filtersGames);
 
     const isFilter =
         search.length > 0 ||

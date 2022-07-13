@@ -36,6 +36,7 @@ const PlayerPages = () => {
 
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
+
     const [search, setSearch] = useState('');
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
@@ -51,13 +52,12 @@ const PlayerPages = () => {
 
     const handleSearch = () => {
         if (search.length === 0) return [];
-        let newArrGames = Array<TypeGame>();
         //фильтрация по названию игры
-        newArrGames = games.filter((item) => {
-            return item.name.indexOf(search) > -1;
+        let newArrGames = games.filter((item) => {
+            return item.name.toLowerCase().indexOf(search) > -1;
         });
         //if (newArrGames.length > 0) return newArrGames;
-        //фильтрация по имени провайдера
+        //поиск по имени провайдера
         const arrProvidersGames = providers.filter((item) => {
             return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
         });
@@ -67,7 +67,7 @@ const PlayerPages = () => {
             }
             //if (newArrGames.length > 0) return newArrGames;
         }
-        //фильтрация по названию группы
+        //поиск по названию группы
         const arrGroupGames = groups.filter((item) => {
             return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
         });
@@ -80,8 +80,6 @@ const PlayerPages = () => {
                 newArrGames = [...newArrGames, ...games.filter((item) => item.id === +id)];
             }
         }
-        // console.log(newArrGames);
-        // console.log(newArrGames.length);
         return newArrGames;
     };
 
@@ -122,31 +120,54 @@ const PlayerPages = () => {
         const idSort = +Object.keys(sorting)?.[0];
         if (!idSort) return arrGames;
         const currArrForSorting = arrGames.length ? arrGames : games;
-        let newArrGames = Array<TypeGame>();
+        const newArrGames = Array<TypeGame>();
         switch (idSort) {
             case 1:
-                newArrGames = currArrForSorting.sort((a, b) => {
-                    if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                        return -1;
-                    }
-                    if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                        return 1;
-                    }
-                    return 0;
-                });
+                newArrGames.splice(
+                    -1,
+                    0,
+                    ...currArrForSorting.sort((a, b) => {
+                        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                            return -1;
+                        }
+                        if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                            return 1;
+                        }
+                        return 0;
+                    })
+                );
                 break;
             case 2:
-                newArrGames = currArrForSorting.sort((a, b) => {
-                    if (a.name.toLowerCase() < b.name.toLowerCase()) {
-                        return 1;
-                    }
-                    if (a.name.toLowerCase() > b.name.toLowerCase()) {
-                        return -1;
-                    }
-                    return 0;
-                });
+                newArrGames.splice(
+                    -1,
+                    0,
+                    ...currArrForSorting.sort((a, b) => {
+                        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                            return 1;
+                        }
+                        if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                            return -1;
+                        }
+                        return 0;
+                    })
+                );
                 break;
             case 3:
+                newArrGames.splice(
+                    -1,
+                    0,
+                    ...currArrForSorting.sort((a, b) => {
+                        const dateA = new Date(a.date);
+                        const dateB = new Date(b.date);
+                        if (dateB > dateA) {
+                            return 1;
+                        }
+                        if (dateB < dateA) {
+                            return -1;
+                        }
+                        return 0;
+                    })
+                );
                 break;
         }
         return newArrGames;

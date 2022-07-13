@@ -166,14 +166,11 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
     const handleFilterProviders = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
         const arrProviders = Object.keys(onSetValuesFilter(id, currFilter, setFilter));
         //if (arrProviders.length === 0) return [];
-        const currArrForFilter = filtersGames.length ? filtersGames : games;
+        //const currArrForFilter = filtersGames.length ? filtersGames : games;
         let newArrProvidersGames = Array<TypeGame>();
 
         for (let i = 0; i < arrProviders.length; i++) {
-            newArrProvidersGames = [
-                ...newArrProvidersGames,
-                ...currArrForFilter.filter((game) => game.provider === +arrProviders[i]),
-            ];
+            newArrProvidersGames = [...newArrProvidersGames, ...games.filter((game) => game.provider === +arrProviders[i])];
         }
         setFiltersGames(newArrProvidersGames);
     };
@@ -189,10 +186,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
             const groupGames = groups.find((item) => item.id === +arrGroups[i]);
             if (groupGames) {
                 for (let j = 0; j < groupGames.games.length; j++) {
-                    newArrGroupsGames = [
-                        ...newArrGroupsGames,
-                        ...currArrForFilter.filter((game) => game.id === groupGames.games[j]),
-                    ];
+                    newArrGroupsGames = [...newArrGroupsGames, ...games.filter((game) => game.id === groupGames.games[j])];
                 }
             }
         }

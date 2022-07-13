@@ -22,16 +22,20 @@ interface TypeFilter {
 }
 
 interface TypeProp {
+    games: Array<TypeGame>;
+    filtersGames: Array<TypeGame>;
+    setFiltersGames: (games: Array<TypeGame>) => void;
     providers: Array<TypeProvider>;
     groups: Array<TypeGroup>;
-    search: string;
-    setSearch: (search: string) => void;
-    filterProviders: {};
-    setFilterProviders: (filter: TypeFilter) => void;
-    filterGroups: {};
-    setFilterGroups: (filter: TypeFilter) => void;
-    sorting: {};
-    setSorting: (filter: TypeFilter) => void;
+}
+
+interface TypeGame {
+    id: number;
+    name: string;
+    provider: number;
+    cover: string;
+    coverLarge: string;
+    date: string;
 }
 
 const dataSorting = [
@@ -40,18 +44,12 @@ const dataSorting = [
     { id: 3, name: 'Newest' },
 ];
 
-const Filters: FC<TypeProp> = ({
-    providers,
-    groups,
-    search,
-    setSearch,
-    filterProviders,
-    setFilterProviders,
-    filterGroups,
-    setFilterGroups,
-    sorting,
-    setSorting,
-}) => {
+const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers, groups }) => {
+    const [search, setSearch] = useState('');
+    const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
+    const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
+    const [sorting, setSorting] = useState<TypeFilter>({});
+
     const [boxColor23, setBoxColor23] = useState<boolean>(true);
     const [boxColor34, setBoxColor34] = useState<boolean>(true);
 
@@ -63,15 +61,17 @@ const Filters: FC<TypeProp> = ({
             newFilter[id] = true;
         }
         setFilter(newFilter);
+        return newFilter;
         //setFilter({ ...currFilter, [name]: !currFilter[name] });
     };
 
     const onSetValuesSorting = (id: number, currFilter: TypeFilter, setSorting: (filter: TypeFilter) => void) => {
         if (currFilter[id]) {
             setSorting({});
-            return;
+            return {};
         }
         setSorting({ [id]: true });
+        return { ...currFilter, [id]: true };
     };
 
     const createListElements = (
@@ -130,17 +130,143 @@ const Filters: FC<TypeProp> = ({
         handleChangeStateBoxColor(true, true);
     };
 
+    const handleSearch = (search: string) => {
+        if (search.length === 0) return;
+        //фильтрация по названию игры
+        let newArrGames = games.filter((item) => {
+            return item.name.toLowerCase().indexOf(search) > -1;
+        });
+        //if (newArrGames.length > 0) return newArrGames;
+        //поиск по имени провайдера
+        const arrProvidersGames = providers.filter((item) => {
+            return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+        });
+        if (arrProvidersGames.length > 0) {
+            for (let provider of arrProvidersGames) {
+                newArrGames = [...newArrGames, ...games.filter((game) => provider.id === game.provider)];
+            }
+            //if (newArrGames.length > 0) return newArrGames;
+        }
+        //поиск по названию группы
+        const arrGroupGames = groups.filter((item) => {
+            return item.name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+        });
+        if (arrGroupGames.length > 0) {
+            let idArrGames = Array<number>();
+            for (let group of arrGroupGames) {
+                idArrGames = [...idArrGames, ...group.games];
+            }
+            for (let id of idArrGames) {
+                newArrGames = [...newArrGames, ...games.filter((item) => item.id === +id)];
+            }
+        }
+        return newArrGames;
+    };
+
+    const handleFilterProviders = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
+        const arrProviders = Object.keys(onSetValuesFilter(id, currFilter, setFilter));
+        //if (arrProviders.length === 0) return [];
+        const currArrForFilter = filtersGames.length ? filtersGames : games;
+        let newArrProvidersGames = Array<TypeGame>();
+
+        for (let i = 0; i < arrProviders.length; i++) {
+            newArrProvidersGames = [
+                ...newArrProvidersGames,
+                ...currArrForFilter.filter((game) => game.provider === +arrProviders[i]),
+            ];
+        }
+        setFiltersGames(newArrProvidersGames);
+    };
+
+    const handleFilterGroup = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
+        //const arrGroups = Object.keys(filterGroups);
+        const arrGroups = Object.keys(onSetValuesFilter(id, currFilter, setFilter));
+        //if (arrGroups.length === 0) return [];
+        const currArrForFilter = filtersGames.length ? filtersGames : games;
+        let newArrGroupsGames = Array<TypeGame>();
+
+        for (let i = 0; i < arrGroups.length; i++) {
+            const groupGames = groups.find((item) => item.id === +arrGroups[i]);
+            if (groupGames) {
+                for (let j = 0; j < groupGames.games.length; j++) {
+                    newArrGroupsGames = [
+                        ...newArrGroupsGames,
+                        ...currArrForFilter.filter((game) => game.id === groupGames.games[j]),
+                    ];
+                }
+            }
+        }
+        setFiltersGames(newArrGroupsGames);
+    };
+
+    const handleSorting = (id: number, currFilter: TypeFilter, setFilter: (filter: TypeFilter) => void) => {
+        const idSort = +Object.keys(onSetValuesSorting(id, currFilter, setSorting))?.[0];
+        if (!idSort) return filtersGames;
+        const currArrForSorting = filtersGames.length ? filtersGames : games;
+        const newArrGames = Array<TypeGame>();
+        switch (idSort) {
+            case 1:
+                newArrGames.splice(
+                    -1,
+                    0,
+                    ...currArrForSorting.sort((a, b) => {
+                        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                            return -1;
+                        }
+                        if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                            return 1;
+                        }
+                        return 0;
+                    })
+                );
+                break;
+            case 2:
+                newArrGames.splice(
+                    -1,
+                    0,
+                    ...currArrForSorting.sort((a, b) => {
+                        if (a.name.toLowerCase() < b.name.toLowerCase()) {
+                            return 1;
+                        }
+                        if (a.name.toLowerCase() > b.name.toLowerCase()) {
+                            return -1;
+                        }
+                        return 0;
+                    })
+                );
+                break;
+            case 3:
+                newArrGames.splice(
+                    -1,
+                    0,
+                    ...currArrForSorting.sort((a, b) => {
+                        const dateA = new Date(a.date);
+                        const dateB = new Date(b.date);
+                        if (dateB > dateA) {
+                            return 1;
+                        }
+                        if (dateB < dateA) {
+                            return -1;
+                        }
+                        return 0;
+                    })
+                );
+                break;
+        }
+        setFiltersGames(newArrGames);
+    };
+
     const listProviders = createListElements(
         providers,
         NUMBER_ELEMENT_PROVIDERS_FLEX,
         filterProviders,
         setFilterProviders,
-        onSetValuesFilter
+        handleFilterProviders
     );
 
-    const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX, filterGroups, setFilterGroups, onSetValuesFilter);
+    const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX, filterGroups, setFilterGroups, handleFilterGroup);
 
-    const listSorting = createListElements(dataSorting, dataSorting.length, sorting, setSorting, onSetValuesSorting);
+    const listSorting = createListElements(dataSorting, dataSorting.length, sorting, setSorting, handleSorting);
 
     return (
         <div className={styles.app__filters}>
@@ -150,7 +276,7 @@ const Filters: FC<TypeProp> = ({
                     name="search"
                     value={search}
                     placeholder="Search"
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => handleSearch(e.target.value)}
                     required
                 />
                 <img src={IconSearch} alt="search" />

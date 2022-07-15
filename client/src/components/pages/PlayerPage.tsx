@@ -58,13 +58,7 @@ const PlayerPages = () => {
         <>
             <AppHeader />
             <GamesList games={filtersGames.length > 0 ? filtersGames : games} />
-            <Filters
-                games={games}
-                filtersGames={filtersGames}
-                setFiltersGames={setFiltersGames}
-                providers={providers}
-                groups={groups}
-            />
+            <Filters games={games} filtersGames={filtersGames} setFiltersGames={setFiltersGames} providers={providers} groups={groups} />
         </>
     );
 };

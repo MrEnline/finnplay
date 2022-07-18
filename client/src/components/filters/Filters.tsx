@@ -1,8 +1,8 @@
-import React, { FC, useState } from "react";
-import styles from "./Filters.module.css";
-import classNames from "classnames";
-import IconSearch from "../../assets/img/icon-search.svg";
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from "../../utils/Constants";
+import React, { FC, useState } from 'react';
+import styles from './Filters.module.css';
+import classNames from 'classnames';
+import IconSearch from '../../assets/img/icon-search.svg';
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from '../../utils/Constants';
 
 interface TypeData {
     id: number;
@@ -39,13 +39,13 @@ interface TypeGame {
 }
 
 const dataSorting = [
-    { id: 1, name: "A-Z" },
-    { id: 2, name: "Z-A" },
-    { id: 3, name: "Newest" },
+    { id: 1, name: 'A-Z' },
+    { id: 2, name: 'Z-A' },
+    { id: 3, name: 'Newest' },
 ];
 
 const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers, groups }) => {
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [sorting, setSorting] = useState<TypeFilter>({});
@@ -57,7 +57,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        onSetValues: (id: number) => void,
+        onSetValues: (id: number) => void
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
@@ -129,8 +129,16 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
     const handleSearch = (currSearch: string) => {
         setSearch(currSearch);
-        if (currSearch.length === 0) return;
+        const resultArrGame = getNewArrSearchGame(currSearch);
+        if (resultArrGame.length === 0) {
+            setFiltersGames(games);
+            return;
+        }
+        setFiltersGames(resultArrGame);
+    };
 
+    const getNewArrSearchGame = (currSearch: string) => {
+        if (currSearch === '') return [];
         //фильтрация по названию игры
         let newArrGames = games.filter((item) => {
             return item.name.toLowerCase().indexOf(currSearch) > -1;
@@ -163,7 +171,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                 //newArrGames = [...games.filter((item) => item.id === +id)];
             }
         }
-        setFiltersGames(newArrGames);
+        return Array.from(new Set(newArrGames).values()); //получим только уникальные объекты
     };
 
     const getNewArrProvidersGames = (arrProviders: Array<string>) => {
@@ -230,19 +238,33 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         return 0;
     };
 
-    // const test = () => {
-    //     const resultArrGames = Array<TypeGame>();
-    //     if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-    //         resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
-    //     } else if (newArrProvidersGames.length > 0) {
-    //         resultArrGames.splice(-1, 0, ...newArrProvidersGames);
-    //     } else if (newArrGroupsGames.length > 0) {
-    //         resultArrGames.splice(-1, 0, ...newArrGroupsGames);
-    //     }
-    //     return resultArrGames;
-    // }
-
     const CommonFilter = () => {};
+
+    const getCommonGames = (...arrs: Array<Array<TypeGame>>) => {
+        let resultArrGames = Array<TypeGame>();
+        let arrGames = arrs.shift();
+        if (arrGames) {
+            for (let item of arrGames) {
+                if (inArrays(item, arrs)) {
+                    resultArrGames.push(item);
+                }
+            }
+        }
+        return resultArrGames;
+    };
+
+    const inArrays = (elem: TypeGame, arrs: Array<Array<TypeGame>>) => {
+        for (let arr of arrs) {
+            if (!inArray(elem, arr)) {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    const inArray = (elem: TypeGame, arr: Array<TypeGame>) => {
+        return arr.indexOf(elem) !== -1;
+    };
 
     const handleFilterProviders = (id: number) => {
         //const arrProviders = Object.keys(filterProviders);
@@ -250,35 +272,54 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         setFilterProviders(newFilterProviders);
         const arrProviders = Object.keys(newFilterProviders);
 
-        if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === "") {
+        if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === '') {
             setFiltersGames(games);
             return;
         }
 
-        // if (arrProviders.length === 0 && filtersGames.length > 0) {
-        //     const filterArrProvidersGames = filtersGames.filter((item) => item.provider !== id);
-        //     setFiltersGames(filterArrProvidersGames);
-        //     return;
-        // }
-
         //const idGames = groups.flatMap((item) => item.games);
+        const newArrSearchGames = getNewArrSearchGame(search);
         const newArrProvidersGames = getNewArrProvidersGames(arrProviders);
         const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
 
-        const resultArrGames = Array<TypeGame>();
-        if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-            resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
+        let resultArrGames = Array<TypeGame>();
+        if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+            resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        } else if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0) {
+            resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames);
+        } else if (newArrSearchGames.length > 0 && newArrGroupsGames.length > 0) {
+            resultArrGames = getCommonGames(newArrSearchGames, newArrGroupsGames);
+        } else if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+            resultArrGames = getCommonGames(newArrProvidersGames, newArrProvidersGames);
+        } else if (newArrSearchGames.length > 0) {
+            resultArrGames = newArrSearchGames;
         } else if (newArrProvidersGames.length > 0) {
-            resultArrGames.splice(-1, 0, ...newArrProvidersGames);
+            resultArrGames = newArrProvidersGames;
         } else if (newArrGroupsGames.length > 0) {
-            resultArrGames.splice(-1, 0, ...newArrGroupsGames);
+            resultArrGames = newArrGroupsGames;
         }
-        if (search.length > 0) {
-        }
+
+        // let resultArrGames = Array<TypeGame>();
+        // if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+        //     //resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
+        //     resultArrGames = newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item));
+        // } else if (newArrProvidersGames.length > 0) {
+        //     resultArrGames = newArrProvidersGames;
+        //     //resultArrGames.splice(-1, 0, ...newArrProvidersGames);
+        // } else if (newArrGroupsGames.length > 0) {
+        //     resultArrGames = newArrGroupsGames;
+        //     //resultArrGames.splice(-1, 0, ...newArrGroupsGames);
+        // }
+
+        // if (newArrSearchGames.length > 0 && resultArrGames.length > 0) {
+        //     resultArrGames = newArrSearchGames.filter((item) => resultArrGames.includes(item));
+        // } else if (newArrSearchGames.length > 0) {
+        //     resultArrGames = newArrSearchGames;
+        // }
+
         if (Object.keys(sorting).length > 0) {
             const arrForSorting = resultArrGames.length > 0 ? resultArrGames : games;
-            setFiltersGames(getNewArrSort(+Object.keys(sorting), arrForSorting));
-            return;
+            resultArrGames = getNewArrSort(+Object.keys(sorting), arrForSorting);
         }
         setFiltersGames(resultArrGames);
     };
@@ -288,28 +329,40 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         setFilterGroups(newFilterGroups);
         const arrGroups = Object.keys(newFilterGroups);
 
-        if (arrGroups.length === 0 && Object.keys(filterProviders).length === 0 && Object.keys(sorting).length === 0 && search === "") {
+        if (arrGroups.length === 0 && Object.keys(filterProviders).length === 0 && Object.keys(sorting).length === 0 && search === '') {
             setFiltersGames(games);
             return;
         }
 
-        // if (arrGroups.length === 0 && filtersGames.length > 0) {
-        //     const filterArrGroupsGames = filtersGames.filter((item) => item.provider !== id);
-        //     setFiltersGames(filterArrGroupsGames);
-        //     return;
-        // }
-
+        const newArrSearchGames = getNewArrSearchGame(search);
         const newArrProvidersGames = getNewArrProvidersGames(Object.keys(filterProviders));
         const newArrGroupsGames = getNewArrGroupsGames(arrGroups);
 
-        const resultArrGames = Array<TypeGame>();
-        if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-            resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
+        let resultArrGames = Array<TypeGame>();
+        if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+            resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        } else if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0) {
+            resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames);
+        } else if (newArrSearchGames.length > 0 && newArrGroupsGames.length > 0) {
+            resultArrGames = getCommonGames(newArrSearchGames, newArrGroupsGames);
+        } else if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+            resultArrGames = getCommonGames(newArrProvidersGames, newArrProvidersGames);
+        } else if (newArrSearchGames.length > 0) {
+            resultArrGames = newArrSearchGames;
         } else if (newArrProvidersGames.length > 0) {
-            resultArrGames.splice(-1, 0, ...newArrProvidersGames);
+            resultArrGames = newArrProvidersGames;
         } else if (newArrGroupsGames.length > 0) {
-            resultArrGames.splice(-1, 0, ...newArrGroupsGames);
+            resultArrGames = newArrGroupsGames;
         }
+
+        // const resultArrGames = Array<TypeGame>();
+        // if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+        //     resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
+        // } else if (newArrProvidersGames.length > 0) {
+        //     resultArrGames.splice(-1, 0, ...newArrProvidersGames);
+        // } else if (newArrGroupsGames.length > 0) {
+        //     resultArrGames.splice(-1, 0, ...newArrGroupsGames);
+        // }
         if (Object.keys(sorting).length > 0) {
             const arrForSorting = resultArrGames.length > 0 ? resultArrGames : games;
             setFiltersGames(getNewArrSort(+Object.keys(sorting), arrForSorting));
@@ -360,7 +413,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                             className={classNames(
                                 styles.filters__label,
                                 { [styles.filters__radio_color]: boxColor23 },
-                                { [styles.filters__radio_color]: boxColor34 },
+                                { [styles.filters__radio_color]: boxColor34 }
                             )}
                             onClick={() => onChangeColorBox(2)}
                         >

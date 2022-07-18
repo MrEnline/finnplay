@@ -41,6 +41,7 @@ const PlayerPages = () => {
     useEffect(() => {
         getAllGames().then((games) => {
             setGames(games);
+            setFiltersGames(games);
         });
         getAllProviders().then((providers) => setProviders(providers));
         getAllGroups().then((groups) => setGroups(groups));
@@ -57,7 +58,7 @@ const PlayerPages = () => {
     return (
         <>
             <AppHeader />
-            <GamesList games={filtersGames.length > 0 ? filtersGames : games} />
+            <GamesList games={filtersGames} />
             <Filters games={games} filtersGames={filtersGames} setFiltersGames={setFiltersGames} providers={providers} groups={groups} />
         </>
     );

@@ -132,8 +132,10 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrSearchGames = getNewArrSearchGame(currSearch);
         const newArrProvidersGames = getNewArrProvidersGames(Object.keys(filterProviders));
         const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
-        let resultArrGames = getFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        setFiltersGames(resultArrGames.length > 0 ? resultArrGames : games);
+
+        const resultArrGames = getFilterGames(currSearch, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        const sortGames = getSortGames(resultArrGames);
+        setFiltersGames(sortGames.length === 0 && currSearch === '' ? games : sortGames);
     };
 
     const getNewArrSearchGame = (currSearch: string) => {
@@ -263,17 +265,22 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         return arr.indexOf(elem) !== -1;
     };
 
-    const getFilterGames = (newArrSearchGames: Array<TypeGame>, newArrProvidersGames: Array<TypeGame>, newArrGroupsGames: Array<TypeGame>) => {
+    const getFilterGames = (
+        currSearch: string,
+        newArrSearchGames: Array<TypeGame>,
+        newArrProvidersGames: Array<TypeGame>,
+        newArrGroupsGames: Array<TypeGame>
+    ) => {
         let resultArrGames = Array<TypeGame>();
-        if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
+        if (currSearch.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
             resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        } else if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0) {
+        } else if (currSearch.length > 0 && newArrProvidersGames.length > 0) {
             resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames);
-        } else if (newArrSearchGames.length > 0 && newArrGroupsGames.length > 0) {
+        } else if (currSearch.length > 0 && newArrGroupsGames.length > 0) {
             resultArrGames = getCommonGames(newArrSearchGames, newArrGroupsGames);
         } else if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
             resultArrGames = getCommonGames(newArrProvidersGames, newArrProvidersGames);
-        } else if (newArrSearchGames.length > 0) {
+        } else if (currSearch.length > 0) {
             resultArrGames = newArrSearchGames;
         } else if (newArrProvidersGames.length > 0) {
             resultArrGames = newArrProvidersGames;
@@ -285,10 +292,16 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
     const getSortGames = (resultArrGames: Array<TypeGame>) => {
         if (Object.keys(sorting).length > 0) {
-            const arrForSorting = resultArrGames.length > 0 ? resultArrGames : games;
-            return getNewArrSort(+Object.keys(sorting), arrForSorting);
+            //const arrForSorting = resultArrGames.length > 0 ? resultArrGames : games;
+            return getNewArrSort(+Object.keys(sorting), resultArrGames);
         }
         return resultArrGames;
+    };
+
+    const checkFilters = (filterProviders: TypeFilter, filterGroups: TypeFilter) => {
+        return (
+            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ''
+        );
     };
 
     const handleFilterProviders = (id: number) => {
@@ -296,16 +309,21 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         setFilterProviders(newFilterProviders);
         const arrProviders = Object.keys(newFilterProviders);
 
-        if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === '') {
+        if (checkFilters(newFilterProviders, filterGroups)) {
             setFiltersGames(games);
             return;
         }
+        // if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === '') {
+        //     setFiltersGames(games);
+        //     return;
+        // }
+
         //const idGames = groups.flatMap((item) => item.games);
         const newArrSearchGames = getNewArrSearchGame(search);
         const newArrProvidersGames = getNewArrProvidersGames(arrProviders);
         const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
 
-        const resultArrGames = getFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
         const sortGames = getSortGames(resultArrGames);
 
         setFiltersGames(sortGames);
@@ -316,7 +334,11 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         setFilterGroups(newFilterGroups);
         const arrGroups = Object.keys(newFilterGroups);
 
-        if (arrGroups.length === 0 && Object.keys(filterProviders).length === 0 && Object.keys(sorting).length === 0 && search === '') {
+        // if (arrGroups.length === 0 && Object.keys(filterProviders).length === 0 && Object.keys(sorting).length === 0 && search === '') {
+        //     setFiltersGames(games);
+        //     return;
+        // }
+        if (checkFilters(filterProviders, newFilterGroups)) {
             setFiltersGames(games);
             return;
         }
@@ -325,7 +347,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrProvidersGames = getNewArrProvidersGames(Object.keys(filterProviders));
         const newArrGroupsGames = getNewArrGroupsGames(arrGroups);
 
-        const resultArrGames = getFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
         const sortGames = getSortGames(resultArrGames);
 
         setFiltersGames(sortGames);
@@ -335,8 +357,9 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newSorting = onSetValuesSorting(id, sorting);
         setSorting(newSorting);
         if (Object.keys(newSorting).length === 0) return;
-        const currArrForSorting = filtersGames.length > 0 ? [...filtersGames] : [...games];
-        setFiltersGames(getNewArrSort(id, currArrForSorting));
+        //const currArrForSorting = filtersGames.length > 0 ? [...filtersGames] : [...games];
+        //setFiltersGames(getNewArrSort(id, currArrForSorting));
+        setFiltersGames(getNewArrSort(id, [...filtersGames]));
     };
 
     const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, handleFilterProviders);

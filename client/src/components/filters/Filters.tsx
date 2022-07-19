@@ -129,12 +129,11 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
     const handleSearch = (currSearch: string) => {
         setSearch(currSearch);
-        const resultArrGame = getNewArrSearchGame(currSearch);
-        if (resultArrGame.length === 0) {
-            setFiltersGames(games);
-            return;
-        }
-        setFiltersGames(resultArrGame);
+        const newArrSearchGames = getNewArrSearchGame(currSearch);
+        const newArrProvidersGames = getNewArrProvidersGames(Object.keys(filterProviders));
+        const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
+        let resultArrGames = getFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        setFiltersGames(resultArrGames.length > 0 ? resultArrGames : games);
     };
 
     const getNewArrSearchGame = (currSearch: string) => {
@@ -238,8 +237,6 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         return 0;
     };
 
-    const CommonFilter = () => {};
-
     const getCommonGames = (...arrs: Array<Array<TypeGame>>) => {
         let resultArrGames = Array<TypeGame>();
         let arrGames = arrs.shift();
@@ -266,22 +263,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         return arr.indexOf(elem) !== -1;
     };
 
-    const handleFilterProviders = (id: number) => {
-        //const arrProviders = Object.keys(filterProviders);
-        const newFilterProviders = onSetValuesFilter(id, filterProviders);
-        setFilterProviders(newFilterProviders);
-        const arrProviders = Object.keys(newFilterProviders);
-
-        if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === '') {
-            setFiltersGames(games);
-            return;
-        }
-
-        //const idGames = groups.flatMap((item) => item.games);
-        const newArrSearchGames = getNewArrSearchGame(search);
-        const newArrProvidersGames = getNewArrProvidersGames(arrProviders);
-        const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
-
+    const getFilterGames = (newArrSearchGames: Array<TypeGame>, newArrProvidersGames: Array<TypeGame>, newArrGroupsGames: Array<TypeGame>) => {
         let resultArrGames = Array<TypeGame>();
         if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
             resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
@@ -298,30 +280,35 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         } else if (newArrGroupsGames.length > 0) {
             resultArrGames = newArrGroupsGames;
         }
+        return resultArrGames;
+    };
 
-        // let resultArrGames = Array<TypeGame>();
-        // if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-        //     //resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
-        //     resultArrGames = newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item));
-        // } else if (newArrProvidersGames.length > 0) {
-        //     resultArrGames = newArrProvidersGames;
-        //     //resultArrGames.splice(-1, 0, ...newArrProvidersGames);
-        // } else if (newArrGroupsGames.length > 0) {
-        //     resultArrGames = newArrGroupsGames;
-        //     //resultArrGames.splice(-1, 0, ...newArrGroupsGames);
-        // }
-
-        // if (newArrSearchGames.length > 0 && resultArrGames.length > 0) {
-        //     resultArrGames = newArrSearchGames.filter((item) => resultArrGames.includes(item));
-        // } else if (newArrSearchGames.length > 0) {
-        //     resultArrGames = newArrSearchGames;
-        // }
-
+    const getSortGames = (resultArrGames: Array<TypeGame>) => {
         if (Object.keys(sorting).length > 0) {
             const arrForSorting = resultArrGames.length > 0 ? resultArrGames : games;
-            resultArrGames = getNewArrSort(+Object.keys(sorting), arrForSorting);
+            return getNewArrSort(+Object.keys(sorting), arrForSorting);
         }
-        setFiltersGames(resultArrGames);
+        return resultArrGames;
+    };
+
+    const handleFilterProviders = (id: number) => {
+        const newFilterProviders = onSetValuesFilter(id, filterProviders);
+        setFilterProviders(newFilterProviders);
+        const arrProviders = Object.keys(newFilterProviders);
+
+        if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === '') {
+            setFiltersGames(games);
+            return;
+        }
+        //const idGames = groups.flatMap((item) => item.games);
+        const newArrSearchGames = getNewArrSearchGame(search);
+        const newArrProvidersGames = getNewArrProvidersGames(arrProviders);
+        const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
+
+        const resultArrGames = getFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        const sortGames = getSortGames(resultArrGames);
+
+        setFiltersGames(sortGames);
     };
 
     const handleFilterGroup = (id: number) => {
@@ -338,45 +325,16 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrProvidersGames = getNewArrProvidersGames(Object.keys(filterProviders));
         const newArrGroupsGames = getNewArrGroupsGames(arrGroups);
 
-        let resultArrGames = Array<TypeGame>();
-        if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-            resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        } else if (newArrSearchGames.length > 0 && newArrProvidersGames.length > 0) {
-            resultArrGames = getCommonGames(newArrSearchGames, newArrProvidersGames);
-        } else if (newArrSearchGames.length > 0 && newArrGroupsGames.length > 0) {
-            resultArrGames = getCommonGames(newArrSearchGames, newArrGroupsGames);
-        } else if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-            resultArrGames = getCommonGames(newArrProvidersGames, newArrProvidersGames);
-        } else if (newArrSearchGames.length > 0) {
-            resultArrGames = newArrSearchGames;
-        } else if (newArrProvidersGames.length > 0) {
-            resultArrGames = newArrProvidersGames;
-        } else if (newArrGroupsGames.length > 0) {
-            resultArrGames = newArrGroupsGames;
-        }
+        const resultArrGames = getFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
+        const sortGames = getSortGames(resultArrGames);
 
-        // const resultArrGames = Array<TypeGame>();
-        // if (newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
-        //     resultArrGames.splice(-1, 0, ...newArrProvidersGames.filter((item) => newArrGroupsGames.includes(item)));
-        // } else if (newArrProvidersGames.length > 0) {
-        //     resultArrGames.splice(-1, 0, ...newArrProvidersGames);
-        // } else if (newArrGroupsGames.length > 0) {
-        //     resultArrGames.splice(-1, 0, ...newArrGroupsGames);
-        // }
-        if (Object.keys(sorting).length > 0) {
-            const arrForSorting = resultArrGames.length > 0 ? resultArrGames : games;
-            setFiltersGames(getNewArrSort(+Object.keys(sorting), arrForSorting));
-            return;
-        }
-        setFiltersGames(resultArrGames);
+        setFiltersGames(sortGames);
     };
 
     const handleSorting = (id: number) => {
         const newSorting = onSetValuesSorting(id, sorting);
         setSorting(newSorting);
-        if (Object.keys(newSorting).length === 0) {
-            return;
-        }
+        if (Object.keys(newSorting).length === 0) return;
         const currArrForSorting = filtersGames.length > 0 ? [...filtersGames] : [...games];
         setFiltersGames(getNewArrSort(id, currArrForSorting));
     };

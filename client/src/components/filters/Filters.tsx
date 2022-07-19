@@ -325,8 +325,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
 
         const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        const sortGames = getSortGames(resultArrGames);
-
+        //const sortGames = getSortGames(resultArrGames);
+        const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? games : resultArrGames);
         setFiltersGames(sortGames);
     };
 
@@ -349,8 +349,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrGroupsGames = getNewArrGroupsGames(arrGroups);
 
         const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        const sortGames = getSortGames(resultArrGames);
-
+        //const sortGames = getSortGames(resultArrGames);
+        const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? games : resultArrGames);
         setFiltersGames(sortGames);
     };
 

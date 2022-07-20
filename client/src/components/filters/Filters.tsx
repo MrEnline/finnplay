@@ -1,8 +1,8 @@
-import React, { FC, useState } from "react";
-import styles from "./Filters.module.css";
-import classNames from "classnames";
-import IconSearch from "../../assets/img/icon-search.svg";
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from "../../utils/Constants";
+import React, { FC, useState } from 'react';
+import styles from './Filters.module.css';
+import classNames from 'classnames';
+import IconSearch from '../../assets/img/icon-search.svg';
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from '../../utils/Constants';
 
 interface TypeData {
     id: number;
@@ -39,13 +39,13 @@ interface TypeGame {
 }
 
 const dataSorting = [
-    { id: 1, name: "A-Z" },
-    { id: 2, name: "Z-A" },
-    { id: 3, name: "Newest" },
+    { id: 1, name: 'A-Z' },
+    { id: 2, name: 'Z-A' },
+    { id: 3, name: 'Newest' },
 ];
 
 const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers, groups }) => {
-    const [search, setSearch] = useState("");
+    const [search, setSearch] = useState('');
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [sorting, setSorting] = useState<TypeFilter>({});
@@ -57,7 +57,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        onSetValues: (id: number) => void,
+        onSetValues: (id: number) => void
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
@@ -134,13 +134,13 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
 
         const resultArrGames = getFilterGames(currSearch, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        const sortGames = getSortGames(currSearch.length === 0 && resultArrGames.length === 0 ? games : resultArrGames);
+        const sortGames = getSortGames(currSearch.length === 0 && resultArrGames.length === 0 ? [...games] : resultArrGames);
         setFiltersGames(sortGames);
         //setFiltersGames(sortGames.length === 0 && currSearch === "" ? games : sortGames);
     };
 
     const getNewArrSearchGame = (currSearch: string) => {
-        if (currSearch === "") return [];
+        if (currSearch === '') return [];
         //фильтрация по названию игры
         let newArrGames = games.filter((item) => {
             return item.name.toLowerCase().indexOf(currSearch) > -1;
@@ -270,7 +270,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         currSearch: string,
         newArrSearchGames: Array<TypeGame>,
         newArrProvidersGames: Array<TypeGame>,
-        newArrGroupsGames: Array<TypeGame>,
+        newArrGroupsGames: Array<TypeGame>
     ) => {
         let resultArrGames = Array<TypeGame>();
         if (currSearch.length > 0 && newArrProvidersGames.length > 0 && newArrGroupsGames.length > 0) {
@@ -301,7 +301,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
     const checkFilters = (filterProviders: TypeFilter, filterGroups: TypeFilter) => {
         return (
-            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ""
+            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ''
         );
     };
 
@@ -326,7 +326,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
         const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
         //const sortGames = getSortGames(resultArrGames);
-        const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? games : resultArrGames);
+        const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? [...games] : resultArrGames);
         setFiltersGames(sortGames);
     };
 
@@ -350,7 +350,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
         const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
         //const sortGames = getSortGames(resultArrGames);
-        const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? games : resultArrGames);
+        const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? [...games] : resultArrGames);
         setFiltersGames(sortGames);
     };
 
@@ -395,7 +395,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                             className={classNames(
                                 styles.filters__label,
                                 { [styles.filters__radio_color]: boxColor23 },
-                                { [styles.filters__radio_color]: boxColor34 },
+                                { [styles.filters__radio_color]: boxColor34 }
                             )}
                             onClick={() => onChangeColorBox(2)}
                         >
@@ -435,7 +435,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                 </div>
             </div>
             <div className={styles.filters__control}>
-                <div className={styles.filters__title}>Games amount: {100}</div>
+                <div className={styles.filters__title}>Games amount: {filtersGames.length}</div>
                 <div className={classNames(styles.filters__button, styles.filters__button_reset)} onClick={onResetAllFilters}>
                     <div className={styles.filters__buttontext}>Reset</div>
                 </div>

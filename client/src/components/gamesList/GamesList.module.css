@@ -1,12 +1,8 @@
 .games__list {
-    width: 884px;
-    left: 82px;
-    top: 145px;
-
     position: absolute;
     width: 844px;
     height: 785px;
-
+    left: 82px;
     top: 145px;
 }
 
@@ -20,6 +16,5 @@
 .games__img {
     width: 196px;
     height: 141px;
-
     border-radius: 8px;
 }

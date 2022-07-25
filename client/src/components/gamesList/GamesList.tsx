@@ -12,15 +12,37 @@ interface TypeGame {
 
 interface TypeProp {
     games: Array<TypeGame>;
+    columnsCounter: number;
 }
 
-const GamesList: FC<TypeProp> = ({ games }) => {
+declare module 'csstype' {
+    interface Properties {
+        '--sliderValue'?: number;
+    }
+}
+
+const GamesList: FC<TypeProp> = ({ games, columnsCounter }) => {
     const createListGames = (arr: Array<TypeGame>) => {
         const newArrImgs = arr.map((item) => {
-            return <img src={item.cover} alt={item.name} className={styles.games__img} />;
+            return (
+                <img
+                    className={styles.games__img}
+                    src={item.coverLarge}
+                    onError={({ currentTarget }) => {
+                        currentTarget.onerror = null;
+                        currentTarget.src = item.cover;
+                    }}
+                    alt="cover"
+                />
+            );
+            //return <img src={item.cover} alt={item.name} className={styles.games__img} />;
         });
 
-        return <div className={styles.games__grid}>{newArrImgs}</div>;
+        return (
+            <div style={{ '--sliderValue': columnsCounter }} className={styles.games__grid}>
+                {newArrImgs}
+            </div>
+        );
     };
 
     const listGames = createListGames(games);

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect } from 'react';
 import useJSONService from '../../services/JSONService';
 import AppHeader from '../appHeader/AppHeader';
 import GamesList from '../gamesList/GamesList';
@@ -17,10 +17,6 @@ interface TypeGroup extends TypeData {
     games: [];
 }
 
-interface TypeFilter {
-    [index: string]: boolean;
-}
-
 interface TypeGame {
     id: number;
     name: string;
@@ -37,6 +33,7 @@ const PlayerPages = () => {
 
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
+    const [columnsCounter, setColumnsCounter] = useState(2);
 
     useEffect(() => {
         getAllGames().then((games) => {
@@ -47,19 +44,19 @@ const PlayerPages = () => {
         getAllGroups().then((groups) => setGroups(groups));
     }, []);
 
-    //let filtersGames = getFiltersGames();
-
-    // const isFilter =
-    //     search.length > 0 ||
-    //     Object.keys(filterProviders).length > 0 ||
-    //     Object.keys(filterGroups).length > 0 ||
-    //     Object.keys(sorting).length > 0;
-
     return (
         <>
             <AppHeader />
-            <GamesList games={filtersGames} />
-            <Filters games={games} filtersGames={filtersGames} setFiltersGames={setFiltersGames} providers={providers} groups={groups} />
+            <GamesList games={filtersGames} columnsCounter={columnsCounter} />
+            <Filters
+                games={games}
+                filtersGames={filtersGames}
+                handleFiltersGames={setFiltersGames}
+                providers={providers}
+                groups={groups}
+                columnsCounter={columnsCounter}
+                handleColumnsCounter={setColumnsCounter}
+            />
         </>
     );
 };

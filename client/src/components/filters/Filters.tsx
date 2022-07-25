@@ -24,9 +24,11 @@ interface TypeFilter {
 interface TypeProp {
     games: Array<TypeGame>;
     filtersGames: Array<TypeGame>;
-    setFiltersGames: (games: Array<TypeGame>) => void;
+    handleFiltersGames: (games: Array<TypeGame>) => void;
     providers: Array<TypeProvider>;
     groups: Array<TypeGroup>;
+    columnsCounter: number;
+    handleColumnsCounter: (colunmns: number) => void;
 }
 
 interface TypeGame {
@@ -44,14 +46,11 @@ const dataSorting = [
     { id: 3, name: 'Newest' },
 ];
 
-const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers, groups }) => {
+const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, providers, groups, columnsCounter, handleColumnsCounter }) => {
     const [search, setSearch] = useState('');
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [sorting, setSorting] = useState<TypeFilter>({});
-
-    const [boxColor23, setBoxColor23] = useState<boolean>(true);
-    const [boxColor34, setBoxColor34] = useState<boolean>(true);
 
     const createListElements = (
         arr: Array<TypeData | TypeProvider | TypeGroup>,
@@ -82,21 +81,16 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         });
     };
 
-    const handleChangeStateBoxColor = (isBox23: boolean, isBox34: boolean) => {
-        setBoxColor23(isBox23);
-        setBoxColor34(isBox34);
-    };
-
-    const onChangeColorBox = (numCol: number) => {
-        switch (numCol) {
+    const onChangeColorBox = (numColumns: number) => {
+        switch (numColumns) {
             case 2:
-                handleChangeStateBoxColor(false, false);
+                handleColumnsCounter(2);
                 break;
             case 3:
-                handleChangeStateBoxColor(true, false);
+                handleColumnsCounter(3);
                 break;
             case 4:
-                handleChangeStateBoxColor(true, true);
+                handleColumnsCounter(4);
                 break;
         }
     };
@@ -105,8 +99,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         setFilterProviders({});
         setFilterGroups({});
         setSorting({});
-        handleChangeStateBoxColor(true, true);
-        setFiltersGames(games);
+        handleFiltersGames(games);
+        handleColumnsCounter(2);
     };
 
     const onSetValuesFilter = (id: number, currFilter: TypeFilter) => {
@@ -135,7 +129,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
 
         const resultArrGames = getFilterGames(currSearch, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
         const sortGames = getSortGames(currSearch.length === 0 && resultArrGames.length === 0 ? [...games] : resultArrGames);
-        setFiltersGames(sortGames);
+        handleFiltersGames(sortGames);
         //setFiltersGames(sortGames.length === 0 && currSearch === "" ? games : sortGames);
     };
 
@@ -311,23 +305,17 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const arrProviders = Object.keys(newFilterProviders);
 
         if (checkFilters(newFilterProviders, filterGroups)) {
-            setFiltersGames(games);
+            handleFiltersGames(games);
             return;
         }
-        // if (arrProviders.length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === '') {
-        //     setFiltersGames(games);
-        //     return;
-        // }
 
-        //const idGames = groups.flatMap((item) => item.games);
         const newArrSearchGames = getNewArrSearchGame(search);
         const newArrProvidersGames = getNewArrProvidersGames(arrProviders);
         const newArrGroupsGames = getNewArrGroupsGames(Object.keys(filterGroups));
 
         const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        //const sortGames = getSortGames(resultArrGames);
         const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? [...games] : resultArrGames);
-        setFiltersGames(sortGames);
+        handleFiltersGames(sortGames);
     };
 
     const handleFilterGroup = (id: number) => {
@@ -335,12 +323,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         setFilterGroups(newFilterGroups);
         const arrGroups = Object.keys(newFilterGroups);
 
-        // if (arrGroups.length === 0 && Object.keys(filterProviders).length === 0 && Object.keys(sorting).length === 0 && search === '') {
-        //     setFiltersGames(games);
-        //     return;
-        // }
         if (checkFilters(filterProviders, newFilterGroups)) {
-            setFiltersGames(games);
+            handleFiltersGames(games);
             return;
         }
 
@@ -349,18 +333,15 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
         const newArrGroupsGames = getNewArrGroupsGames(arrGroups);
 
         const resultArrGames = getFilterGames(search, newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        //const sortGames = getSortGames(resultArrGames);
         const sortGames = getSortGames(search.length === 0 && resultArrGames.length === 0 ? [...games] : resultArrGames);
-        setFiltersGames(sortGames);
+        handleFiltersGames(sortGames);
     };
 
     const handleSorting = (id: number) => {
         const newSorting = onSetValuesSorting(id, sorting);
         setSorting(newSorting);
         if (Object.keys(newSorting).length === 0) return;
-        //const currArrForSorting = filtersGames.length > 0 ? [...filtersGames] : [...games];
-        //setFiltersGames(getNewArrSort(id, currArrForSorting));
-        setFiltersGames(getNewArrSort(id, [...filtersGames]));
+        handleFiltersGames(getNewArrSort(id, [...filtersGames]));
     };
 
     const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, handleFilterProviders);
@@ -392,11 +373,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                         <input id="radio-2" type="radio" name="radio" value="2" />
                         <label
                             htmlFor="radio-2"
-                            className={classNames(
-                                styles.filters__label,
-                                { [styles.filters__radio_color]: boxColor23 },
-                                { [styles.filters__radio_color]: boxColor34 }
-                            )}
+                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter })}
                             onClick={() => onChangeColorBox(2)}
                         >
                             <span>2</span>
@@ -404,14 +381,14 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                     </div>
                     <div
                         className={classNames(styles.filters__box, styles.filters__box23, {
-                            [styles.filters__box_color]: boxColor23,
+                            [styles.filters__box_color]: columnsCounter > 2,
                         })}
                     ></div>
                     <div className={classNames(styles.filters__radio3, styles.filters__radio)}>
                         <input id="radio-3" type="radio" name="radio" value="3" />
                         <label
                             htmlFor="radio-3"
-                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: boxColor34 })}
+                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter > 2 })}
                             onClick={() => onChangeColorBox(3)}
                         >
                             <span>3</span>
@@ -419,14 +396,14 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, setFiltersGames, providers
                     </div>
                     <div
                         className={classNames(styles.filters__box, styles.filters__box34, {
-                            [styles.filters__box_color]: boxColor34,
+                            [styles.filters__box_color]: columnsCounter > 3,
                         })}
                     ></div>
                     <div className={classNames(styles.filters__radio4, styles.filters__radio)}>
                         <input id="radio-4" type="radio" name="radio" value="4" />
                         <label
                             htmlFor="radio-4"
-                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: boxColor34 })}
+                            className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter > 3 })}
                             onClick={() => onChangeColorBox(4)}
                         >
                             <span>4</span>

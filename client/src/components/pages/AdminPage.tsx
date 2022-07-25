@@ -1,5 +1,11 @@
+import AppHeader from '../appHeader/AppHeader';
+
 const AdminPage = () => {
-    return <></>;
+    return (
+        <>
+            <AppHeader />
+        </>
+    );
 };
 
 export default AdminPage;

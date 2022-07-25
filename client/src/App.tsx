@@ -19,8 +19,7 @@ function App() {
     if (store.isAuth && store.adminRole) {
         return (
             <div className="App">
-                <div>Admin panel</div>
-                <button onClick={() => store.logout()}>Logout</button>
+                <AdminPage />
             </div>
         );
     }

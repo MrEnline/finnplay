@@ -7,14 +7,16 @@
 }
 
 .games__grid {
+    --columns: 2;
+    --sliderValue: 2;
+    grid-template-columns: repeat(max(var(--columns), var(--sliderValue)), 1fr);
+    min-width: 270px;
     display: grid;
-    grid-template-columns: repeat(auto-fill, 196px);
     gap: 20px;
     padding-bottom: 20px;
 }
 
 .games__img {
-    width: 196px;
-    height: 141px;
+    width: 100%;
     border-radius: 8px;
 }

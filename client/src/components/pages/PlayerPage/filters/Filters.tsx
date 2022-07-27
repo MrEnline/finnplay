@@ -1,25 +1,10 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useRef, useState } from 'react';
 import styles from './Filters.module.css';
 import classNames from 'classnames';
-import IconSearch from '../../assets/img/icon-search.svg';
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX } from '../../utils/Constants';
-
-interface TypeData {
-    id: number;
-    name: string;
-}
-
-interface TypeProvider extends TypeData {
-    logo: string;
-}
-
-interface TypeGroup extends TypeData {
-    games: [];
-}
-
-interface TypeFilter {
-    [index: string]: boolean;
-}
+import IconSearch from '../../../../assets/img/icon-search.svg';
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX, INIT_COLUMNS_COUNTER } from '../../../../utils/Constants';
+import { TypeData, TypeGame, TypeProvider, TypeGroup, TypeFilter } from '../../../../utils/Interfaces';
+import { NumberColumns } from '../../../../utils/Enums';
 
 interface TypeProp {
     games: Array<TypeGame>;
@@ -29,15 +14,6 @@ interface TypeProp {
     groups: Array<TypeGroup>;
     columnsCounter: number;
     handleColumnsCounter: (colunmns: number) => void;
-}
-
-interface TypeGame {
-    id: number;
-    name: string;
-    provider: number;
-    cover: string;
-    coverLarge: string;
-    date: string;
 }
 
 const dataSorting = [
@@ -51,6 +27,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [sorting, setSorting] = useState<TypeFilter>({});
+
+    const refRadio = useRef(null);
 
     const createListElements = (
         arr: Array<TypeData | TypeProvider | TypeGroup>,
@@ -84,13 +62,13 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
     const onChangeColorBox = (numColumns: number) => {
         switch (numColumns) {
             case 2:
-                handleColumnsCounter(2);
+                handleColumnsCounter(NumberColumns.Two);
                 break;
             case 3:
-                handleColumnsCounter(3);
+                handleColumnsCounter(NumberColumns.Three);
                 break;
             case 4:
-                handleColumnsCounter(4);
+                handleColumnsCounter(NumberColumns.Four);
                 break;
         }
     };
@@ -100,7 +78,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
         setFilterGroups({});
         setSorting({});
         handleFiltersGames(games);
-        handleColumnsCounter(2);
+        handleColumnsCounter(INIT_COLUMNS_COUNTER);
+        if (refRadio.current) (refRadio.current as HTMLInputElement).checked = true;
     };
 
     const onSetValuesFilter = (id: number, currFilter: TypeFilter) => {
@@ -370,11 +349,11 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                 <div className={styles.filters__title}>Columns</div>
                 <div className={styles.filters__switch}>
                     <div className={classNames(styles.filters__radio2, styles.filters__radio)}>
-                        <input id="radio-2" type="radio" name="radio" value="2" />
+                        <input ref={refRadio} id="radio-2" type="radio" name="radio" value="2" />
                         <label
                             htmlFor="radio-2"
                             className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter })}
-                            onClick={() => onChangeColorBox(2)}
+                            onClick={() => onChangeColorBox(NumberColumns.Two)}
                         >
                             <span>2</span>
                         </label>
@@ -389,7 +368,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                         <label
                             htmlFor="radio-3"
                             className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter > 2 })}
-                            onClick={() => onChangeColorBox(3)}
+                            onClick={() => onChangeColorBox(NumberColumns.Three)}
                         >
                             <span>3</span>
                         </label>
@@ -404,7 +383,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                         <label
                             htmlFor="radio-4"
                             className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter > 3 })}
-                            onClick={() => onChangeColorBox(4)}
+                            onClick={() => onChangeColorBox(NumberColumns.Four)}
                         >
                             <span>4</span>
                         </label>

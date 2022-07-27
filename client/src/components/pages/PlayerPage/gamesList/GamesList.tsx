@@ -1,14 +1,6 @@
 import { FC } from 'react';
 import styles from './GamesList.module.css';
-
-interface TypeGame {
-    id: number;
-    name: string;
-    provider: number;
-    cover: string;
-    coverLarge: string;
-    date: string;
-}
+import { TypeGame } from '../../../../utils/Interfaces';
 
 interface TypeProp {
     games: Array<TypeGame>;

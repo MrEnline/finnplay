@@ -1,0 +1,19 @@
+.app__groups {
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    gap: 32px;
+
+    width: 412px;
+    height: 709px;
+
+    background: #ffffff;
+
+    border: 1px solid #f2f2f2;
+    border-radius: 8px;
+
+    border: 1px solid red;
+}

@@ -1,30 +1,10 @@
 import { useState, useEffect } from 'react';
-import useJSONService from '../../services/JSONService';
-import AppHeader from '../appHeader/AppHeader';
-import GamesList from '../gamesList/GamesList';
-import Filters from '../filters/Filters';
-
-interface TypeData {
-    id: number;
-    name: string;
-}
-
-interface TypeProvider extends TypeData {
-    logo: string;
-}
-
-interface TypeGroup extends TypeData {
-    games: [];
-}
-
-interface TypeGame {
-    id: number;
-    name: string;
-    provider: number;
-    cover: string;
-    coverLarge: string;
-    date: string;
-}
+import useJSONService from '../../../services/JSONService';
+import AppHeader from '../../appHeader/AppHeader';
+import GamesList from './gamesList/GamesList';
+import Filters from './filters/Filters';
+import { INIT_COLUMNS_COUNTER } from '../../../utils/Constants';
+import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
 
 const PlayerPages = () => {
     const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
@@ -33,7 +13,7 @@ const PlayerPages = () => {
 
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
-    const [columnsCounter, setColumnsCounter] = useState(2);
+    const [columnsCounter, setColumnsCounter] = useState(INIT_COLUMNS_COUNTER);
 
     useEffect(() => {
         getAllGames().then((games) => {

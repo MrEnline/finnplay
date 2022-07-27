@@ -3,8 +3,8 @@ import { Context } from '.';
 import './App.css';
 import Login from './components/login/Login';
 import { observer } from 'mobx-react-lite';
-import PlayerPage from './components/pages/PlayerPage';
-import AdminPage from './components/pages/AdminPage';
+import PlayerPage from './components/pages/PlayerPage/PlayerPage';
+import AdminPage from './components/pages/AdminPage/AdminPage';
 
 function App() {
     const { store } = useContext(Context);

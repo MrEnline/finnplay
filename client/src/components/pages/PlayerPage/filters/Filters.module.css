@@ -1,15 +1,14 @@
 .app__filters {
     display: flex;
-    position: absolute;
     width: 412px;
     height: 823px;
 
+    position: absolute;
     left: 946px;
     top: 145px;
+
     background: #ffffff;
-
     border-radius: 8px;
-
     border: 1px solid #f2f2f2;
 }
 
@@ -28,8 +27,8 @@
     position: absolute;
     top: 32px;
     left: 32px;
-    background: #ffffff;
 
+    background: #ffffff;
     border: 1px solid #f2f2f2;
     border-radius: 4px;
 }
@@ -37,7 +36,7 @@
 .filters__search input {
     width: 100%;
     height: 19px;
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -71,7 +70,7 @@
     width: 150px;
     height: 19px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -93,7 +92,7 @@
 }
 
 .filters__item {
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -114,6 +113,8 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 10px;
+
     position: absolute;
     top: 355px;
     left: 32px;
@@ -122,7 +123,6 @@
     height: 155px;
 
     padding: 10px;
-    gap: 10px;
 }
 
 .filters__sorting {
@@ -193,7 +193,7 @@
     width: 43px;
     height: 19px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -235,22 +235,9 @@
     display: inline-block;
 }
 
-.filters__radio input[type="radio"] {
+.filters__radio input[type='radio'] {
     display: none;
 }
-
-/* .filters__radio label {
-    display: inline-block;
-    cursor: pointer;
-    width: 1.1em;
-    height: 1.1em;
-
-    border-radius: 50%;
-    user-select: none;
-
-    background: #f2f2f2;
-    padding: 1px;
-} */
 
 .filters__label {
     display: inline-block;
@@ -296,15 +283,8 @@
     background: #f2f2f2;
     z-index: 1;
 }
-/* 
-.filters__box_color {
-    background: #fdbc11;
-}
 
-.filters__radio_color {
-    background: #fdbc11;
-} */
-.filters__radio input[type="radio"]:checked + label,
+.filters__radio input[type='radio']:checked + label,
 .filters__radio_color,
 .filters__box_color {
     background: #fdbc11;

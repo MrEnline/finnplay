@@ -24,7 +24,7 @@ const AdminPage = () => {
         <>
             <AppHeader />
             <div className={styles.app__blocks}>
-                <Groups groups={groups} />
+                <Groups games={games} groups={groups} />
             </div>
         </>
     );

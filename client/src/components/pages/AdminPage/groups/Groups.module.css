@@ -7,6 +7,10 @@
     padding: 32px;
     gap: 32px;
 
+    position: absolute;
+    left: 0;
+    top: 0;
+
     width: 412px;
     height: 709px;
 
@@ -15,7 +19,7 @@
     border: 1px solid #f2f2f2;
     border-radius: 8px;
 
-    border: 1px solid red;
+    border: 1px solid darkorchid;
 }
 
 .groups__title {
@@ -26,8 +30,14 @@
     padding: 0px;
     gap: 10px;
 
+    position: absolute;
+    left: 32px;
+    top: 32px;
+
     width: 348px;
     height: 32px;
+
+    border: 1px solid red;
 }
 
 .groups__titletext {
@@ -41,4 +51,78 @@
     line-height: 120%;
 
     color: #2b2b2b;
+}
+
+.groups__games {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 40px;
+
+    position: absolute;
+    left: 32px;
+    top: 96px;
+
+    width: 348px;
+    height: 581px;
+
+    border: 1px solid darkorange;
+}
+
+.groups__rowgames {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 10px;
+
+    width: 348px;
+    height: 167px;
+
+    border: 1px solid green;
+}
+
+.groups__game {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 10px;
+
+    width: 169px;
+    height: 167px;
+}
+
+.groups__images {
+    width: 169px;
+    height: 120px;
+    border: 1px solid red;
+}
+
+.groups__img1 {
+    width: 56px;
+    height: 120px;
+    left: 0px;
+    top: 0px;
+
+    border-radius: 8px 0px 0px 8px;
+}
+
+.groups__img2 {
+    width: 56px;
+    height: 120px;
+    left: 56px;
+    top: 0px;
+
+    border-radius: 0px;
+}
+
+.groups__img3 {
+    width: 56px;
+    height: 120px;
+    left: 113px;
+    top: 0px;
+
+    border-radius: 0px 8px 8px 0px;
 }

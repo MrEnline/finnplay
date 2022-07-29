@@ -8,7 +8,7 @@ export interface TypeProvider extends TypeData {
 }
 
 export interface TypeGroup extends TypeData {
-    games: [];
+    games: Array<number>;
 }
 
 export interface TypeGame {

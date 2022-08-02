@@ -18,14 +18,15 @@ const AdminPage = () => {
         });
         getAllProviders().then((providers) => setProviders(providers));
         getAllGroups().then((groups) => setGroups(groups));
+        console.log('useEffect');
     }, []);
+
+    const resultLoadGroups = games.length > 0 && groups.length > 0 ? <Groups games={games} groups={groups} /> : <div>ЗАГРУЗКА ДАННЫХ</div>;
 
     return (
         <>
             <AppHeader />
-            <div className={styles.app__blocks}>
-                <Groups games={games} groups={groups} />
-            </div>
+            <div className={styles.app__blocks}>{resultLoadGroups}</div>
         </>
     );
 };

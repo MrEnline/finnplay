@@ -66,7 +66,7 @@
     height: 581px;
 }
 
-.groups__rowgames {
+.groups__rowgroups {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -86,8 +86,6 @@
 
     width: 169px;
     height: 167px;
-
-    border: 1px solid yellowgreen;
 }
 
 .group__images {

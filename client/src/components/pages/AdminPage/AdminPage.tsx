@@ -27,6 +27,17 @@ const AdminPage = () => {
         <>
             <AppHeader />
             <div className={styles.app__blocks}>{resultLoadGroups}</div>
+            <div className={styles.popupdelete}>
+                <div className={styles.popupdelete__body}>
+                    <div className={styles.popupdelete__content}>
+                        <div className={styles.popupdelete__title}>Group delete</div>
+                        <div className={styles.popupdelete__text}>
+                            Do you want to delete Slots group? <br />
+                            If you want to move 63 games, select new group below.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </>
     );
 };

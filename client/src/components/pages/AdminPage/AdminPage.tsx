@@ -4,6 +4,7 @@ import useJSONService from '../../../services/JSONService';
 import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
 import styles from './AdminPage.module.css';
 import Groups from './groups/Groups';
+import ButtonClose from '../../../../src/assets/img/icon-close.svg';
 
 const AdminPage = () => {
     const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
@@ -29,11 +30,19 @@ const AdminPage = () => {
             <div className={styles.app__blocks}>{resultLoadGroups}</div>
             <div className={styles.popupdelete}>
                 <div className={styles.popupdelete__body}>
+                    <div className={styles.popupdelete__close}>
+                        <img src={ButtonClose} alt="close" />
+                    </div>
                     <div className={styles.popupdelete__content}>
                         <div className={styles.popupdelete__title}>Group delete</div>
                         <div className={styles.popupdelete__text}>
                             Do you want to delete Slots group? <br />
                             If you want to move 63 games, select new group below.
+                        </div>
+                        <div className={styles.content}>
+                            <div className={styles.input}>
+                                <div className={styles.input__content}></div>
+                            </div>
                         </div>
                     </div>
                 </div>

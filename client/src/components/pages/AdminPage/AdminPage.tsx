@@ -1,10 +1,17 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppHeader from '../../appHeader/AppHeader';
 import useJSONService from '../../../services/JSONService';
 import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
 import styles from './AdminPage.module.css';
 import Groups from './groups/Groups';
 import ButtonClose from '../../../../src/assets/img/icon-close.svg';
+import Select from 'react-select';
+
+const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+];
 
 const AdminPage = () => {
     const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
@@ -12,6 +19,7 @@ const AdminPage = () => {
     const [games, setGames] = useState(Array<TypeGame>());
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
+    const [selectedOption, setSelectedOption] = useState(null);
 
     useEffect(() => {
         getAllGames().then((games) => {
@@ -41,8 +49,11 @@ const AdminPage = () => {
                         </div>
                         <div className={styles.content}>
                             <div className={styles.input}>
-                                <div className={styles.input__content}></div>
+                                <Select defaultValue={selectedOption} options={options} />
                             </div>
+                            {/* <div className={styles.input}>
+                                <div className={styles.input__content}></div>
+                            </div> */}
                         </div>
                     </div>
                 </div>

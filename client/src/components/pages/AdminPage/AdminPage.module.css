@@ -19,6 +19,18 @@
     background-color: rgba(43, 43, 43, 0.8);
     left: 0;
     top: 0;
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* .popupdelete:target {
+    opacity: 1;
+    visibility: visible;
+} */
+
+.popupdelete_visible {
+    opacity: 1;
+    visibility: visible;
 }
 
 .popupdelete__body {

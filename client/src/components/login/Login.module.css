@@ -28,7 +28,7 @@
     flex-grow: 0;
 }
 
-.inputs__textfield {
+.inputfield {
     box-sizing: border-box;
 
     display: flex;
@@ -51,12 +51,12 @@
     flex-grow: 0;
 }
 
-.textfield_content {
+.inputfield__content {
     width: 380px;
     height: 35px;
 }
 
-.textfield_content input {
+.inputfield__content input {
     width: 100%; /* Ширина поля */
     box-sizing: border-box; /* Ширина не учитывает padding */
     padding: 0.5rem 0; /* Поля вокруг текста */
@@ -64,12 +64,12 @@
     background: transparent; /* Прозрачный фон */
 }
 
-.textfield_content input:focus {
+.inputfield__content input:focus {
     outline: none; /* Убираем контур */
     border-color: #1976d2; /* Синяя линия снизу */
 }
 
-.textfield_content label {
+.inputfield__content label {
     display: block; /* Блочный элемент */
     text-align: left;
     color: #aaa; /* Цвет подсказки */
@@ -78,13 +78,13 @@
     transition: 0.5s; /* Время трансформации */
 }
 
-.textfield_content input:focus + label,
-.textfield_content input:valid + label {
+.inputfield__content input:focus + label,
+.inputfield__content input:valid + label {
     font-size: 10px; /* Размер шрифта */
     transform: translateY(-2.5rem); /* Сдвигаем вверх */
 }
 
-.textfield_content img {
+.inputfield__content img {
     position: absolute;
     left: 0%;
     right: 0%;

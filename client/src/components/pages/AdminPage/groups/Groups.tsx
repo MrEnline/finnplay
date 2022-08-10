@@ -11,9 +11,11 @@ import classNames from 'classnames';
 interface TypeProp {
     games: Array<TypeGame>;
     groups: Array<TypeGroup>;
+    onSetIdDeleteGroup: (id: number) => void;
+    onSetIdEditGroup: (id: number) => void;
 }
 
-const Groups: FC<TypeProp> = ({ games, groups }) => {
+const Groups: FC<TypeProp> = ({ games, groups, onSetIdDeleteGroup, onSetIdEditGroup }) => {
     const createGroups = () => {
         const divGroupsArr = groups.map((group) => {
             return (
@@ -32,12 +34,32 @@ const Groups: FC<TypeProp> = ({ games, groups }) => {
                     <div className={styles.group__name}>{group.name}</div>
                     <div className={styles.group__buttons}>
                         <div className={classNames(styles.button, styles.button__edit)}>
-                            <img onClick={() => console.log('edit')} alt="icon-edit" src={IconEdit} />
-                            <img onClick={() => console.log('edit')} alt="button-edit" src={ButtonEdit} />
+                            <img
+                                data-id={group.id}
+                                onClick={(event: any) => onSetIdEditGroup(+event.target.dataset.id)}
+                                alt="icon-edit"
+                                src={IconEdit}
+                            />
+                            <img
+                                data-id={group.id}
+                                onClick={(event: any) => onSetIdEditGroup(+event.target.dataset.id)}
+                                alt="button-edit"
+                                src={ButtonEdit}
+                            />
                         </div>
                         <div className={classNames(styles.button, styles.button__delete)}>
-                            <img onClick={() => console.log('delete')} alt="icon-delete" src={IconDelete} />
-                            <img onClick={() => console.log('delete')} alt="button-delete" src={ButtonDelete} />
+                            <img
+                                data-id={group.id}
+                                onClick={(event: any) => onSetIdDeleteGroup(+event.target.dataset.id)}
+                                alt="icon-delete"
+                                src={IconDelete}
+                            />
+                            <img
+                                data-id={group.id}
+                                onClick={(event: any) => onSetIdDeleteGroup(+event.target.dataset.id)}
+                                alt="button-delete"
+                                src={ButtonDelete}
+                            />
                         </div>
                     </div>
                 </div>

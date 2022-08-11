@@ -42,7 +42,7 @@
     width: 84px;
     height: 29px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 24px;
@@ -136,7 +136,7 @@
     width: 32px;
     height: 17px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -167,10 +167,12 @@
     width: 39px;
     height: 15px;
     gap: 5px;
+    cursor: pointer;
 }
 
 .button__delete {
     width: 56px;
     height: 14px;
     gap: 6px;
+    cursor: pointer;
 }

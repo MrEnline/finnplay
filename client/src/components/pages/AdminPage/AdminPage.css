@@ -5,12 +5,10 @@
     border-radius: 4px !important;
 }
 
+.input__control--is-focused,
+.input__control--menu-is-open,
 .input__control:focus {
-    border-color: white !important;
-}
-
-.input__input {
-    text-align: start;
+    box-shadow: none;
 }
 
 .input__indicator-separator {
@@ -23,4 +21,14 @@
 
 .input__indicators {
     cursor: pointer !important;
+}
+
+.input__placeholder,
+.input__single-value {
+    padding-left: 10px !important;
+    text-align: left !important;
+}
+
+.input__menu {
+    text-align: left !important;
 }

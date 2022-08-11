@@ -3,16 +3,11 @@ import AppHeader from '../../appHeader/AppHeader';
 import useJSONService from '../../../services/JSONService';
 import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
 import styles from './AdminPage.module.css';
+import './AdminPage.css';
 import Groups from './groups/Groups';
 import ButtonClose from '../../../../src/assets/img/icon-close.svg';
-import Select from 'react-select';
+import Select, { OnChangeValue } from 'react-select';
 import classNames from 'classnames';
-
-const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-];
 
 interface TypeDeleteGroup {
     id: number;
@@ -30,7 +25,7 @@ const AdminPage = () => {
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
     const [selectedOption, setSelectedOption] = useState(null);
-    const [idDelete, setIdDelete] = useState(0);
+    const [dataDelete, setDataDelete] = useState<TypeDeleteGroup>({ id: 0, options: [] });
     const [idEdit, setIdEdit] = useState(0);
 
     useEffect(() => {
@@ -41,33 +36,45 @@ const AdminPage = () => {
         getAllGroups().then((groups) => setGroups(groups));
     }, []);
 
+    const handleFormListGroup = (id: number) => {
+        const options = groups
+            .filter((group) => group.id !== id)
+            .reduce((result, currValue) => {
+                result.push({ value: currValue.name, label: currValue.name });
+                return result;
+            }, Array<TypeOptions>());
+        setDataDelete({ id, options });
+    };
+
     const resultLoadGroups =
         games.length > 0 && groups.length > 0 ? (
-            <Groups games={games} groups={groups} onSetIdDeleteGroup={setIdDelete} onSetIdEditGroup={setIdEdit} />
+            <Groups games={games} groups={groups} onSetDataDeleteGroup={handleFormListGroup} onSetIdEditGroup={setIdEdit} />
         ) : (
             <div>ЗАГРУЗКА ДАННЫХ</div>
         );
 
-    const numberIdDeleteGroup = groups.length > 0 && idDelete > 0 ? groups[groups.findIndex((group) => group.id === idDelete)].games.length : 0;
+    const numberIdDeleteGroup =
+        groups.length > 0 && dataDelete.id > 0 ? groups[groups.findIndex((group) => group.id === dataDelete.id)].games.length : 0;
 
-    const formListGroup = (id: number) => {
-        const newArrListGroup = groups.filter((group) => group.id !== id);
-        const temp = newArrListGroup.reduce((options, group) => {
-            options.push({ value: group.name, label: group.name });
-        }, Array<TypeDeleteGroup>);
-        console.log(`newArrListGroup - ${newArrListGroup}`);
+    const handleResetSettings = () => {
+        setDataDelete({ id: 0, options: [] });
+        setSelectedOption(null);
     };
 
-    formListGroup(1);
+    const handleChangeValue = (newValue: any) => {
+        setSelectedOption(newValue);
+    };
+
+    console.log(`selectedOption - ${selectedOption}`);
 
     return (
         <>
             <AppHeader />
             <div className={styles.app__blocks}>{resultLoadGroups}</div>
-            <div className={classNames(styles.popupdelete, { [styles.popupdelete_visible]: idDelete > 0 })}>
+            <div className={classNames(styles.popupdelete, { [styles.popupdelete_visible]: dataDelete.id > 0 })}>
                 <div className={styles.popupdelete__body}>
                     <div className={styles.popupdelete__close}>
-                        <img onClick={() => setIdDelete(0)} src={ButtonClose} alt="close" />
+                        <img onClick={handleResetSettings} src={ButtonClose} alt="close" />
                     </div>
                     <div className={styles.popupdelete__content}>
                         <div className={styles.popupdelete__title}>Group delete</div>
@@ -76,8 +83,19 @@ const AdminPage = () => {
                             If you want to move {numberIdDeleteGroup} games, select new group below.
                         </div>
                         <div className={styles.content}>
-                            <div className={styles.input}>
-                                <Select defaultValue={selectedOption} options={options} />
+                            {/* <div className={styles.input}> */}
+                            <Select
+                                classNamePrefix="input"
+                                value={selectedOption}
+                                onChange={handleChangeValue}
+                                options={dataDelete.options}
+                                placeholder="Move games to"
+                            />
+                            {/* </div> */}
+                            <div className={styles.checkbox}>
+                                <div className={styles.checkbox__box}></div>
+                                <div className={styles.checkbox__box_check}></div>
+                                <div className={styles.checkbox__title}>Delete comletely</div>
                             </div>
                         </div>
                     </div>

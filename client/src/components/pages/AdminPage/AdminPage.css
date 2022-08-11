@@ -1,0 +1,26 @@
+.input__control {
+    width: 564px !important;
+    height: 64px !important;
+    border: 1px solid #f2f2f2 !important;
+    border-radius: 4px !important;
+}
+
+.input__control:focus {
+    border-color: white !important;
+}
+
+.input__input {
+    text-align: start;
+}
+
+.input__indicator-separator {
+    display: none !important;
+}
+
+.input__value-container {
+    padding: 0 !important;
+}
+
+.input__indicators {
+    cursor: pointer !important;
+}

@@ -11,11 +11,11 @@ import classNames from 'classnames';
 interface TypeProp {
     games: Array<TypeGame>;
     groups: Array<TypeGroup>;
-    onSetIdDeleteGroup: (id: number) => void;
+    onSetDataDeleteGroup: (id: number) => void;
     onSetIdEditGroup: (id: number) => void;
 }
 
-const Groups: FC<TypeProp> = ({ games, groups, onSetIdDeleteGroup, onSetIdEditGroup }) => {
+const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetIdEditGroup }) => {
     const createGroups = () => {
         const divGroupsArr = groups.map((group) => {
             return (
@@ -50,13 +50,13 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetIdDeleteGroup, onSetIdEditGr
                         <div className={classNames(styles.button, styles.button__delete)}>
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetIdDeleteGroup(+event.target.dataset.id)}
+                                onClick={(event: any) => onSetDataDeleteGroup(+event.target.dataset.id)}
                                 alt="icon-delete"
                                 src={IconDelete}
                             />
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetIdDeleteGroup(+event.target.dataset.id)}
+                                onClick={(event: any) => onSetDataDeleteGroup(+event.target.dataset.id)}
                                 alt="button-delete"
                                 src={ButtonDelete}
                             />

@@ -27,6 +27,7 @@ const AdminPage = () => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [dataDelete, setDataDelete] = useState<TypeDeleteGroup>({ id: 0, options: [] });
     const [idEdit, setIdEdit] = useState(0);
+    const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
 
     useEffect(() => {
         getAllGames().then((games) => {
@@ -59,6 +60,7 @@ const AdminPage = () => {
     const handleResetSettings = () => {
         setDataDelete({ id: 0, options: [] });
         setSelectedOption(null);
+        setIsDeleteCompletly(false);
     };
 
     const handleChangeValue = (newValue: any) => {
@@ -83,19 +85,26 @@ const AdminPage = () => {
                             If you want to move {numberIdDeleteGroup} games, select new group below.
                         </div>
                         <div className={styles.content}>
-                            {/* <div className={styles.input}> */}
-                            <Select
-                                classNamePrefix="input"
-                                value={selectedOption}
-                                onChange={handleChangeValue}
-                                options={dataDelete.options}
-                                placeholder="Move games to"
-                            />
-                            {/* </div> */}
+                            <div className={classNames({ [styles.content_disabled]: isDeleteCompletely })}>
+                                <Select
+                                    classNamePrefix="input"
+                                    value={selectedOption}
+                                    onChange={handleChangeValue}
+                                    options={dataDelete.options}
+                                    placeholder="Move games to"
+                                />
+                            </div>
                             <div className={styles.checkbox}>
-                                <div className={styles.checkbox__box}></div>
-                                <div className={styles.checkbox__box_check}></div>
-                                <div className={styles.checkbox__title}>Delete comletely</div>
+                                {/* <div onClick={() => setIsDeleteCompletly(!isDeleteCompletely)} className={styles.checkbox__box}></div>
+                                <div
+                                    onClick={() => setIsDeleteCompletly(!isDeleteCompletely)}
+                                    className={classNames({ [styles.checkbox__boxcheck]: isDeleteCompletely })}
+                                ></div> */}
+                                <div>
+                                    <input type="checkbox" id="checkbox" />
+                                    <label htmlFor="checkbox"></label>
+                                </div>
+                                {/* <div className={styles.checkbox__title}>Delete comletely</div> */}
                             </div>
                         </div>
                     </div>

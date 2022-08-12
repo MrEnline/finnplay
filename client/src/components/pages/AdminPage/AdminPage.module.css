@@ -70,7 +70,7 @@
     width: 207;
     height: 32px;
     text-align: justify;
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 32px;
@@ -83,7 +83,7 @@
     width: 495px;
     height: 44px;
     text-align: left;
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -102,7 +102,7 @@
     height: 16px;
     left: 596px;
     top: 0px;
-
+    cursor: pointer;
     border-radius: 0px 8px;
 }
 
@@ -117,6 +117,10 @@
     height: 108px;
 
     /* border: 1px solid orange; */
+}
+
+.content_disabled {
+    pointer-events: none;
 }
 
 /* .input {
@@ -149,16 +153,16 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     padding: 0px 0px 0px 10px;
     gap: 10px;
 
     width: 198px;
     height: 24px;
-
+    cursor: pointer;
     position: relative;
 
-    /* border: 1px solid green; */
+    border: 1px solid green;
 }
 
 .checkbox__box {
@@ -169,18 +173,18 @@
     height: 24px;
     left: 0px;
     top: 0px;
-
+    cursor: pointer;
     border: 1px solid #ec4466;
     border-radius: 2px;
 }
 
-.checkbox__box_check {
+.checkbox__boxcheck {
     position: absolute;
     width: 16px;
     height: 16px;
     left: 4px;
     top: 4px;
-
+    cursor: pointer;
     background: #ec4466;
     border-radius: 2px;
 }
@@ -189,7 +193,7 @@
     width: 160px;
     height: 22px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;

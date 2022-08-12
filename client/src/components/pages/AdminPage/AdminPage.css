@@ -6,9 +6,8 @@
 }
 
 .input__control--is-focused,
-.input__control--menu-is-open,
-.input__control:focus {
-    box-shadow: none;
+.input__control--menu-is-open {
+    box-shadow: none !important;
 }
 
 .input__indicator-separator {
@@ -31,4 +30,8 @@
 
 .input__menu {
     text-align: left !important;
+}
+
+.input__option {
+    cursor: pointer;
 }

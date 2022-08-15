@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import AppHeader from '../../appHeader/AppHeader';
 import useJSONService from '../../../services/JSONService';
 import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
@@ -28,6 +28,8 @@ const AdminPage = () => {
     const [dataDelete, setDataDelete] = useState<TypeDeleteGroup>({ id: 0, options: [] });
     const [idEdit, setIdEdit] = useState(0);
     const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
+
+    const refCheckbox = useRef(null);
 
     useEffect(() => {
         getAllGames().then((games) => {
@@ -63,11 +65,18 @@ const AdminPage = () => {
         setIsDeleteCompletly(false);
     };
 
+    const handleResetSelectedOptions = () => {
+        setSelectedOption(null);
+        setIsDeleteCompletly(!isDeleteCompletely);
+    };
+
     const handleChangeValue = (newValue: any) => {
         setSelectedOption(newValue);
     };
 
-    console.log(`selectedOption - ${selectedOption}`);
+    // console.log(`isDeleteCompletely - ${isDeleteCompletely}`);
+    // console.log(`refCheckbox - ${(refCheckbox.current!! as HTMLInputElement).checked}`);
+    console.log(`selectedOption - ${selectedOption !== null}`);
 
     return (
         <>
@@ -95,16 +104,34 @@ const AdminPage = () => {
                                 />
                             </div>
                             <div className={styles.checkbox}>
-                                {/* <div onClick={() => setIsDeleteCompletly(!isDeleteCompletely)} className={styles.checkbox__box}></div>
-                                <div
-                                    onClick={() => setIsDeleteCompletly(!isDeleteCompletely)}
-                                    className={classNames({ [styles.checkbox__boxcheck]: isDeleteCompletely })}
-                                ></div> */}
                                 <div>
-                                    <input type="checkbox" id="checkbox" />
-                                    <label htmlFor="checkbox"></label>
+                                    <label className={styles.checkbox__externalbox}></label>
+                                    <input ref={refCheckbox} className={styles.checkbox__input} type="checkbox" id="checkbox" />
+                                    <label
+                                        onClick={handleResetSelectedOptions}
+                                        className={classNames(styles.checkbox__innerbox, {
+                                            [styles.checkbox__innerbox_hide]: !isDeleteCompletely,
+                                        })}
+                                        htmlFor="checkbox"
+                                    ></label>
                                 </div>
-                                {/* <div className={styles.checkbox__title}>Delete comletely</div> */}
+                                <div className={styles.checkbox__title}>Delete comletely</div>
+                            </div>
+                            <div className={styles.popupdelete__buttons}>
+                                <div
+                                    className={classNames(styles.button, { [styles.button_coloryes]: isDeleteCompletely || selectedOption !== null })}
+                                >
+                                    <span
+                                        className={classNames(styles.button__text, {
+                                            [styles.button__text_color]: isDeleteCompletely || selectedOption !== null,
+                                        })}
+                                    >
+                                        Yes, delete
+                                    </span>
+                                </div>
+                                <div className={classNames(styles.button, styles.button_colorno)}>
+                                    <span className={classNames(styles.button__text, styles.button__text_color)}>No</span>
+                                </div>
                             </div>
                         </div>
                     </div>

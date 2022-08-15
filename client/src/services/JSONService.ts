@@ -51,9 +51,7 @@ const useJSONService = () => {
     // };
 
     const getAllProviders = async () => {
-        const res = await axios.get<TypeProviders>(
-            'http://localhost:5000/getData'
-        );
+        const res = await axios.get<TypeProviders>('http://localhost:5000/getData');
         //return res.data.providers.map(transformProvider);
         return res.data.providers;
     };
@@ -67,9 +65,7 @@ const useJSONService = () => {
     // };
 
     const getAllGroups = async () => {
-        const res = await axios.get<TypeGroups>(
-            'http://localhost:5000/getData'
-        );
+        const res = await axios.get<TypeGroups>('http://localhost:5000/getData');
         return res.data.groups;
         //return res.data.groups.map(transformGroup);
     };
@@ -81,6 +77,12 @@ const useJSONService = () => {
     //         games: group.games,
     //     };
     // };
+
+    const deleteGroup = async (id: number) => {
+        const res = await axios.delete<TypeGroups>(`http://localhost:5000/deleteGroup/id${id}`);
+        return res.data.groups;
+        //return res.data.groups.map(transformGroup);
+    };
 
     return {
         getAllGames,

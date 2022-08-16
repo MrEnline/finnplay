@@ -68,10 +68,18 @@ class authController {
 
     async getData(req, res) {
         try {
-            if (data) {
-                return res.json(data);
+            // if (data) {
+            //     return res.json(data);
+            // }
+            // let dataJSON = JSON.parse(data);
+            // console.log(dataJSON);
+            let dataJSON = fs.readFile('data.json');
+            if (dataJSON) {
+                return res.json(dataJSON);
             }
-        } catch (error) {}
+        } catch (e) {
+            res.status(400).json({ message: 'Logout error', e: error.message });
+        }
     }
 
     async deleteGroup(req, res) {}

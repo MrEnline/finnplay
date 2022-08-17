@@ -19,7 +19,7 @@ interface TypeOptions {
 }
 
 const AdminPage = () => {
-    const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
+    const { getAllGames, getAllProviders, getAllGroups, deleteGroup } = useJSONService();
 
     const [games, setGames] = useState(Array<TypeGame>());
     const [providers, setProviders] = useState(Array<TypeProvider>());
@@ -71,12 +71,20 @@ const AdminPage = () => {
     };
 
     const handleChangeValue = (newValue: any) => {
+        //console.log(newValue);
         setSelectedOption(newValue);
+    };
+
+    const handleDeleteGroup = (isPermitDelete: boolean) => {
+        if (!isPermitDelete) return;
+        const idDeleteGroup = dataDelete.id;
+        const idMoveGroup = selectedOption !== null ? groups.findIndex((group) => group.name === (selectedOption as TypeOptions).value) : 0;
+        deleteGroup(idDeleteGroup, idMoveGroup);
     };
 
     // console.log(`isDeleteCompletely - ${isDeleteCompletely}`);
     // console.log(`refCheckbox - ${(refCheckbox.current!! as HTMLInputElement).checked}`);
-    console.log(`selectedOption - ${selectedOption !== null}`);
+    if (selectedOption !== null) console.log(`selectedOption - ${(selectedOption as TypeOptions).value}`);
 
     return (
         <>
@@ -120,6 +128,7 @@ const AdminPage = () => {
                             <div className={styles.popupdelete__buttons}>
                                 <div
                                     className={classNames(styles.button, { [styles.button_coloryes]: isDeleteCompletely || selectedOption !== null })}
+                                    onClick={() => handleDeleteGroup(isDeleteCompletely || selectedOption !== null)}
                                 >
                                     <span
                                         className={classNames(styles.button__text, {

@@ -22,6 +22,8 @@ const generateTokens = (id, adminRole) => {
     };
 };
 
+let dataJSON = { ...data };
+
 class authController {
     async login(req, res) {
         const { username, password } = req.body;
@@ -71,18 +73,25 @@ class authController {
             // if (data) {
             //     return res.json(data);
             // }
-            // let dataJSON = JSON.parse(data);
-            // console.log(dataJSON);
-            let dataJSON = fs.readFile('data.json');
             if (dataJSON) {
                 return res.json(dataJSON);
             }
-        } catch (e) {
-            res.status(400).json({ message: 'Logout error', e: error.message });
+        } catch (error) {
+            res.status(400).json({ message: 'Get data error', e: error.message });
         }
     }
 
-    async deleteGroup(req, res) {}
+    async deleteGroup(req, res) {
+        const { idDeleteGroup, idMoveGroup } = req.body;
+        console.log(req.body);
+        if (+idMoveGroup > 0) {
+            const indexDeleteGroup = dataJSON.groups.findIndex((group) => group.id === +idDeleteGroup);
+            const indexMoveGroup = dataJSON.groups.findIndex((group) => group.id === +idMoveGroup);
+            dataJSON.groups[indexMoveGroup].games.push(...dataJSON.groups[indexDeleteGroup].games);
+        }
+        dataJSON = dataJSON.groups.filter((group) => group.id !== +idDeleteGroup);
+        return res.json(dataJSON);
+    }
 
     async logout(req, res) {
         try {

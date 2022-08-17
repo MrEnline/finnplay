@@ -6,6 +6,6 @@ router.post('/login', authController.login);
 router.post('/logout', authController.logout);
 router.get('/checkAuth', authController.checkAuth);
 router.get('/getData', authController.getData);
-router.get('/deleteGroup', authController.deleteGroup);
+router.delete('/deleteGroup', authController.deleteGroup);
 
 module.exports = router;

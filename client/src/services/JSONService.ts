@@ -79,7 +79,10 @@ const useJSONService = () => {
     // };
 
     const deleteGroup = async (idDeleteGroup: number, idMoveGroup: number) => {
-        const res = await axios.delete<TypeGroups>(`http://localhost:5000/deleteGroup/`, { data: { idDeleteGroup, idMoveGroup } });
+        const res = await axios.delete<TypeGroups>(`http://localhost:5000/deleteGroup/`, {
+            headers: { 'Content-type': 'application/json; charset=UTF-8' },
+            data: { idDeleteGroup, idMoveGroup },
+        });
         return res.data.groups;
     };
 

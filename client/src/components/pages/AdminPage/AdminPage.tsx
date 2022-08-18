@@ -9,7 +9,7 @@ import ButtonClose from '../../../../src/assets/img/icon-close.svg';
 import Select, { OnChangeValue } from 'react-select';
 import classNames from 'classnames';
 
-interface TypeDeleteGroup {
+interface TypeDataGroup {
     id: number;
     options: Array<TypeOptions>;
 }
@@ -25,7 +25,8 @@ const AdminPage = () => {
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
     const [selectedOption, setSelectedOption] = useState(null);
-    const [dataDelete, setDataDelete] = useState<TypeDeleteGroup>({ id: 0, options: [] });
+    const [dataDelete, setDataDelete] = useState<TypeDataGroup>({ id: 0, options: [] });
+    const [dataEdit, setDataEdit] = useState<TypeDataGroup>({ id: 0, options: [] });
     const [idEdit, setIdEdit] = useState(0);
     const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
 
@@ -49,11 +50,21 @@ const AdminPage = () => {
         setDataDelete({ id, options });
     };
 
+    const handleFormListGames = (id: number) => {
+        const options = groups
+            .filter((group) => group.id !== id)
+            .reduce((result, currValue) => {
+                result.push({ value: currValue.name, label: currValue.name });
+                return result;
+            }, Array<TypeOptions>());
+        setDataEdit({ id, options });
+    };
+
     const resultLoadGroups =
         games.length > 0 && groups.length > 0 ? (
-            <Groups games={games} groups={groups} onSetDataDeleteGroup={handleFormListGroup} onSetIdEditGroup={setIdEdit} />
+            <Groups games={games} groups={groups} onSetDataDeleteGroup={handleFormListGroup} onSetDataEditGroup={handleFormListGames} />
         ) : (
-            <div>ЗАГРУЗКА ДАННЫХ</div>
+            <Groups games={[]} groups={[]} onSetDataDeleteGroup={handleFormListGroup} onSetDataEditGroup={handleFormListGames} />
         );
 
     const numberIdDeleteGroup =
@@ -61,6 +72,7 @@ const AdminPage = () => {
 
     const handleResetSettings = () => {
         setDataDelete({ id: 0, options: [] });
+        setDataEdit({ id: 0, options: [] });
         setSelectedOption(null);
         setIsDeleteCompletly(false);
     };
@@ -75,16 +87,21 @@ const AdminPage = () => {
         setSelectedOption(newValue);
     };
 
-    const handleDeleteGroup = (isPermitDelete: boolean) => {
+    const handleDeleteGroup = async (isPermitDelete: boolean) => {
         if (!isPermitDelete) return;
         const idDeleteGroup = dataDelete.id;
-        const idMoveGroup = selectedOption !== null ? groups.findIndex((group) => group.name === (selectedOption as TypeOptions).value) : 0;
-        deleteGroup(idDeleteGroup, idMoveGroup);
+        const idMoveGroup =
+            selectedOption !== null
+                ? groups[groups.findIndex((group) => group.name.toLowerCase() === (selectedOption as TypeOptions).value.toLowerCase())].id
+                : 0;
+        setDataDelete({ id: 0, options: [] });
+        await deleteGroup(idDeleteGroup, idMoveGroup).then((groups) => setGroups(groups));
+        setIsDeleteCompletly(false);
     };
 
     // console.log(`isDeleteCompletely - ${isDeleteCompletely}`);
     // console.log(`refCheckbox - ${(refCheckbox.current!! as HTMLInputElement).checked}`);
-    if (selectedOption !== null) console.log(`selectedOption - ${(selectedOption as TypeOptions).value}`);
+    //if (selectedOption !== null) console.log(`selectedOption - ${(selectedOption as TypeOptions).value}`);
 
     return (
         <>
@@ -138,8 +155,49 @@ const AdminPage = () => {
                                         Yes, delete
                                     </span>
                                 </div>
-                                <div className={classNames(styles.button, styles.button_colorno)}>
+                                <div onClick={handleResetSettings} className={classNames(styles.button, styles.button_colorno)}>
                                     <span className={classNames(styles.button__text, styles.button__text_color)}>No</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div className={classNames(styles.popupedit, { [styles.popupedit_visible]: dataEdit.id > 0 })}>
+                <div className={styles.popupedit__body}>
+                    <div className={styles.popupedit__close}>
+                        <img onClick={handleResetSettings} src={ButtonClose} alt="close" />
+                    </div>
+                    <div className={styles.popupedit__content}>
+                        <div className={styles.popupedit__title}>Group editing</div>
+                        <div className={classNames(styles.popupedit__groupname, styles.groupname)}>
+                            <div className={styles.groupname__content}>
+                                <span className={styles.groupname__title}>Group name</span>
+                                <span className={styles.groupname__name}>Test</span>
+                            </div>
+                        </div>
+                        <div className={styles.content}>
+                            <div className={classNames({ [styles.content_disabled]: isDeleteCompletely })}>
+                                <Select
+                                    classNamePrefix="input"
+                                    value={selectedOption}
+                                    onChange={handleChangeValue}
+                                    options={dataDelete.options}
+                                    placeholder="Move games to"
+                                />
+                            </div>
+                            <div className={styles.popupedit__buttons}>
+                                <div
+                                    className={classNames(styles.button, { [styles.button_coloryes]: isDeleteCompletely || selectedOption !== null })}
+                                    onClick={() => handleDeleteGroup(isDeleteCompletely || selectedOption !== null)}
+                                >
+                                    <span
+                                        className={classNames(styles.button__text, {
+                                            [styles.button__text_color]: isDeleteCompletely || selectedOption !== null,
+                                        })}
+                                    >
+                                        Save
+                                    </span>
                                 </div>
                             </div>
                         </div>

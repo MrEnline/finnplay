@@ -12,11 +12,13 @@ interface TypeProp {
     games: Array<TypeGame>;
     groups: Array<TypeGroup>;
     onSetDataDeleteGroup: (id: number) => void;
-    onSetIdEditGroup: (id: number) => void;
+    onSetDataEditGroup: (id: number) => void;
 }
 
-const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetIdEditGroup }) => {
+const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEditGroup }) => {
     const createGroups = () => {
+        if (groups.length === 0) return;
+
         const divGroupsArr = groups.map((group) => {
             return (
                 <div className={styles.group}>
@@ -36,13 +38,13 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetIdEdit
                         <div className={classNames(styles.button, styles.button__edit)}>
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetIdEditGroup(+event.target.dataset.id)}
+                                onClick={(event: any) => onSetDataEditGroup(+event.target.dataset.id)}
                                 alt="icon-edit"
                                 src={IconEdit}
                             />
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetIdEditGroup(+event.target.dataset.id)}
+                                onClick={(event: any) => onSetDataEditGroup(+event.target.dataset.id)}
                                 alt="button-edit"
                                 src={ButtonEdit}
                             />

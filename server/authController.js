@@ -83,13 +83,12 @@ class authController {
 
     async deleteGroup(req, res) {
         const { idDeleteGroup, idMoveGroup } = req.body;
-        console.log(req.body);
-        if (+idMoveGroup > 0) {
-            const indexDeleteGroup = dataJSON.groups.findIndex((group) => group.id === +idDeleteGroup);
-            const indexMoveGroup = dataJSON.groups.findIndex((group) => group.id === +idMoveGroup);
+        if (idMoveGroup > 0) {
+            const indexDeleteGroup = dataJSON.groups.findIndex((group) => group.id === idDeleteGroup);
+            const indexMoveGroup = dataJSON.groups.findIndex((group) => group.id === idMoveGroup);
             dataJSON.groups[indexMoveGroup].games.push(...dataJSON.groups[indexDeleteGroup].games);
         }
-        dataJSON = dataJSON.groups.filter((group) => group.id !== +idDeleteGroup);
+        dataJSON.groups = dataJSON.groups.filter((group) => group.id !== idDeleteGroup);
         return res.json(dataJSON);
     }
 

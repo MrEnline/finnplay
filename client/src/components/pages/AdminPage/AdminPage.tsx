@@ -15,7 +15,8 @@ interface TypeDataGroup {
 }
 
 interface TypeOptions {
-    [value: string]: string;
+    value: string;
+    label: string;
 }
 
 const AdminPage = () => {
@@ -24,10 +25,9 @@ const AdminPage = () => {
     const [games, setGames] = useState(Array<TypeGame>());
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
-    const [selectedOption, setSelectedOption] = useState(null);
-    const [dataDelete, setDataDelete] = useState<TypeDataGroup>({ id: 0, options: [] });
-    const [dataEdit, setDataEdit] = useState<TypeDataGroup>({ id: 0, options: [] });
-    const [idEdit, setIdEdit] = useState(0);
+    const [selectedOption, setSelectedOption] = useState<TypeOptions | null>(null);
+    const [dataDelete, setDataDelete] = useState<TypeDataGroup>({ id: 0, options: Array<TypeOptions>() });
+    const [dataEdit, setDataEdit] = useState<TypeDataGroup>({ id: 0, options: Array<TypeOptions>() });
     const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
 
     const refCheckbox = useRef(null);
@@ -69,6 +69,8 @@ const AdminPage = () => {
 
     const numberIdDeleteGroup =
         groups.length > 0 && dataDelete.id > 0 ? groups[groups.findIndex((group) => group.id === dataDelete.id)].games.length : 0;
+
+    const nameGroup = groups.length > 0 && dataEdit.id > 0 ? groups[groups.findIndex((group) => group.id === dataEdit.id)].name : 'Загрузка данных';
 
     const handleResetSettings = () => {
         setDataDelete({ id: 0, options: [] });
@@ -173,7 +175,7 @@ const AdminPage = () => {
                         <div className={classNames(styles.popupedit__groupname, styles.groupname)}>
                             <div className={styles.groupname__content}>
                                 <span className={styles.groupname__title}>Group name</span>
-                                <span className={styles.groupname__name}>Test</span>
+                                <span className={styles.groupname__name}>{nameGroup}</span>
                             </div>
                         </div>
                         <div className={styles.content}>

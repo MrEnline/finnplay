@@ -1,13 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
-import AppHeader from '../../appHeader/AppHeader';
-import useJSONService from '../../../services/JSONService';
-import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
-import styles from './AdminPage.module.css';
-import './AdminPage.css';
-import Groups from './groups/Groups';
-import ButtonClose from '../../../../src/assets/img/icon-close.svg';
-import Select, { OnChangeValue } from 'react-select';
-import classNames from 'classnames';
+import React, { useState, useEffect, useRef } from "react";
+import AppHeader from "../../appHeader/AppHeader";
+import useJSONService from "../../../services/JSONService";
+import { TypeGame, TypeProvider, TypeGroup } from "../../../utils/Interfaces";
+import styles from "./AdminPage.module.css";
+import "./AdminPage.css";
+import Groups from "./groups/Groups";
+import ButtonClose from "../../../../src/assets/img/icon-close.svg";
+import Select, { OnChangeValue } from "react-select";
+import classNames from "classnames";
 
 interface TypeDataGroup {
     id: number;
@@ -25,10 +25,12 @@ const AdminPage = () => {
     const [games, setGames] = useState(Array<TypeGame>());
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
-    const [selectedOption, setSelectedOption] = useState<TypeOptions | null>(null);
+    const [selectedGroup, setSelectedGroup] = useState<string>("");
+    const [selectedGames, setSelectedGames] = useState<Array<string>>([]);
     const [dataDelete, setDataDelete] = useState<TypeDataGroup>({ id: 0, options: Array<TypeOptions>() });
     const [dataEdit, setDataEdit] = useState<TypeDataGroup>({ id: 0, options: Array<TypeOptions>() });
     const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
+    const [isEditGroup, setIsEditGroup] = useState(false);
 
     const refCheckbox = useRef(null);
 
@@ -43,21 +45,27 @@ const AdminPage = () => {
     const handleFormListGroup = (id: number) => {
         const options = groups
             .filter((group) => group.id !== id)
-            .reduce((result, currValue) => {
-                result.push({ value: currValue.name, label: currValue.name });
+            .reduce((result, currItem) => {
+                result.push({ value: currItem.name, label: currItem.name });
                 return result;
             }, Array<TypeOptions>());
         setDataDelete({ id, options });
     };
 
     const handleFormListGames = (id: number) => {
-        const options = groups
-            .filter((group) => group.id !== id)
-            .reduce((result, currValue) => {
-                result.push({ value: currValue.name, label: currValue.name });
-                return result;
-            }, Array<TypeOptions>());
+        const options = games.reduce((result, game) => {
+            result.push({ value: game.name, label: game.name });
+            return result;
+        }, Array<TypeOptions>());
         setDataEdit({ id, options });
+        setSelectedGames(
+            groups
+                .find((group) => group.id === id)!!
+                .games.reduce((result, gameId) => {
+                    result.push(games.find((game) => game.id === gameId)!!.name);
+                    return result;
+                }, Array<string>()),
+        );
     };
 
     const resultLoadGroups =
@@ -70,40 +78,73 @@ const AdminPage = () => {
     const numberIdDeleteGroup =
         groups.length > 0 && dataDelete.id > 0 ? groups[groups.findIndex((group) => group.id === dataDelete.id)].games.length : 0;
 
-    const nameGroup = groups.length > 0 && dataEdit.id > 0 ? groups[groups.findIndex((group) => group.id === dataEdit.id)].name : 'Загрузка данных';
+    const nameGroup = groups.length > 0 && dataEdit.id > 0 ? groups[groups.findIndex((group) => group.id === dataEdit.id)].name : "Загрузка данных";
 
-    const handleResetSettings = () => {
+    const handleResetDeleteSettings = () => {
         setDataDelete({ id: 0, options: [] });
-        setDataEdit({ id: 0, options: [] });
-        setSelectedOption(null);
+        //setDataEdit({ id: 0, options: [] });
+        setSelectedGroup("");
         setIsDeleteCompletly(false);
     };
 
-    const handleResetSelectedOptions = () => {
-        setSelectedOption(null);
+    const handleResetEditSettings = () => {
+        setDataEdit({ id: 0, options: [] });
+        setSelectedGames([]);
+        setIsEditGroup(false);
+    };
+
+    const handleResetSelectedGroup = () => {
+        setSelectedGroup("");
         setIsDeleteCompletly(!isDeleteCompletely);
     };
 
-    const handleChangeValue = (newValue: any) => {
-        //console.log(newValue);
-        setSelectedOption(newValue);
+    const handleChangeGroup = (newSelectedGroup: OnChangeValue<TypeOptions, boolean>) => {
+        setSelectedGroup((newSelectedGroup as TypeOptions).value);
+    };
+
+    const isCompareGamesEdit = (namesGames: Array<string>) => {
+        const gamesGroup = groups.find((group) => group.id === dataEdit.id)?.games;
+        if (gamesGroup) {
+            if (gamesGroup.length !== namesGames.length) return false;
+            for (let i = 0; i < gamesGroup.length; i++) {
+                const nameGame = games.find((game) => game.id === gamesGroup[i])?.name;
+                if (nameGame) {
+                    if (namesGames.indexOf(nameGame) < 0) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    };
+
+    const handleChangeGames = (newSelectedGames: OnChangeValue<TypeOptions, boolean>) => {
+        const arrNewSelectedGames = (newSelectedGames as TypeOptions[]).map((game) => game.value);
+        setSelectedGames(arrNewSelectedGames);
+        if (!isCompareGamesEdit(arrNewSelectedGames)) {
+            setIsEditGroup(true);
+        } else {
+            setIsEditGroup(false);
+        }
+    };
+
+    const handleGetSelectedGroup = () => {
+        return dataDelete.options.filter((group) => group.value.toLowerCase() === selectedGroup.toLowerCase());
+    };
+
+    const handleGetSelectedGames = () => {
+        return dataEdit.options.filter((game) => selectedGames.indexOf(game.value) >= 0);
     };
 
     const handleDeleteGroup = async (isPermitDelete: boolean) => {
         if (!isPermitDelete) return;
         const idDeleteGroup = dataDelete.id;
         const idMoveGroup =
-            selectedOption !== null
-                ? groups[groups.findIndex((group) => group.name.toLowerCase() === (selectedOption as TypeOptions).value.toLowerCase())].id
-                : 0;
+            selectedGroup !== "" ? groups[groups.findIndex((group) => group.name.toLowerCase() === selectedGroup.toLowerCase())].id : 0;
         setDataDelete({ id: 0, options: [] });
         await deleteGroup(idDeleteGroup, idMoveGroup).then((groups) => setGroups(groups));
         setIsDeleteCompletly(false);
     };
-
-    // console.log(`isDeleteCompletely - ${isDeleteCompletely}`);
-    // console.log(`refCheckbox - ${(refCheckbox.current!! as HTMLInputElement).checked}`);
-    //if (selectedOption !== null) console.log(`selectedOption - ${(selectedOption as TypeOptions).value}`);
 
     return (
         <>
@@ -112,7 +153,7 @@ const AdminPage = () => {
             <div className={classNames(styles.popupdelete, { [styles.popupdelete_visible]: dataDelete.id > 0 })}>
                 <div className={styles.popupdelete__body}>
                     <div className={styles.popupdelete__close}>
-                        <img onClick={handleResetSettings} src={ButtonClose} alt="close" />
+                        <img onClick={handleResetDeleteSettings} src={ButtonClose} alt="close" />
                     </div>
                     <div className={styles.popupdelete__content}>
                         <div className={styles.popupdelete__title}>Group delete</div>
@@ -124,8 +165,8 @@ const AdminPage = () => {
                             <div className={classNames({ [styles.content_disabled]: isDeleteCompletely })}>
                                 <Select
                                     classNamePrefix="input"
-                                    value={selectedOption}
-                                    onChange={handleChangeValue}
+                                    value={handleGetSelectedGroup()}
+                                    onChange={handleChangeGroup}
                                     options={dataDelete.options}
                                     placeholder="Move games to"
                                 />
@@ -135,7 +176,7 @@ const AdminPage = () => {
                                     <label className={styles.checkbox__externalbox}></label>
                                     <input ref={refCheckbox} className={styles.checkbox__input} type="checkbox" id="checkbox" />
                                     <label
-                                        onClick={handleResetSelectedOptions}
+                                        onClick={handleResetSelectedGroup}
                                         className={classNames(styles.checkbox__innerbox, {
                                             [styles.checkbox__innerbox_hide]: !isDeleteCompletely,
                                         })}
@@ -146,18 +187,18 @@ const AdminPage = () => {
                             </div>
                             <div className={styles.popupdelete__buttons}>
                                 <div
-                                    className={classNames(styles.button, { [styles.button_coloryes]: isDeleteCompletely || selectedOption !== null })}
-                                    onClick={() => handleDeleteGroup(isDeleteCompletely || selectedOption !== null)}
+                                    className={classNames(styles.button, { [styles.button_coloryes]: isDeleteCompletely || selectedGroup !== "" })}
+                                    onClick={() => handleDeleteGroup(isDeleteCompletely || selectedGroup !== "")}
                                 >
                                     <span
                                         className={classNames(styles.button__text, {
-                                            [styles.button__text_color]: isDeleteCompletely || selectedOption !== null,
+                                            [styles.button__text_color]: isDeleteCompletely || selectedGroup !== "",
                                         })}
                                     >
                                         Yes, delete
                                     </span>
                                 </div>
-                                <div onClick={handleResetSettings} className={classNames(styles.button, styles.button_colorno)}>
+                                <div onClick={handleResetDeleteSettings} className={classNames(styles.button, styles.button_colorno)}>
                                     <span className={classNames(styles.button__text, styles.button__text_color)}>No</span>
                                 </div>
                             </div>
@@ -168,7 +209,7 @@ const AdminPage = () => {
             <div className={classNames(styles.popupedit, { [styles.popupedit_visible]: dataEdit.id > 0 })}>
                 <div className={styles.popupedit__body}>
                     <div className={styles.popupedit__close}>
-                        <img onClick={handleResetSettings} src={ButtonClose} alt="close" />
+                        <img onClick={handleResetEditSettings} src={ButtonClose} alt="close" />
                     </div>
                     <div className={styles.popupedit__content}>
                         <div className={styles.popupedit__title}>Group editing</div>
@@ -178,29 +219,28 @@ const AdminPage = () => {
                                 <span className={styles.groupname__name}>{nameGroup}</span>
                             </div>
                         </div>
-                        <div className={styles.content}>
-                            <div className={classNames({ [styles.content_disabled]: isDeleteCompletely })}>
-                                <Select
-                                    classNamePrefix="input"
-                                    value={selectedOption}
-                                    onChange={handleChangeValue}
-                                    options={dataDelete.options}
-                                    placeholder="Move games to"
-                                />
-                            </div>
-                            <div className={styles.popupedit__buttons}>
-                                <div
-                                    className={classNames(styles.button, { [styles.button_coloryes]: isDeleteCompletely || selectedOption !== null })}
-                                    onClick={() => handleDeleteGroup(isDeleteCompletely || selectedOption !== null)}
+                        <Select
+                            classNamePrefix="input"
+                            onChange={handleChangeGames}
+                            value={handleGetSelectedGames()}
+                            options={dataEdit.options}
+                            placeholder="Move games to"
+                            isMulti
+                        />
+                        <div className={styles.popupedit__buttons}>
+                            <div
+                                className={classNames(styles.button, {
+                                    [styles.button_colorsave]: isEditGroup,
+                                })}
+                                onClick={() => handleDeleteGroup(isDeleteCompletely || selectedGames.length > 0)}
+                            >
+                                <span
+                                    className={classNames(styles.button__text, {
+                                        [styles.button__text_save]: isEditGroup,
+                                    })}
                                 >
-                                    <span
-                                        className={classNames(styles.button__text, {
-                                            [styles.button__text_color]: isDeleteCompletely || selectedOption !== null,
-                                        })}
-                                    >
-                                        Save
-                                    </span>
-                                </div>
+                                    Save
+                                </span>
                             </div>
                         </div>
                     </div>

@@ -38,43 +38,40 @@
 .popupdelete__body,
 .popupedit__body {
     width: 628px;
-    height: 420px;
+    /* height: 420px; */
+    min-height: 420px;
+
     position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
     background: #fdfdfd;
 
     box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
     border-radius: 8px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    overflow: auto;
 }
 
-.popupedit__body {
-    /* height: auto; */
+.test {
+    height: 200px;
+
+    border: 1px solid blue;
 }
 
 .popupdelete__content,
 .popupedit__content {
     display: flex;
     flex-direction: column;
-
     align-content: flex-start;
-    padding: 0px;
+    padding: 32px;
     gap: 40px 0px;
-    position: absolute;
-    width: 564px;
-    height: 356px;
-    left: 32px;
-    top: 32px;
-
-    border: 1px solid red;
-}
-
-.popupedit__content {
-    height: auto;
+    border: 1px solid orange;
 }
 
 .popupdelete__title,
@@ -82,7 +79,7 @@
     width: 207;
     height: 32px;
     text-align: justify;
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 32px;
@@ -95,7 +92,7 @@
     width: 495px;
     height: 44px;
     text-align: left;
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -128,8 +125,6 @@
 
     width: 564px;
     height: 108px;
-
-    border: 1px solid orange;
 }
 
 .content_disabled {
@@ -195,7 +190,7 @@
     width: 160px;
     height: 22px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -204,7 +199,7 @@
     color: #ec4466;
 
     position: absolute;
-    left: 12px;
+    left: 32px;
 }
 
 .popupdelete__buttons {
@@ -214,10 +209,10 @@
     padding: 0px;
     gap: 16px;
 
-    position: absolute;
+    /* position: absolute;
     bottom: 0;
     width: 564px;
-    height: 64px;
+    height: 64px; */
 }
 
 .button {
@@ -242,7 +237,7 @@
     width: 98px;
     height: 22px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
@@ -251,20 +246,12 @@
     color: #adadad;
 }
 
-.button__text_save {
-    color: #2b2b2b;
-}
-
 .button__text_color {
     color: #ffffff;
 }
 
 .button_coloryes {
     background: #ec4466;
-}
-
-.button_colorsave {
-    background: #fdbc11;
 }
 
 .button_colorno {
@@ -314,7 +301,7 @@
     width: 72px;
     height: 14px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 12px;
@@ -328,7 +315,7 @@
     width: 150px;
     height: 19px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;

@@ -1,8 +1,6 @@
 .input__control {
     width: 564px !important;
-    /* height: 64px !important; */
-    height: auto;
-    padding: 16px;
+    height: 64px !important;
     border: 1px solid #f2f2f2 !important;
     border-radius: 4px !important;
 }
@@ -28,17 +26,6 @@
 .input__single-value {
     padding-left: 10px !important;
     text-align: left !important;
-}
-
-.input__multi-value {
-    width: auto;
-    height: 31px;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-
-    background: #fdbc11 !important;
-    border-radius: 4px !important;
 }
 
 .input__menu {

@@ -2,16 +2,37 @@ import Portal from '../portal/Portal';
 import styles from './Modal.module.css';
 import classNames from 'classnames';
 import ButtonClose from '../../assets/img/icon-close.svg';
+import Button from '../button/Button';
 
 type PropsType = {
     title: string;
-    description: JSX.Element | string | null;
     isOpen: boolean;
+    dataDeleteGroup: { nameGame: string; numberGame: number } | null;
+    nameEditGroup: string | null;
     onResetSettings: () => void;
-    children: JSX.Element;
+    body: JSX.Element;
+    footer: JSX.Element;
 };
 
-const Modal = ({ title, description, isOpen, onResetSettings, children }: PropsType) => {
+const Modal = ({ title, isOpen, dataDeleteGroup, nameEditGroup, onResetSettings, body, footer }: PropsType) => {
+    const description = (
+        <>
+            Do you want to delete {dataDeleteGroup?.nameGame} group? <br /> If you want to move {dataDeleteGroup?.numberGame} games, select new group
+            below.
+        </>
+    );
+
+    const editGroupName = (
+        <>
+            <div className={styles.groupname}>
+                <div className={styles.groupname__content}>
+                    <span className={styles.groupname__title}>Group name</span>
+                    <span className={styles.groupname__name}>{nameEditGroup}</span>
+                </div>
+            </div>
+        </>
+    );
+
     return (
         <>
             {isOpen && (
@@ -24,14 +45,9 @@ const Modal = ({ title, description, isOpen, onResetSettings, children }: PropsT
                             <div className={styles.modal__close}>
                                 <img onClick={onResetSettings} src={ButtonClose} alt="close" />
                             </div>
-                            <div className={styles.modal__description}>{description}</div>
-                            <div className={styles.modal__body}>{children}</div>
-                            <div className={styles.modal__footer}>
-                                {/* <Button onClick={onCancel} invert>
-                                    Cancel
-                                </Button>
-                                <Button onClick={onSubmit}>Submit</Button> */}
-                            </div>
+                            <div className={styles.modal__description}>{dataDeleteGroup !== null ? description : editGroupName}</div>
+                            <div className={styles.modal__body}>{body}</div>
+                            <div className={styles.modal__footer}>{footer}</div>
                         </div>
                     </div>
                 </Portal>

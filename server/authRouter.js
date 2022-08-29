@@ -7,5 +7,6 @@ router.post('/logout', authController.logout);
 router.get('/checkAuth', authController.checkAuth);
 router.get('/getData', authController.getData);
 router.delete('/deleteGroup', authController.deleteGroup);
+router.post('/editGroup', authController.editGroup);
 
 module.exports = router;

@@ -86,11 +86,20 @@ const useJSONService = () => {
         return res.data.groups;
     };
 
+    const editGroup = async (idEditGroup: number, games: Array<number>) => {
+        const res = await axios.post<TypeGroups>(`http://localhost:5000/editGroup/`, {
+            headers: { 'Content-type': 'application/json; charset=UTF-8' },
+            data: { idEditGroup, games },
+        });
+        return res.data.groups;
+    };
+
     return {
         getAllGames,
         getAllProviders,
         getAllGroups,
         deleteGroup,
+        editGroup,
     };
 };
 

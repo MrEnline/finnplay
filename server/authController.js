@@ -92,6 +92,10 @@ class authController {
         return res.json(dataJSON);
     }
 
+    async editGroup(req, res) {
+        return res.json(dataJSON);
+    }
+
     async logout(req, res) {
         try {
             const { refreshToken } = req.cookies;

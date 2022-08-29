@@ -33,13 +33,13 @@
     color: #ffffff;
 }
 
-.button_coloryes {
+/* .button_coloryes {
     background: #ec4466;
 }
 
 .button_colorno {
     background: #6c6963;
-}
+} */
 
 .button {
     display: inline-block;
@@ -47,6 +47,10 @@
     padding: 10px 15px;
     box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
     border-radius: 4px;
+
+    width: 196px;
+    height: 64px;
+
     color: #adadad;
     font-family: 'Prompt';
     font-style: normal;
@@ -55,6 +59,8 @@
 
     cursor: pointer;
     text-decoration: none;
+
+    border: none;
 }
 
 /* .button:hover {
@@ -62,15 +68,20 @@
 } */
 
 .button_delete {
-    background: #ec4466;
     box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
     color: #ffffff;
+    background: #ec4466;
 }
 
 .button_edit {
+    background: #fdbc11;
+    color: #2b2b2b;
 }
 
 .button_cancel {
+    background: #6c6963;
+    box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
+    color: #ffffff;
 }
 
 .button[disabled] {

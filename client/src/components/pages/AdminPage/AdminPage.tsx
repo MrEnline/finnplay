@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import AppHeader from '../../appHeader/AppHeader';
 import useJSONService from '../../../services/JSONService';
 import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
@@ -15,9 +15,20 @@ interface TypeDataGroup {
     options: Array<TypeOptions>;
 }
 
+interface TypeDataGroup1 {
+    id: number;
+    options: Array<TypeOptionsGame>;
+}
+
 interface TypeOptions {
     value: string;
     label: string;
+}
+
+interface TypeOptionsGame {
+    value: string;
+    label: string;
+    id: number;
 }
 
 const AdminPage = () => {
@@ -34,6 +45,16 @@ const AdminPage = () => {
     const [isEditGroup, setIsEditGroup] = useState(false);
 
     const refCheckbox = useRef(null);
+
+    const getMapGames = () => {
+        console.log(`getMapGames`);
+        return games.reduce((result, cValue) => {
+            result.set(cValue.name, cValue.id);
+            return result;
+        }, new Map<string, number>());
+    };
+
+    const mapGames = useMemo(() => getMapGames(), [games]);
 
     useEffect(() => {
         getAllGames().then((games) => {
@@ -89,7 +110,6 @@ const AdminPage = () => {
 
     const handleResetDeleteSettings = () => {
         setDataDelete({ id: 0, options: [] });
-        //setDataEdit({ id: 0, options: [] });
         setSelectedGroup('');
         setIsDeleteCompletly(false);
     };
@@ -151,7 +171,13 @@ const AdminPage = () => {
         setIsDeleteCompletly(false);
     };
 
-    const handleEditGroup = async () => {};
+    const handleEditGroup = async () => {
+        const idsGames = selectedGames.reduce((result, cValue) => {
+            mapGames.has(cValue) ? result.push(mapGames.get(cValue)) : result;
+            return result;
+        }, Array<number>());
+        await editGroup(dataEdit.id, idsGames).then((groups) => setGroups(groups));
+    };
 
     return (
         <>

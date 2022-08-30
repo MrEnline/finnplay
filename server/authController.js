@@ -93,6 +93,21 @@ class authController {
     }
 
     async editGroup(req, res) {
+        const { idEditGroup, idsGames } = req.body;
+        if (idEditGroup > 0) {
+            const indexEditGroup = dataJSON.groups.findIndex((group) => group.id === idEditGroup);
+            if (idsGames.length > 0) {
+                dataJSON.groups = dataJSON.groups.map((group, index) => {
+                    if (index === indexEditGroup) {
+                        group.games = idsGames;
+                        return group;
+                    }
+                    return group;
+                });
+            } else {
+                dataJSON.groups = dataJSON.groups.filter((group) => group.id !== idEditGroup);
+            }
+        }
         return res.json(dataJSON);
     }
 

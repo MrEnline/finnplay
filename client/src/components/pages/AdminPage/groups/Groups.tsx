@@ -27,10 +27,10 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEd
                             <img src={games[games.findIndex((item) => item.id === group.games[0])].cover} alt="game" />
                         </div>
                         <div className={classNames(styles.group__wrap2, styles.wrappers)}>
-                            <img src={games[games.findIndex((item) => item.id === group.games[1])].cover} alt="game" />
+                            <img src={group.games[1] ? games[games.findIndex((item) => item.id === group.games[1])].cover : undefined} alt="game" />
                         </div>
                         <div className={classNames(styles.group__wrap3, styles.wrappers)}>
-                            <img src={games[games.findIndex((item) => item.id === group.games[2])].cover} alt="game" />
+                            <img src={group.games[2] ? games[games.findIndex((item) => item.id === group.games[2])].cover : undefined} alt="game" />
                         </div>
                     </div>
                     <div className={styles.group__name}>{group.name}</div>

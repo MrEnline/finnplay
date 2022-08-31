@@ -11,9 +11,7 @@ export interface TypeGroup extends TypeData {
     games: Array<number>;
 }
 
-export interface TypeGame {
-    id: number;
-    name: string;
+export interface TypeGame extends TypeData {
     provider: number;
     cover: string;
     coverLarge: string;

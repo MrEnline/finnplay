@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import AppHeader from '../../appHeader/AppHeader';
 import useJSONService from '../../../services/JSONService';
-import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
+import { TypeData, TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
 import styles from './AdminPage.module.css';
 import './AdminPage.css';
 import Groups from './groups/Groups';
@@ -15,20 +15,13 @@ interface TypeDataGroup {
     options: Array<TypeOptions>;
 }
 
-interface TypeDataGroup1 {
-    id: number;
-    options: Array<TypeOptionsGame>;
-}
-
 interface TypeOptions {
     value: string;
     label: string;
 }
 
-interface TypeOptionsGame {
-    value: string;
-    label: string;
-    id: number;
+interface TypeMap {
+    [index: string]: number;
 }
 
 const AdminPage = () => {
@@ -51,7 +44,7 @@ const AdminPage = () => {
         return games.reduce((result, cValue) => {
             result.set(cValue.name, cValue.id);
             return result;
-        }, new Map<string, number>());
+        }, new Map<TypeMap>());
     };
 
     const mapGames = useMemo(() => getMapGames(), [games]);
@@ -90,6 +83,14 @@ const AdminPage = () => {
         );
     };
 
+    const getIndexId = (arr: Array<TypeData>, compareVal: number) => {
+        return arr.findIndex((item) => item.id === compareVal);
+    };
+
+    const getIndexName = (arr: Array<TypeData>, compareVal: string) => {
+        return arr.findIndex((item) => item.name.toLowerCase() === compareVal.toLowerCase());
+    };
+
     const resultLoadGroups =
         games.length > 0 && groups.length > 0 ? (
             <Groups games={games} groups={groups} onSetDataDeleteGroup={handleFormListGroup} onSetDataEditGroup={handleFormListGames} />
@@ -97,16 +98,18 @@ const AdminPage = () => {
             <Groups games={[]} groups={[]} onSetDataDeleteGroup={handleFormListGroup} onSetDataEditGroup={handleFormListGames} />
         );
 
-    const dataDeleteGroup =
-        groups.length > 0 && dataDelete.id > 0
+    const dataDeleteGroup = useMemo(() => {
+        return groups.length > 0 && dataDelete.id > 0
             ? {
-                  nameGame: groups[groups.findIndex((group) => group.id === dataDelete.id)].name,
-                  numberGame: groups[groups.findIndex((group) => group.id === dataDelete.id)].games.length,
+                  nameGame: groups[getIndexId(groups, dataDelete.id)].name,
+                  numberGame: groups[getIndexId(groups, dataDelete.id)].games.length,
               }
             : null;
+    }, [dataDelete.id]);
 
-    const nameEditGroup =
-        groups.length > 0 && dataEdit.id > 0 ? groups[groups.findIndex((group) => group.id === dataEdit.id)].name : 'Загрузка данных';
+    const nameEditGroup = useMemo(() => {
+        return groups.length > 0 && dataEdit.id > 0 && getIndexId(groups, dataEdit.id) > -1 ? groups[getIndexId(groups, dataEdit.id)].name : null;
+    }, [dataEdit.id]);
 
     const handleResetDeleteSettings = () => {
         setDataDelete({ id: 0, options: [] });
@@ -164,8 +167,7 @@ const AdminPage = () => {
     };
 
     const handleDeleteGroup = async () => {
-        const idMoveGroup =
-            selectedGroup !== '' ? groups[groups.findIndex((group) => group.name.toLowerCase() === selectedGroup.toLowerCase())].id : 0;
+        const idMoveGroup = selectedGroup !== '' ? groups[getIndexName(groups, selectedGroup)].id : 0;
         setDataDelete({ id: 0, options: [] });
         await deleteGroup(dataDelete.id, idMoveGroup).then((groups) => setGroups(groups));
         setIsDeleteCompletly(false);
@@ -176,7 +178,12 @@ const AdminPage = () => {
             mapGames.has(cValue) ? result.push(mapGames.get(cValue)) : result;
             return result;
         }, Array<number>());
+
+        setIsEditGroup(false);
         await editGroup(dataEdit.id, idsGames).then((groups) => setGroups(groups));
+        if (selectedGames.length === 0) {
+            handleResetEditSettings();
+        }
     };
 
     return (

@@ -24,10 +24,24 @@ const Modal = ({ title, isOpen, dataDeleteGroup, nameEditGroup, onResetSettings,
 
     const editGroupName = (
         <>
-            <div className={styles.groupname}>
+            {/* <div className={styles.groupname}>
                 <div className={styles.groupname__content}>
                     <span className={styles.groupname__title}>Group name</span>
                     <span className={styles.groupname__name}>{nameEditGroup}</span>
+                </div>
+            </div> */}
+            <div className={styles.inputfield}>
+                <div className={styles.inputfield__content}>
+                    <input
+                        className="groupname"
+                        type="groupname"
+                        name="groupname"
+                        id="groupname"
+                        value={nameEditGroup}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                    />
+                    <label htmlFor="groupname">Group name</label>
                 </div>
             </div>
         </>

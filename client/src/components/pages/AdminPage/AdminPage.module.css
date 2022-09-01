@@ -215,7 +215,7 @@
     height: 64px; */
 }
 
-.button {
+/* .button {
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -256,4 +256,70 @@
 
 .button_colorno {
     background: #6c6963;
+} */
+
+.inputfield {
+    box-sizing: border-box;
+
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 0px 16px;
+    gap: 16px;
+
+    width: 564px;
+    height: 64px;
+
+    background: #ffffff;
+
+    border: 1px solid #f2f2f2;
+    border-radius: 4px;
+
+    flex: none;
+    order: 0;
+    align-self: stretch;
+    flex-grow: 0;
+}
+
+.inputfield__content {
+    width: 380px;
+    height: 35px;
+}
+
+.inputfield__content input {
+    width: 100%; /* Ширина поля */
+    box-sizing: border-box; /* Ширина не учитывает padding */
+    padding: 0.5rem 0; /* Поля вокруг текста */
+    border: none; /* Убираем рамку */
+    background: transparent; /* Прозрачный фон */
+}
+
+.inputfield__content input:focus {
+    outline: none; /* Убираем контур */
+    border-color: #1976d2; /* Синяя линия снизу */
+}
+
+.inputfield__content label {
+    display: block; /* Блочный элемент */
+    text-align: left;
+    color: #aaa; /* Цвет подсказки */
+    transform: translateY(-1.5rem); /* Сдвигаем вверх */
+    line-height: 1rem; /* Межстрочный интервал */
+    transition: 0.5s; /* Время трансформации */
+}
+
+.inputfield__content input:focus + label,
+.inputfield__content input:valid + label {
+    font-size: 10px; /* Размер шрифта */
+    transform: translateY(-2.5rem); /* Сдвигаем вверх */
+}
+
+.inputfield__content img {
+    position: absolute;
+    left: 0%;
+    right: 0%;
+    top: 18.75%;
+    bottom: 18.75%;
+
+    background: #808080;
 }

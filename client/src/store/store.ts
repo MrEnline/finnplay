@@ -37,10 +37,8 @@ export default class Store {
 
     async login(username: string, password: string) {
         this.setLoading(true);
-        console.log(this.isLoading);
         try {
             const response = await AuthService.login(username, password);
-            console.log(response);
             localStorage.setItem('token', response.data.accessToken);
             this.setAuth(true);
             this.setAdminRole(response.data.adminRole);
@@ -48,7 +46,6 @@ export default class Store {
             console.log(error.response?.data?.message);
         } finally {
             this.setLoading(false);
-            console.log(this.isLoading);
         }
     }
 

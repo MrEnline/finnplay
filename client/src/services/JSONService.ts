@@ -86,8 +86,13 @@ const useJSONService = () => {
         return res.data.groups;
     };
 
-    const editGroup = async (idEditGroup: number, idsGames: Array<number>) => {
-        const res = await axios.post<TypeGroups>(`http://localhost:5000/editGroup/`, { idEditGroup, idsGames });
+    const editGroup = async (idEditGroup: number, nameEditGroup: string, idsGames: Array<number>) => {
+        const res = await axios.post<TypeGroups>(`http://localhost:5000/editGroup/`, { idEditGroup, nameEditGroup, idsGames });
+        return res.data.groups;
+    };
+
+    const addGroup = async (nameAddGroup: string, idsGames: Array<number>) => {
+        const res = await axios.post<TypeGroups>(`http://localhost:5000/addGroup/`, { nameAddGroup, idsGames });
         return res.data.groups;
     };
 
@@ -97,6 +102,7 @@ const useJSONService = () => {
         getAllGroups,
         deleteGroup,
         editGroup,
+        addGroup,
     };
 };
 

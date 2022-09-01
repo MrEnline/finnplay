@@ -93,20 +93,29 @@ class authController {
     }
 
     async editGroup(req, res) {
-        const { idEditGroup, idsGames } = req.body;
-        if (idEditGroup > 0) {
-            const indexEditGroup = dataJSON.groups.findIndex((group) => group.id === idEditGroup);
-            if (idsGames.length > 0) {
-                dataJSON.groups = dataJSON.groups.map((group, index) => {
-                    if (index === indexEditGroup) {
-                        group.games = idsGames;
-                        return group;
-                    }
+        const { idEditGroup, nameEditGroup, idsGames } = req.body;
+        const indexEditGroup = dataJSON.groups.findIndex((group) => group.id === idEditGroup);
+        if (idsGames.length > 0) {
+            dataJSON.groups = dataJSON.groups.map((group, index) => {
+                if (index === indexEditGroup) {
+                    group.games = idsGames;
+                    group.name = nameEditGroup;
                     return group;
-                });
-            } else {
-                dataJSON.groups = dataJSON.groups.filter((group) => group.id !== idEditGroup);
-            }
+                }
+                return group;
+            });
+        } else {
+            dataJSON.groups = dataJSON.groups.filter((group) => group.id !== idEditGroup);
+        }
+        return res.json(dataJSON);
+    }
+
+    async addGroup(req, res) {
+        const { nameAddGroup, idsGames } = req.body;
+        if (dataJSON.groups.length === 0) {
+            dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames });
+        } else {
+            dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });
         }
         return res.json(dataJSON);
     }

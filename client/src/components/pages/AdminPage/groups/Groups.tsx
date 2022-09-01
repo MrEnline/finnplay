@@ -13,9 +13,10 @@ interface TypeProp {
     groups: Array<TypeGroup>;
     onSetDataDeleteGroup: (id: number) => void;
     onSetDataEditGroup: (id: number) => void;
+    onSetDataAddGroup: () => void;
 }
 
-const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEditGroup }) => {
+const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEditGroup, onSetDataAddGroup }) => {
     const createGroups = () => {
         if (groups.length === 0) return;
 
@@ -38,13 +39,13 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEd
                         <div className={classNames(styles.button, styles.button__edit)}>
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetDataEditGroup(+event.target.dataset.id)}
+                                onClick={(e) => onSetDataEditGroup(+e.currentTarget.dataset.id!)}
                                 alt="icon-edit"
                                 src={IconEdit}
                             />
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetDataEditGroup(+event.target.dataset.id)}
+                                onClick={(e) => onSetDataEditGroup(+e.currentTarget.dataset.id!)}
                                 alt="button-edit"
                                 src={ButtonEdit}
                             />
@@ -52,13 +53,13 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEd
                         <div className={classNames(styles.button, styles.button__delete)}>
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetDataDeleteGroup(+event.target.dataset.id)}
+                                onClick={(e) => onSetDataDeleteGroup(+e.currentTarget.dataset.id!)}
                                 alt="icon-delete"
                                 src={IconDelete}
                             />
                             <img
                                 data-id={group.id}
-                                onClick={(event: any) => onSetDataDeleteGroup(+event.target.dataset.id)}
+                                onClick={(e) => onSetDataDeleteGroup(+e.currentTarget.dataset.id!)}
                                 alt="button-delete"
                                 src={ButtonDelete}
                             />
@@ -84,7 +85,7 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEd
             <div className={styles.app__groups}>
                 <div className={styles.groups__title}>
                     <span className={styles.groups__titletext}>Groups</span>
-                    <img onClick={() => console.log('add group')} alt="add" src={IconAdd} />
+                    <img onClick={onSetDataAddGroup} alt="add" src={IconAdd} />
                 </div>
                 <div className={styles.groups__games}>{createGroups()}</div>
             </div>

@@ -5,11 +5,49 @@
     padding: 0px;
     gap: 20px;
 
+    /* position: absolute; */
+    /* left: 82px;
+    top: 145px; */
+
+    margin-left: 82px;
+    margin-top: 75px;
+
+    margin-bottom: 100px;
+
+    width: 1276px;
+    min-height: 709px;
+
+    border: 1px solid green;
+}
+
+.app__groups {
+    /* display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 20px;
+
     position: absolute;
     width: 1276px;
     height: 709px;
     left: 82px;
-    top: 145px;
+    top: 145px; */
+
+    /* box-sizing: border-box;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 32px;
+    gap: 32px;
+
+    width: 412px;
+    height: 709px;
+
+    background: #ffffff;
+
+    border: 1px solid #f2f2f2;
+    border-radius: 8px; */
 }
 
 .popupdelete,
@@ -23,11 +61,6 @@
     opacity: 0;
     visibility: hidden;
 }
-
-/* .popupdelete:target {
-    opacity: 1;
-    visibility: visible;
-} */
 
 .popupdelete_visible,
 .popupedit_visible {
@@ -208,55 +241,7 @@
     align-items: flex-start;
     padding: 0px;
     gap: 16px;
-
-    /* position: absolute;
-    bottom: 0;
-    width: 564px;
-    height: 64px; */
 }
-
-/* .button {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-    align-items: center;
-
-    gap: 10px;
-
-    width: 196px;
-    height: 64px;
-    background: #f2f2f2;
-
-    box-shadow: 0px -2px 18px rgba(128, 128, 128, 0.1);
-    border-radius: 4px;
-
-    cursor: pointer;
-}
-
-.button__text {
-    width: 98px;
-    height: 22px;
-
-    font-family: 'Prompt';
-    font-style: normal;
-    font-weight: 400;
-    font-size: 18px;
-    line-height: 120%;
-
-    color: #adadad;
-}
-
-.button__text_color {
-    color: #ffffff;
-}
-
-.button_coloryes {
-    background: #ec4466;
-}
-
-.button_colorno {
-    background: #6c6963;
-} */
 
 .inputfield {
     box-sizing: border-box;

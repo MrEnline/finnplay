@@ -9,7 +9,6 @@ import Select, { OnChangeValue } from 'react-select';
 import classNames from 'classnames';
 import Modal from '../../modal/Modal';
 import Button from '../../button/Button';
-import { EventType } from '@testing-library/react';
 
 interface TypeDataGroup {
     id: number;
@@ -22,7 +21,7 @@ interface TypeOptions {
 }
 
 const AdminPage = () => {
-    const { getAllGames, getAllProviders, getAllGroups, deleteGroup, editGroup } = useJSONService();
+    const { getAllGames, getAllProviders, getAllGroups, deleteGroup, editGroup, addGroup } = useJSONService();
 
     const [games, setGames] = useState(Array<TypeGame>());
     const [providers, setProviders] = useState(Array<TypeProvider>());
@@ -37,6 +36,7 @@ const AdminPage = () => {
     const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
     const [isEditGroup, setIsEditGroup] = useState(false);
     const [isAddGroup, setIsAddGroup] = useState(false);
+    const [isOpenModalAddGroup, setIsOpenModalAddGroup] = useState(false);
 
     const refCheckbox = useRef(null);
 
@@ -85,7 +85,15 @@ const AdminPage = () => {
         setNameGroup(groups[getIndexId(groups, id)].name);
     };
 
-    const handleFormListNewGames = () => {};
+    const handleOpenModal = () => {
+        setIsOpenModalAddGroup(true);
+        setDataAdd(
+            games.reduce((result, game) => {
+                result.push({ value: game.name, label: game.name });
+                return result;
+            }, Array<TypeOptions>())
+        );
+    };
 
     const getIndexId = (arr: Array<TypeData>, compareVal: number) => {
         return arr.findIndex((item) => item.id === compareVal);
@@ -102,7 +110,7 @@ const AdminPage = () => {
                 groups={groups}
                 onSetDataDeleteGroup={handleFormListGroup}
                 onSetDataEditGroup={handleFormListGames}
-                onSetDataAddGroup={handleFormListNewGames}
+                onSetDataAddGroup={handleOpenModal}
             />
         ) : (
             <Groups
@@ -110,7 +118,7 @@ const AdminPage = () => {
                 groups={[]}
                 onSetDataDeleteGroup={handleFormListGroup}
                 onSetDataEditGroup={handleFormListGames}
-                onSetDataAddGroup={handleFormListNewGames}
+                onSetDataAddGroup={handleOpenModal}
             />
         );
 
@@ -137,6 +145,15 @@ const AdminPage = () => {
         setDataEdit({ id: 0, options: [] });
         setSelectedGames([]);
         setIsEditGroup(false);
+        setNameGroup('');
+    };
+
+    const handleResetAddSettings = () => {
+        setDataAdd([]);
+        setIsOpenModalAddGroup(false);
+        setIsAddGroup(false);
+        setNameGroup('');
+        setSelectedGames([]);
     };
 
     const handleResetSelectedGroup = () => {
@@ -164,7 +181,7 @@ const AdminPage = () => {
         return true;
     };
 
-    const handleChangeGames = (newSelectedGames: OnChangeValue<TypeOptions, boolean>) => {
+    const handleChangeEditGames = (newSelectedGames: OnChangeValue<TypeOptions, boolean>) => {
         const arrNewSelectedGames = (newSelectedGames as TypeOptions[]).map((game) => game.value);
         setSelectedGames(arrNewSelectedGames);
         if (!isCompareGamesEdit(arrNewSelectedGames) || nameGroup !== groups[getIndexId(groups, dataEdit.id)].name) {
@@ -174,8 +191,17 @@ const AdminPage = () => {
         }
     };
 
+    const handleChangeAddGames = (newSelectedGames: OnChangeValue<TypeOptions, boolean>) => {
+        const arrNewSelectedGames = (newSelectedGames as TypeOptions[]).map((game) => game.value);
+        setSelectedGames(arrNewSelectedGames);
+        if (nameGroup !== '' && arrNewSelectedGames.length > 0) {
+            setIsAddGroup(true);
+        } else {
+            setIsAddGroup(false);
+        }
+    };
+
     const handleChangeNameGroup = (e: HTMLInputElement) => {
-        console.log(`e.value - ${e.value}`);
         setNameGroup(e.value);
         if (!isCompareGamesEdit(selectedGames) || (e.value !== '' && groups[getIndexId(groups, dataEdit.id)].name !== e.value)) {
             setIsEditGroup(true);
@@ -184,12 +210,28 @@ const AdminPage = () => {
         }
     };
 
+    const handleSetNewNameGroup = (e: HTMLInputElement) => {
+        setNameGroup(e.value);
+        if (e.value !== '' && selectedGames.length > 0) {
+            setIsAddGroup(true);
+        } else {
+            setIsAddGroup(false);
+        }
+    };
+
     const handleGetSelectedGroup = () => {
         return dataDelete.options.filter((group) => group.value.toLowerCase() === selectedGroup.toLowerCase());
     };
 
-    const handleGetSelectedGames = () => {
-        return dataEdit.options.filter((game) => selectedGames.indexOf(game.value) >= 0);
+    const handleGetSelectedGames = (data: Array<TypeOptions>) => {
+        return data.filter((game) => selectedGames.indexOf(game.value) >= 0);
+    };
+
+    const getSelectedGames = () => {
+        return selectedGames.reduce((result, cValue) => {
+            result.push(mapGames.get(cValue)!!);
+            return result;
+        }, Array<number>());
     };
 
     const handleDeleteGroup = () => {
@@ -200,23 +242,24 @@ const AdminPage = () => {
     };
 
     const handleEditGroup = () => {
-        const idsGames = selectedGames.reduce((result, cValue) => {
-            result.push(mapGames.get(cValue)!!);
-            return result;
-        }, Array<number>());
         setIsEditGroup(false);
-        editGroup(dataEdit.id, nameGroup, idsGames).then((groups) => setGroups(groups));
+        editGroup(dataEdit.id, nameGroup, getSelectedGames()).then((groups) => setGroups(groups));
         if (selectedGames.length === 0) {
             handleResetEditSettings();
         }
     };
 
-    const handleAddGroup = async () => {};
+    const handleAddGroup = () => {
+        setIsAddGroup(false);
+        addGroup(nameGroup, getSelectedGames()).then((groups) => setGroups(groups));
+    };
 
     return (
         <>
             <AppHeader />
-            <div className={styles.app__blocks}>{resultLoadGroups}</div>
+            <div className={styles.app__blocks}>
+                <div>{resultLoadGroups}</div>
+            </div>
             <Modal
                 title={'Group delete'}
                 isOpen={dataDelete.id > 0}
@@ -291,8 +334,8 @@ const AdminPage = () => {
                     <>
                         <Select
                             classNamePrefix="input"
-                            onChange={handleChangeGames}
-                            value={handleGetSelectedGames()}
+                            onChange={handleChangeEditGames}
+                            value={handleGetSelectedGames(dataEdit.options)}
                             options={dataEdit.options}
                             placeholder="Games"
                             isMulti
@@ -309,8 +352,8 @@ const AdminPage = () => {
             ></Modal>
             <Modal
                 title={'Group add'}
-                isOpen={isAddGroup}
-                onResetSettings={handleResetEditSettings}
+                isOpen={isOpenModalAddGroup}
+                onResetSettings={handleResetAddSettings}
                 description={
                     <>
                         <div className={styles.inputfield}>
@@ -321,7 +364,7 @@ const AdminPage = () => {
                                     name="groupname"
                                     id="groupname"
                                     value={nameGroup}
-                                    onChange={(e) => handleChangeNameGroup(e.target)}
+                                    onChange={(e) => handleSetNewNameGroup(e.target)}
                                     required
                                 />
                                 <label htmlFor="groupname">Group name</label>
@@ -333,8 +376,8 @@ const AdminPage = () => {
                     <>
                         <Select
                             classNamePrefix="input"
-                            onChange={handleChangeGames}
-                            value={handleGetSelectedGames()}
+                            onChange={handleChangeAddGames}
+                            value={handleGetSelectedGames(dataAdd)}
                             options={dataAdd}
                             placeholder="Games"
                             isMulti

@@ -6,11 +6,12 @@
     padding: 0px;
     gap: 1129px;
 
-    position: absolute;
+    /* position: absolute;
+    left: 0px;
+    top: 0px; */
+
     width: 1440px;
     height: 70px;
-    left: 0px;
-    top: 0px;
 
     background: #fdfdfd;
 

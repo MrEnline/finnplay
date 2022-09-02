@@ -7,12 +7,12 @@
     padding: 32px;
     gap: 32px;
 
-    position: absolute;
+    /* position: absolute;
     left: 0;
-    top: 0;
+    top: 0; */
 
     width: 412px;
-    height: 709px;
+    min-height: 709px;
 
     background: #ffffff;
 
@@ -20,6 +20,8 @@
     border-radius: 8px;
 
     border: 1px solid darkorchid;
+
+    margin-bottom: 32px;
 }
 
 .groups__title {
@@ -30,10 +32,6 @@
     padding: 0px;
     gap: 10px;
 
-    position: absolute;
-    left: 32px;
-    top: 32px;
-
     width: 348px;
     height: 32px;
 }
@@ -42,7 +40,7 @@
     width: 84px;
     height: 29px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 24px;
@@ -58,12 +56,8 @@
     padding: 0px;
     gap: 40px;
 
-    position: absolute;
-    left: 32px;
-    top: 96px;
-
     width: 348px;
-    height: 581px;
+    min-height: 581px;
 }
 
 .groups__rowgroups {
@@ -136,7 +130,7 @@
     width: 32px;
     height: 17px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

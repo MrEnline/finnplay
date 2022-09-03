@@ -31,12 +31,6 @@
 }
 
 .input__multi-value {
-    /* width: auto;
-    height: 31px;
-    display: flex;
-    flex-direction: row;
-    align-items: center; */
-
     background: #fdbc11 !important;
     border-radius: 4px !important;
 }

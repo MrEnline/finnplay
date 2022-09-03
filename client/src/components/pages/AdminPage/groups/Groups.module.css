@@ -40,7 +40,7 @@
     width: 84px;
     height: 29px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 24px;
@@ -95,7 +95,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
     width: 56px;
     height: 120px;
 }
@@ -130,7 +129,7 @@
     width: 32px;
     height: 17px;
 
-    font-family: 'Prompt';
+    font-family: "Prompt";
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

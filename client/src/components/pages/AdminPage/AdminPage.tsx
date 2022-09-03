@@ -1,14 +1,16 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import AppHeader from '../../appHeader/AppHeader';
-import useJSONService from '../../../services/JSONService';
-import { TypeData, TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
-import styles from './AdminPage.module.css';
-import './AdminPage.css';
-import Groups from './groups/Groups';
-import Select, { OnChangeValue } from 'react-select';
-import classNames from 'classnames';
-import Modal from '../../modal/Modal';
-import Button from '../../button/Button';
+import React, { useState, useEffect, useRef, useCallback, useMemo, FC } from "react";
+import AppHeader from "../../appHeader/AppHeader";
+import useJSONService from "../../../services/JSONService";
+import { TypeData, TypeGame, TypeProvider, TypeGroup } from "../../../utils/Interfaces";
+import styles from "./AdminPage.module.css";
+import "./AdminPage.css";
+import Groups from "./groups/Groups";
+import Select, { OnChangeValue } from "react-select";
+import classNames from "classnames";
+import Modal from "../../modal/Modal";
+import Button from "../../button/Button";
+import Games from "./games/Games";
+import Providers from "./providers/Providers";
 
 interface TypeDataGroup {
     id: number;
@@ -20,25 +22,23 @@ interface TypeOptions {
     label: string;
 }
 
-const AdminPage = () => {
+const AdminPage: FC = () => {
     const { getAllGames, getAllProviders, getAllGroups, deleteGroup, editGroup, addGroup } = useJSONService();
 
     const [games, setGames] = useState(Array<TypeGame>());
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
 
-    const [selectedGroup, setSelectedGroup] = useState<string>('');
+    const [selectedGroup, setSelectedGroup] = useState<string>("");
     const [selectedGames, setSelectedGames] = useState<Array<string>>([]);
     const [dataDelete, setDataDelete] = useState<TypeDataGroup>({ id: 0, options: Array<TypeOptions>() });
     const [dataEdit, setDataEdit] = useState<TypeDataGroup>({ id: 0, options: Array<TypeOptions>() });
     const [dataAdd, setDataAdd] = useState<Array<TypeOptions>>([]);
-    const [nameGroup, setNameGroup] = useState<string>('');
+    const [nameGroup, setNameGroup] = useState<string>("");
     const [isDeleteCompletely, setIsDeleteCompletly] = useState(false);
     const [isEditGroup, setIsEditGroup] = useState(false);
     const [isAddGroup, setIsAddGroup] = useState(false);
     const [isOpenModalAddGroup, setIsOpenModalAddGroup] = useState(false);
-
-    const refCheckbox = useRef(null);
 
     const getMapGames = () => {
         console.log(`getMapGames`);
@@ -80,7 +80,7 @@ const AdminPage = () => {
                 .games.reduce((result, gameId) => {
                     result.push(games.find((game) => game.id === gameId)!!.name);
                     return result;
-                }, Array<string>())
+                }, Array<string>()),
         );
         setNameGroup(groups[getIndexId(groups, id)].name);
     };
@@ -91,7 +91,7 @@ const AdminPage = () => {
             games.reduce((result, game) => {
                 result.push({ value: game.name, label: game.name });
                 return result;
-            }, Array<TypeOptions>())
+            }, Array<TypeOptions>()),
         );
     };
 
@@ -137,7 +137,7 @@ const AdminPage = () => {
 
     const handleResetDeleteSettings = () => {
         setDataDelete({ id: 0, options: [] });
-        setSelectedGroup('');
+        setSelectedGroup("");
         setIsDeleteCompletly(false);
     };
 
@@ -145,19 +145,19 @@ const AdminPage = () => {
         setDataEdit({ id: 0, options: [] });
         setSelectedGames([]);
         setIsEditGroup(false);
-        setNameGroup('');
+        setNameGroup("");
     };
 
     const handleResetAddSettings = () => {
         setDataAdd([]);
         setIsOpenModalAddGroup(false);
         setIsAddGroup(false);
-        setNameGroup('');
+        setNameGroup("");
         setSelectedGames([]);
     };
 
     const handleResetSelectedGroup = () => {
-        setSelectedGroup('');
+        setSelectedGroup("");
         setIsDeleteCompletly(!isDeleteCompletely);
     };
 
@@ -194,7 +194,7 @@ const AdminPage = () => {
     const handleChangeAddGames = (newSelectedGames: OnChangeValue<TypeOptions, boolean>) => {
         const arrNewSelectedGames = (newSelectedGames as TypeOptions[]).map((game) => game.value);
         setSelectedGames(arrNewSelectedGames);
-        if (nameGroup !== '' && arrNewSelectedGames.length > 0) {
+        if (nameGroup !== "" && arrNewSelectedGames.length > 0) {
             setIsAddGroup(true);
         } else {
             setIsAddGroup(false);
@@ -203,7 +203,7 @@ const AdminPage = () => {
 
     const handleChangeNameGroup = (e: HTMLInputElement) => {
         setNameGroup(e.value);
-        if (!isCompareGamesEdit(selectedGames) || (e.value !== '' && groups[getIndexId(groups, dataEdit.id)].name !== e.value)) {
+        if (!isCompareGamesEdit(selectedGames) || (e.value !== "" && groups[getIndexId(groups, dataEdit.id)].name !== e.value)) {
             setIsEditGroup(true);
         } else {
             setIsEditGroup(false);
@@ -212,7 +212,7 @@ const AdminPage = () => {
 
     const handleSetNewNameGroup = (e: HTMLInputElement) => {
         setNameGroup(e.value);
-        if (e.value !== '' && selectedGames.length > 0) {
+        if (e.value !== "" && selectedGames.length > 0) {
             setIsAddGroup(true);
         } else {
             setIsAddGroup(false);
@@ -235,7 +235,7 @@ const AdminPage = () => {
     };
 
     const handleDeleteGroup = () => {
-        const idMoveGroup = selectedGroup !== '' ? groups[getIndexName(groups, selectedGroup)].id : 0;
+        const idMoveGroup = selectedGroup !== "" ? groups[getIndexName(groups, selectedGroup)].id : 0;
         setDataDelete({ id: 0, options: [] });
         deleteGroup(dataDelete.id, idMoveGroup).then((groups) => setGroups(groups));
         setIsDeleteCompletly(false);
@@ -259,9 +259,11 @@ const AdminPage = () => {
             <AppHeader />
             <div className={styles.app__blocks}>
                 <div>{resultLoadGroups}</div>
+                <Games games={games} />
+                <Providers providers={providers} />
             </div>
             <Modal
-                title={'Group delete'}
+                title={"Group delete"}
                 isOpen={dataDelete.id > 0}
                 onResetSettings={handleResetDeleteSettings}
                 description={
@@ -272,7 +274,7 @@ const AdminPage = () => {
                 }
                 body={
                     <>
-                        <div className={classNames({ [styles.content_disabled]: isDeleteCompletely })}>
+                        <div className={classNames({ [styles.menu_disabled]: isDeleteCompletely })}>
                             <Select
                                 classNamePrefix="input"
                                 value={handleGetSelectedGroup()}
@@ -284,7 +286,7 @@ const AdminPage = () => {
                         <div className={styles.checkbox}>
                             <div>
                                 <label className={styles.checkbox__externalbox}></label>
-                                <input ref={refCheckbox} className={styles.checkbox__input} type="checkbox" id="checkbox" />
+                                <input className={styles.checkbox__input} type="checkbox" id="checkbox" />
                                 <label
                                     onClick={handleResetSelectedGroup}
                                     className={classNames(styles.checkbox__innerbox, {
@@ -299,7 +301,7 @@ const AdminPage = () => {
                 }
                 footer={
                     <>
-                        <Button onClick={handleDeleteGroup} classNameButton="button_delete" disabled={!(isDeleteCompletely || selectedGroup !== '')}>
+                        <Button onClick={handleDeleteGroup} classNameButton="button_delete" disabled={!(isDeleteCompletely || selectedGroup !== "")}>
                             Yes, delete
                         </Button>
                         <Button onClick={handleResetDeleteSettings} classNameButton="button_cancel" disabled={false}>
@@ -309,7 +311,7 @@ const AdminPage = () => {
                 }
             ></Modal>
             <Modal
-                title={'Group edit'}
+                title={"Group edit"}
                 isOpen={dataEdit.id > 0}
                 onResetSettings={handleResetEditSettings}
                 description={
@@ -351,7 +353,7 @@ const AdminPage = () => {
                 }
             ></Modal>
             <Modal
-                title={'Group add'}
+                title={"Group add"}
                 isOpen={isOpenModalAddGroup}
                 onResetSettings={handleResetAddSettings}
                 description={

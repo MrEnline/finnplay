@@ -1,12 +1,13 @@
-import { FC } from 'react';
-import styles from './Groups.module.css';
-import { TypeGame, TypeGroup } from '../../../../utils/Interfaces';
-import IconAdd from '../../../../assets/img/icon-add.svg';
-import IconEdit from '../../../../assets/img/icon-edit.svg';
-import IconDelete from '../../../../assets/img/icon-delete.svg';
-import ButtonEdit from '../../../../assets/img/button-edit.svg';
-import ButtonDelete from '../../../../assets/img/button-delete.svg';
-import classNames from 'classnames';
+import { FC } from "react";
+import styles from "./Groups.module.css";
+import { TypeGame, TypeGroup } from "../../../../utils/Interfaces";
+import IconAdd from "../../../../assets/img/icon-add.svg";
+import IconEdit from "../../../../assets/img/icon-edit.svg";
+import IconDelete from "../../../../assets/img/icon-delete.svg";
+import ButtonEdit from "../../../../assets/img/button-edit.svg";
+import ButtonDelete from "../../../../assets/img/button-delete.svg";
+import classNames from "classnames";
+import { NUMBER_ELEMENT_IN_ROW } from "../../../../utils/Constants";
 
 interface TypeProp {
     games: Array<TypeGame>;
@@ -69,27 +70,24 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEd
             );
         });
 
-        const divGroupItemsArr = [];
-        const countElementInFlex = 2;
-        for (let index = 0; index < divGroupsArr.length; index += countElementInFlex) {
-            divGroupItemsArr.push(divGroupsArr.slice(index, index + countElementInFlex));
+        const divGroupArrRow = [];
+        for (let index = 0; index < divGroupsArr.length; index += NUMBER_ELEMENT_IN_ROW) {
+            divGroupArrRow.push(divGroupsArr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
         }
 
-        return divGroupItemsArr.map((item) => {
+        return divGroupArrRow.map((item) => {
             return <div className={styles.groups__rowgroups}>{item}</div>;
         });
     };
 
     return (
-        <>
-            <div className={styles.app__groups}>
-                <div className={styles.groups__title}>
-                    <span className={styles.groups__titletext}>Groups</span>
-                    <img onClick={onSetDataAddGroup} alt="add" src={IconAdd} />
-                </div>
-                <div className={styles.groups__games}>{createGroups()}</div>
+        <div className={styles.app__groups}>
+            <div className={styles.groups__title}>
+                <span className={styles.groups__titletext}>Groups</span>
+                <img onClick={onSetDataAddGroup} alt="add" src={IconAdd} />
             </div>
-        </>
+            <div className={styles.groups__games}>{createGroups()}</div>
+        </div>
     );
 };
 

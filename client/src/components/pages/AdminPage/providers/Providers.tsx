@@ -8,7 +8,6 @@ import Gameart from "../../../../assets/img/gameart.png";
 import Evolution from "../../../../assets/img/evolution.png";
 import Endorphina from "../../../../assets/img/endorphina.png";
 import Nolimitcity from "../../../../assets/img/nolimitcity.png";
-import { TypeAliasDeclaration } from "typescript";
 
 interface TypeProp {
     providers: Array<TypeProvider>;

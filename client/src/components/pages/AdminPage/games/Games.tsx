@@ -22,10 +22,17 @@ const Games: FC<TypeProp> = ({ games }) => {
             );
         });
 
-        const divGamesArrRow = [];
-        for (let index = 0; index < divGamesArr.length; index += NUMBER_ELEMENT_IN_ROW) {
-            divGamesArrRow.push(divGamesArr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
-        }
+        // const divGamesArrRow = [];
+        // for (let index = 0; index < divGamesArr.length; index += NUMBER_ELEMENT_IN_ROW) {
+        //     divGamesArrRow.push(divGamesArr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
+        // }
+
+        const divGamesArrRow = divGamesArr.reduce((result, game, index, arr) => {
+            if (index % NUMBER_ELEMENT_IN_ROW === 0) {
+                result.push(arr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
+            }
+            return result;
+        }, new Array<JSX.Element[]>());
 
         return divGamesArrRow.map((item) => {
             return <div className={styles.games__rowgames}>{item}</div>;

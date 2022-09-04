@@ -70,10 +70,17 @@ const Groups: FC<TypeProp> = ({ games, groups, onSetDataDeleteGroup, onSetDataEd
             );
         });
 
-        const divGroupArrRow = [];
-        for (let index = 0; index < divGroupsArr.length; index += NUMBER_ELEMENT_IN_ROW) {
-            divGroupArrRow.push(divGroupsArr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
-        }
+        // const divGroupArrRow = [];
+        // for (let index = 0; index < divGroupsArr.length; index += NUMBER_ELEMENT_IN_ROW) {
+        //     divGroupArrRow.push(divGroupsArr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
+        // }
+
+        const divGroupArrRow = divGroupsArr.reduce((result, group, index, arr) => {
+            if (index % NUMBER_ELEMENT_IN_ROW === 0) {
+                result.push(arr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
+            }
+            return result;
+        }, new Array<JSX.Element[]>());
 
         return divGroupArrRow.map((item) => {
             return <div className={styles.groups__rowgroups}>{item}</div>;

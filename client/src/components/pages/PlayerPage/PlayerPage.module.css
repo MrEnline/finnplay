@@ -1,0 +1,9 @@
+.app__mainblock {
+    display: flex;
+    flex-direction: row;
+    width: 1276px;
+    min-height: 400px;
+    justify-content: space-between;
+    margin-top: 75px;
+    margin-left: 82px;
+}

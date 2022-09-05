@@ -1,9 +1,17 @@
 .games__list {
-    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 20px;
+
     width: 844px;
     height: 785px;
+
+    /* 
+        position: absolute;
     left: 82px;
-    top: 145px;
+    top: 145px; */
 }
 
 .games__grid {

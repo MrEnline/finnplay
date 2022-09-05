@@ -30,6 +30,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
 
     const refRadio = useRef(null);
 
+    console.log(`games - ${games.length}`);
+
     const createListElements = (
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
@@ -49,12 +51,14 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
             );
         });
 
-        const divGroupItemsArr = [];
-        for (let index = 0; index < divItemsArr.length; index += countElementInFlex) {
-            divGroupItemsArr.push(divItemsArr.slice(index, index + countElementInFlex));
-        }
+        const divItemsArrRow = divItemsArr.reduce((result, game, index, arr) => {
+            if (index % countElementInFlex === 0) {
+                result.push(arr.slice(index, index + countElementInFlex));
+            }
+            return result;
+        }, new Array<JSX.Element[]>());
 
-        return divGroupItemsArr.map((item) => {
+        return divItemsArrRow.map((item) => {
             return <div className={classNames(styles.filters__items)}>{item}</div>;
         });
     };

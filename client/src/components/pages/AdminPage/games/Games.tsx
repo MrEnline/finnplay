@@ -1,7 +1,7 @@
-import { FC } from "react";
-import { TypeGame } from "../../../../utils/Interfaces";
-import styles from "./Games.module.css";
-import { NUMBER_ELEMENT_IN_ROW } from "../../../../utils/Constants";
+import { FC } from 'react';
+import { TypeGame } from '../../../../utils/Interfaces';
+import styles from './Games.module.css';
+import { NUMBER_ELEMENT_IN_ROW } from '../../../../utils/Constants';
 
 interface TypeProp {
     games: Array<TypeGame>;
@@ -21,11 +21,6 @@ const Games: FC<TypeProp> = ({ games }) => {
                 </div>
             );
         });
-
-        // const divGamesArrRow = [];
-        // for (let index = 0; index < divGamesArr.length; index += NUMBER_ELEMENT_IN_ROW) {
-        //     divGamesArrRow.push(divGamesArr.slice(index, index + NUMBER_ELEMENT_IN_ROW));
-        // }
 
         const divGamesArrRow = divGamesArr.reduce((result, game, index, arr) => {
             if (index % NUMBER_ELEMENT_IN_ROW === 0) {

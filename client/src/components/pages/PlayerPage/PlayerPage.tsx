@@ -6,15 +6,12 @@ import Filters from './filters/Filters';
 import { INIT_COLUMNS_COUNTER } from '../../../utils/Constants';
 import { TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
 import styles from './PlayerPage.module.css';
-
-interface TypeObject {
-    [index: number]: boolean;
-}
+import { TypeObject } from '../../../utils/Interfaces';
 
 const PlayerPages: FC = () => {
     const { getAllGames, getAllProviders, getAllGroups } = useJSONService();
     const [games, setGames] = useState(Array<TypeGame>());
-    const [filtersGames, setFiltersGames] = useState(Array<TypeGame>());
+    const [filtersGames, setFiltersGames] = useState<Array<TypeGame> | null>(null);
 
     const [providers, setProviders] = useState(Array<TypeProvider>());
     const [groups, setGroups] = useState(Array<TypeGroup>());
@@ -26,7 +23,7 @@ const PlayerPages: FC = () => {
         getAllGroups().then((groups) => setGroups(groups));
     }, []);
 
-    const idGamesInGroup = useMemo(() => {
+    const idGamesInGroups = useMemo(() => {
         return groups.reduce((result, group) => {
             group.games.forEach((gameId) => (result[gameId] = true));
             return result;
@@ -38,12 +35,12 @@ const PlayerPages: FC = () => {
             <AppHeader />
             <div className={styles.app__mainblock}>
                 <GamesList
-                    games={filtersGames.length === 0 ? games.filter((game) => idGamesInGroup[game.id]) : filtersGames}
+                    games={filtersGames === null ? games.filter((game) => idGamesInGroups[game.id]) : filtersGames}
                     columnsCounter={columnsCounter}
                 />
                 <Filters
-                    games={games.filter((game) => idGamesInGroup[game.id])}
-                    filtersGames={filtersGames.length === 0 ? games.filter((game) => idGamesInGroup[game.id]) : filtersGames}
+                    games={games.filter((game) => idGamesInGroups[game.id])}
+                    filtersGames={filtersGames === null ? games.filter((game) => idGamesInGroups[game.id]) : filtersGames}
                     handleFiltersGames={setFiltersGames}
                     providers={providers}
                     groups={groups}

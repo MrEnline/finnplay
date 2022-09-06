@@ -18,6 +18,8 @@ export interface TypeGame extends TypeData {
     date: string;
 }
 
-export interface TypeFilter {
+export interface TypeObject {
     [index: string]: boolean;
 }
+
+export interface TypeFilter extends TypeObject {}

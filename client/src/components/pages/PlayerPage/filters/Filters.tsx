@@ -111,19 +111,12 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
 
     const handleSearch = (currSearch: string) => {
         setSearch(currSearch);
-
         const newArrSearchGames = getNewArrSearchGame(currSearch);
-        const newArrProvidersGames = Array.from(new Set(getNewArrProvidersGames(Object.keys(filterProviders))));
-        const newArrGroupsGames = Array.from(new Set(getNewArrGroupsGames(Object.keys(filterGroups))));
-        const allSearchGames = [...newArrSearchGames, ...newArrProvidersGames, ...newArrGroupsGames];
-
-        const filterGames = Array<TypeGame>();
-        const countLengthArrays = getCountLengthArrays(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        countLengthArrays > 1
-            ? filterGames.push(...getCommonGames(allSearchGames, countLengthArrays))
-            : filterGames.push(...Array.from(new Set(allSearchGames)));
-        const sortGames = getSortGames(countLengthArrays === 0 ? [...games] : filterGames);
-        handleFiltersGames(sortGames);
+        if (currSearch && newArrSearchGames.length === 0) {
+            handleFiltersGames(Array<TypeGame>());
+            return;
+        }
+        setFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
     };
 
     const getFilterArr = (arr: Array<TypeGame | TypeGroup | TypeProvider>, strSearch: string) => {
@@ -255,6 +248,28 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
         return filterGames;
     };
 
+    const newArrSearchGames = useMemo(() => {
+        return getNewArrSearchGame(search);
+    }, [search]);
+
+    const newArrGroupsGames = useMemo(() => {
+        return Array.from(new Set(getNewArrGroupsGames(Object.keys(filterGroups))));
+    }, [filterGroups]);
+
+    const newArrProvidersGames = useMemo(() => {
+        return Array.from(new Set(getNewArrProvidersGames(Object.keys(filterProviders))));
+    }, [filterProviders]);
+
+    const setFilterGames = (...arrGames: Array<Array<TypeGame>>) => {
+        const allSearchGames = [...arrGames[0], ...arrGames[1], ...arrGames[2]];
+        const filterGames = Array<TypeGame>();
+        const countLengthArrays = getCountLengthArrays(arrGames[0], arrGames[1], arrGames[2]);
+        countLengthArrays > 1
+            ? filterGames.push(...getCommonGames(allSearchGames, countLengthArrays))
+            : filterGames.push(...Array.from(new Set(allSearchGames)));
+        handleFiltersGames(getSortGames(countLengthArrays === 0 ? [...games] : filterGames));
+    };
+
     const handleFilterProviders = (id: number) => {
         const newFilterProviders = onSetValuesFilter(id, filterProviders);
         setFilterProviders(newFilterProviders);
@@ -265,18 +280,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
             return;
         }
 
-        const newArrSearchGames = getNewArrSearchGame(search);
         const newArrProvidersGames = Array.from(new Set(getNewArrProvidersGames(arrProviders)));
-        const newArrGroupsGames = Array.from(new Set(getNewArrGroupsGames(Object.keys(filterGroups))));
-        const allSearchGames = [...newArrSearchGames, ...newArrProvidersGames, ...newArrGroupsGames];
-
-        const filterGames = Array<TypeGame>();
-        const countLengthArrays = getCountLengthArrays(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        countLengthArrays > 1
-            ? filterGames.push(...getCommonGames(allSearchGames, countLengthArrays))
-            : filterGames.push(...Array.from(new Set(allSearchGames)));
-        const sortGames = getSortGames(countLengthArrays === 0 ? [...games] : filterGames);
-        handleFiltersGames(sortGames);
+        setFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
     };
 
     const handleFilterGroup = (id: number) => {
@@ -289,16 +294,8 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
             return;
         }
 
-        const newArrSearchGames = getNewArrSearchGame(search);
-        const newArrProvidersGames = Array.from(new Set(getNewArrProvidersGames(Object.keys(filterProviders))));
         const newArrGroupsGames = Array.from(new Set(getNewArrGroupsGames(arrGroups)));
-        const allSearchGames = [...newArrSearchGames, ...newArrProvidersGames, ...newArrGroupsGames];
-
-        const filterGames = Array<TypeGame>();
-        const countLengthArrays = getCountLengthArrays(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
-        countLengthArrays > 1 ? filterGames.push(...getCommonGames(allSearchGames, countLengthArrays)) : filterGames.push(...allSearchGames);
-        const sortGames = getSortGames(countLengthArrays === 0 ? [...games] : filterGames);
-        handleFiltersGames(sortGames);
+        setFilterGames(newArrSearchGames, newArrProvidersGames, newArrGroupsGames);
     };
 
     const handleSorting = (id: number) => {

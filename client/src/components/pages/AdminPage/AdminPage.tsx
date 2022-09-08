@@ -130,10 +130,6 @@ const AdminPage: FC = () => {
             : null;
     }, [dataDelete.id]);
 
-    // const nameGroup = useMemo(() => {
-    //     return groups.length > 0 && dataEdit.id > 0 && getIndexId(groups, dataEdit.id) > -1 ? groups[getIndexId(groups, dataEdit.id)].name : null;
-    // }, [dataEdit.id]);
-
     const handleResetDeleteSettings = () => {
         setDataDelete({ id: 0, options: [] });
         setSelectedGroup('');
@@ -256,7 +252,7 @@ const AdminPage: FC = () => {
     return (
         <>
             <AppHeader />
-            <div className={styles.app__blocks}>
+            <div className={styles.adminpage}>
                 <div>{resultLoadGroups}</div>
                 <Games games={games} />
                 <Providers providers={providers} />

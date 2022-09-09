@@ -10,7 +10,7 @@
 
     margin-bottom: 100px;
 
-    width: 1276px;
+    max-width: 1276px;
     min-height: 709px;
 }
 
@@ -155,8 +155,13 @@
     background: #808080;
 }
 
-@media (max-width: 1920px) {
+@media (max-width: 768px) {
     .adminpage {
         flex-direction: column;
+        align-items: center;
+        border: 1px solid green;
+        max-width: 384px;
+        margin-left: 22px;
+        margin-right: 22px;
     }
 }

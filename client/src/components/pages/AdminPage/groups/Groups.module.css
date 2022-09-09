@@ -7,11 +7,7 @@
     padding: 32px;
     gap: 32px;
 
-    /* position: absolute;
-    left: 0;
-    top: 0; */
-
-    width: 412px;
+    max-width: 412px;
     min-height: 709px;
 
     background: #ffffff;
@@ -40,7 +36,7 @@
     width: 84px;
     height: 29px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 24px;
@@ -129,7 +125,7 @@
     width: 32px;
     height: 17px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
@@ -168,4 +164,9 @@
     height: 14px;
     gap: 6px;
     cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .app__groups {
+    }
 }

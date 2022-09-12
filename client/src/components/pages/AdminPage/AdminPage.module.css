@@ -96,10 +96,13 @@
     flex-direction: row;
     align-items: center;
     padding: 0px 16px;
-    gap: 16px;
+    /* gap: 16px; */
 
-    width: 564px;
+    max-width: 564px;
     height: 64px;
+
+    margin-left: 32px;
+    margin-right: 32px;
 
     background: #ffffff;
 
@@ -118,10 +121,10 @@
 }
 
 .inputfield__content input {
-    width: 100%; /* Ширина поля */
+    max-width: 100%;
     box-sizing: border-box; /* Ширина не учитывает padding */
     padding: 0.5rem 0; /* Поля вокруг текста */
-    border: none; /* Убираем рамку */
+    border: none;
     background: transparent; /* Прозрачный фон */
 }
 
@@ -159,9 +162,12 @@
     .adminpage {
         flex-direction: column;
         align-items: center;
-        border: 1px solid green;
-        max-width: 384px;
         margin-left: 22px;
         margin-right: 22px;
+        gap: 0px;
+    }
+
+    .inputfield {
+        margin-left: 0;
     }
 }

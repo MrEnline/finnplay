@@ -168,5 +168,6 @@
 
 @media (max-width: 768px) {
     .app__groups {
+        padding: 0;
     }
 }

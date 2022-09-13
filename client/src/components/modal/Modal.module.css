@@ -7,6 +7,8 @@
     top: 0;
     opacity: 0;
     visibility: hidden;
+    overflow-y: auto;
+    z-index: 9999;
 }
 
 .modal__overlay_visible {
@@ -69,7 +71,6 @@
     display: flex;
     flex-direction: column;
 
-    /* width: 495px; */
     min-height: 0;
 
     font-family: 'Prompt';
@@ -81,6 +82,7 @@
     color: #2b2b2b;
 
     margin-top: 40px;
+    margin-left: 32px;
 }
 
 .modal__body {
@@ -183,9 +185,9 @@
         width: 90%;
     }
 
-    .modal__description {
+    /* .modal__description {
         margin-left: 32px;
-    }
+    } */
 
     .modal__footer {
         display: flex;
@@ -194,8 +196,6 @@
         padding: 0px;
         gap: 16px;
 
-        margin-left: 32px;
-        margin-top: 28px;
-        margin-bottom: 32px;
+        margin: 28px 32px 32px 32px;
     }
 }

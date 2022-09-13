@@ -38,9 +38,16 @@
 
 .input__menu {
     text-align: left !important;
-    width: 564px !important;
+    max-width: 564px !important;
 }
 
 .input__option {
     cursor: pointer !important;
+}
+
+@media (max-width: 768px) {
+    .input__menu {
+        width: 90% !important;
+        margin-right: 32px !important;
+    }
 }

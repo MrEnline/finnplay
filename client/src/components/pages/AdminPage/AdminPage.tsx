@@ -296,10 +296,15 @@ const AdminPage: FC = () => {
                 }
                 footer={
                     <>
-                        <Button onClick={handleDeleteGroup} classNameButton="button_delete" disabled={!(isDeleteCompletely || selectedGroup !== '')}>
+                        <Button
+                            onClick={handleDeleteGroup}
+                            classNameButton="button_delete"
+                            disabled={!(isDeleteCompletely || selectedGroup !== '')}
+                            isSave={false}
+                        >
                             Yes, delete
                         </Button>
-                        <Button onClick={handleResetDeleteSettings} classNameButton="button_cancel" disabled={false}>
+                        <Button onClick={handleResetDeleteSettings} classNameButton="button_cancel" disabled={false} isSave={false}>
                             No
                         </Button>
                     </>
@@ -341,7 +346,7 @@ const AdminPage: FC = () => {
                 }
                 footer={
                     <>
-                        <Button onClick={handleEditGroup} classNameButton="button_edit" disabled={!isEditGroup}>
+                        <Button onClick={handleEditGroup} classNameButton="button_edit" disabled={!isEditGroup} isSave={true}>
                             Save
                         </Button>
                     </>
@@ -383,7 +388,7 @@ const AdminPage: FC = () => {
                 }
                 footer={
                     <>
-                        <Button onClick={handleAddGroup} classNameButton="button_edit" disabled={!isAddGroup}>
+                        <Button onClick={handleAddGroup} classNameButton="button_edit" disabled={!isAddGroup} isSave={true}>
                             Save
                         </Button>
                     </>

@@ -101,7 +101,6 @@
     max-width: 564px;
     height: 64px;
 
-    margin-left: 32px;
     margin-right: 32px;
 
     background: #ffffff;
@@ -164,6 +163,7 @@
         align-items: center;
         margin-left: 22px;
         margin-right: 22px;
+        margin-top: 32px;
         gap: 0px;
     }
 

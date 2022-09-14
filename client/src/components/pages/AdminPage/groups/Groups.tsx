@@ -1,13 +1,13 @@
-import { FC } from "react";
-import styles from "./Groups.module.css";
-import { TypeGame, TypeGroup } from "../../../../utils/Interfaces";
-import IconAdd from "../../../../assets/img/icon-add.svg";
-import IconEdit from "../../../../assets/img/icon-edit.svg";
-import IconDelete from "../../../../assets/img/icon-delete.svg";
-import ButtonEdit from "../../../../assets/img/button-edit.svg";
-import ButtonDelete from "../../../../assets/img/button-delete.svg";
-import classNames from "classnames";
-import { NUMBER_ELEMENT_IN_ROW } from "../../../../utils/Constants";
+import { FC } from 'react';
+import styles from './Groups.module.css';
+import { TypeGame, TypeGroup } from '../../../../utils/Interfaces';
+import IconAdd from '../../../../assets/img/icon-add.svg';
+import IconEdit from '../../../../assets/img/icon-edit.svg';
+import IconDelete from '../../../../assets/img/icon-delete.svg';
+import ButtonEdit from '../../../../assets/img/button-edit.svg';
+import ButtonDelete from '../../../../assets/img/button-delete.svg';
+import classNames from 'classnames';
+import { NUMBER_ELEMENT_IN_ROW } from '../../../../utils/Constants';
 
 interface TypeProp {
     games: Array<TypeGame>;

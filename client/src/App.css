@@ -41,3 +41,10 @@
         transform: rotate(360deg);
     }
 }
+
+@media (max-width: 768px) {
+    .App {
+        width: inherit;
+        height: 100vh;
+    }
+}

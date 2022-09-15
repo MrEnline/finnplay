@@ -185,10 +185,6 @@
         width: 90%;
     }
 
-    /* .modal__description {
-        margin-left: 32px;
-    } */
-
     .modal__footer {
         display: flex;
         flex-direction: column;

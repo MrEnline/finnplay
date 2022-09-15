@@ -15,7 +15,7 @@ const Games: FC<TypeProp> = ({ games }) => {
             return (
                 <div className={styles.game}>
                     <div className={styles.game__image}>
-                        <img src={game.cover} alt="game" />
+                        <img src={game.coverLarge} alt={game.name} />
                     </div>
                     <div className={styles.game__name}>{game.name}</div>
                 </div>

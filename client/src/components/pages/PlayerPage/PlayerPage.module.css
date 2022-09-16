@@ -8,9 +8,12 @@
     margin-left: 82px;
 }
 
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
     .app__mainblock {
-        margin-top: 22px;
-        margin-left: 22px;
+        flex-direction: column-reverse;
+        align-items: center;
+        width: inherit;
+        margin-left: 0;
+        margin-top: 24px;
     }
-} */
+}

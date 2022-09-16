@@ -5,7 +5,7 @@
     padding: 0px;
     gap: 20px;
 
-    width: 844px;
+    max-width: 844px;
     height: 785px;
 
     /* 
@@ -27,4 +27,11 @@
 .games__img {
     width: 100%;
     border-radius: 8px;
+}
+
+@media (width: 768px) {
+    .games__grid {
+        width: 80vw;
+        gap: 10px;
+    }
 }

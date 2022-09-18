@@ -8,6 +8,8 @@
     max-width: 844px;
     height: 785px;
 
+    border: 1px solid green;
+
     /* 
         position: absolute;
     left: 82px;
@@ -25,13 +27,14 @@
 }
 
 .games__img {
-    width: 100%;
+    max-width: 100%;
     border-radius: 8px;
 }
 
-@media (width: 768px) {
-    .games__grid {
-        width: 80vw;
-        gap: 10px;
+@media (max-width: 768px) {
+    .games__list {
+        margin-top: 32px;
+        width: 90vw;
+        border: 1px solid red;
     }
 }

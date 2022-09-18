@@ -1,10 +1,10 @@
-import React, { FC, useRef, useState, useMemo, useEffect } from 'react';
-import styles from './Filters.module.css';
-import classNames from 'classnames';
-import IconSearch from '../../../../assets/img/icon-search.svg';
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX, INIT_COLUMNS_COUNTER } from '../../../../utils/Constants';
-import { TypeData, TypeGame, TypeProvider, TypeGroup, TypeFilter } from '../../../../utils/Interfaces';
-import { NumberColumns } from '../../../../utils/Enums';
+import React, { FC, useRef, useState, useMemo, useEffect } from "react";
+import styles from "./Filters.module.css";
+import classNames from "classnames";
+import IconSearch from "../../../../assets/img/icon-search.svg";
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX, INIT_COLUMNS_COUNTER } from "../../../../utils/Constants";
+import { TypeData, TypeGame, TypeProvider, TypeGroup, TypeFilter } from "../../../../utils/Interfaces";
+import { NumberColumns } from "../../../../utils/Enums";
 
 interface TypeProp {
     games: Array<TypeGame>;
@@ -17,13 +17,13 @@ interface TypeProp {
 }
 
 const dataSorting = [
-    { id: 1, name: 'A-Z' },
-    { id: 2, name: 'Z-A' },
-    { id: 3, name: 'Newest' },
+    { id: 1, name: "A-Z" },
+    { id: 2, name: "Z-A" },
+    { id: 3, name: "Newest" },
 ];
 
 const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, providers, groups, columnsCounter, handleColumnsCounter }) => {
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [sorting, setSorting] = useState<TypeFilter>({});
@@ -48,7 +48,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        onSetValues: (id: number) => void
+        onSetValues: (id: number) => void,
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
@@ -126,7 +126,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
     };
 
     const getNewArrSearchGame = (currSearch: string) => {
-        if (currSearch === '') return [];
+        if (currSearch === "") return [];
         //поиск по названию игры
         const newArrGames = getFilterArr(games, currSearch) as Array<TypeGame>;
         //поиск по имени провайдера
@@ -136,7 +136,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                 ...arrProvidersGames.reduce((result, provider) => {
                     result = [...result, ...games.filter((game) => provider.id === game.provider)];
                     return result;
-                }, Array<TypeGame>())
+                }, Array<TypeGame>()),
             );
         }
         //поиск по названию группы
@@ -150,7 +150,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                 ...idArrGames.reduce((result, id) => {
                     result = [...result, ...games.filter((game) => game.id === id)];
                     return result;
-                }, Array<TypeGame>())
+                }, Array<TypeGame>()),
             );
         }
         return Array.from(new Set(newArrGames).values()); //получим только уникальные объекты
@@ -227,7 +227,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
 
     const checkFilters = (filterProviders: TypeFilter, filterGroups: TypeFilter) => {
         return (
-            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ''
+            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ""
         );
     };
 
@@ -315,6 +315,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                 <input type="text" name="search" value={search} placeholder="Search" onChange={(e) => handleSearch(e.target.value)} required />
                 <img src={IconSearch} alt="search" />
             </div>
+            <div>Test</div>
             <div className={styles.filters__providers}>
                 <div className={styles.filters__title}>Providers</div>
                 {listProviders}

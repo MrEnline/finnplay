@@ -1,9 +1,9 @@
-const jwt = require("jsonwebtoken");
-require("dotenv").config();
-const { Users } = require("./Users");
-const fs = require("fs");
-const ApiError = require("./api-error");
-const data = require("./data.json");
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
+const { Users } = require('./Users');
+const fs = require('fs');
+const ApiError = require('./api-error');
+const data = require('./data.json');
 
 const generateTokens = (id, adminRole) => {
     const payLoad = {
@@ -11,10 +11,10 @@ const generateTokens = (id, adminRole) => {
         adminRole,
     };
     const accessToken = jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: "12h",
+        expiresIn: '12h',
     });
     const refreshToken = jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: "72h",
+        expiresIn: '72h',
     });
     return {
         accessToken,
@@ -37,34 +37,34 @@ class authController {
         }
         const tokens = generateTokens(user.id, user.adminRole);
         const adminRole = user.adminRole;
-        res.cookie("refreshToken", tokens.refreshToken, {
+        res.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
         });
-        fs.writeFileSync("refreshToken.txt", tokens.refreshToken);
+        fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
         return res.json({ ...tokens, adminRole });
     }
 
     async checkAuth(req, res) {
         const { refreshToken } = req.cookies;
         if (!refreshToken) {
-            fs.writeFileSync("refreshToken.txt", "");
+            fs.writeFileSync('refreshToken.txt', '');
             throw ApiError.UnauthorizedError();
         }
         const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        const refreshTokenFromDB = fs.readFileSync("refreshToken.txt", "utf-8");
+        const refreshTokenFromDB = fs.readFileSync('refreshToken.txt', 'utf-8');
         const isTokensEquals = refreshToken === refreshTokenFromDB;
         if (!user || !isTokensEquals) {
-            fs.writeFileSync("refreshToken.txt", "");
+            fs.writeFileSync('refreshToken.txt', '');
             throw ApiError.UnauthorizedError();
         }
         const tokens = generateTokens(user.id, user.adminRole);
         const adminRole = user.adminRole;
-        res.cookie("refreshToken", tokens.refreshToken, {
+        res.cookie('refreshToken', tokens.refreshToken, {
             maxAge: 30 * 24 * 60 * 60 * 1000,
             httpOnly: true,
         });
-        fs.writeFileSync("refreshToken.txt", tokens.refreshToken);
+        fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
         return res.json({ ...tokens, adminRole });
     }
 
@@ -77,7 +77,7 @@ class authController {
                 return res.json(dataJSON);
             }
         } catch (error) {
-            res.status(400).json({ message: "Get data error", e: error.message });
+            res.status(400).json({ message: 'Get data error', e: error.message });
         }
     }
 
@@ -112,23 +112,26 @@ class authController {
 
     async addGroup(req, res) {
         const { nameAddGroup, idsGames } = req.body;
-        if (dataJSON.groups.length === 0) {
-            dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames });
-        } else {
-            dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });
-        }
+        // if (dataJSON.groups.length === 0) {
+        //     dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames });
+        // } else {
+        //     dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });
+        // }
+        dataJSON.groups.length === 0
+            ? dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames })
+            : dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });
         return res.json(dataJSON);
     }
 
     async logout(req, res) {
         try {
             const { refreshToken } = req.cookies;
-            fs.writeFileSync("refreshToken.txt", "");
-            res.clearCookie("refreshToken");
-            const token = "";
+            fs.writeFileSync('refreshToken.txt', '');
+            res.clearCookie('refreshToken');
+            const token = '';
             return res.json(token);
         } catch (e) {
-            res.status(400).json({ message: "Logout error", e: error.message });
+            res.status(400).json({ message: 'Logout error', e: error.message });
         }
     }
 }

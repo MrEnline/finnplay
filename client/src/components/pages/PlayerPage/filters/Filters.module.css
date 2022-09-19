@@ -35,7 +35,7 @@
 .filters__search input {
     width: 100%;
     height: 19px;
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -68,7 +68,7 @@
     width: 150px;
     height: 19px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -90,7 +90,7 @@
 }
 
 .filters__item {
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -188,7 +188,7 @@
     width: 43px;
     height: 19px;
 
-    font-family: "Prompt";
+    font-family: 'Prompt';
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -230,7 +230,7 @@
     display: inline-block;
 }
 
-.filters__radio input[type="radio"] {
+.filters__radio input[type='radio'] {
     display: none;
 }
 
@@ -279,22 +279,32 @@
     z-index: 1;
 }
 
-.filters__radio input[type="radio"]:checked + label,
+.filters__radio input[type='radio']:checked + label,
 .filters__radio_color,
 .filters__box_color {
     background: #fdbc11;
 }
 
+.filters__options {
+    display: none;
+}
+
 @media (max-width: 768px) {
     .app__filters {
         width: 90vw;
-        border: 1px solid orange;
+        z-index: 2;
+        position: absolute;
+        top: 0px;
     }
 
     .filters__search,
     .filters__providers,
     .filters__control {
         width: 75vw;
+    }
+
+    .filters__control {
+        margin-bottom: 0;
     }
 
     .filters__items {
@@ -306,6 +316,32 @@
     }
 
     .filters__columns {
+        display: none;
+    }
+
+    .filters__options {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 8px;
+        margin-top: 32px;
+        margin-bottom: 32px;
+    }
+
+    .filter__text {
+        width: 85px;
+        height: 19px;
+
+        font-family: 'Prompt';
+        font-style: normal;
+        font-weight: 400;
+        font-size: 16px;
+        line-height: 120%;
+
+        color: #3f53be;
+    }
+
+    .filter_invisiblity {
         display: none;
     }
 }

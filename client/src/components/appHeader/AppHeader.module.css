@@ -64,6 +64,8 @@
         box-shadow: none;
 
         box-sizing: border-box;
+
+        z-index: 2;
     }
 
     .app__logo {

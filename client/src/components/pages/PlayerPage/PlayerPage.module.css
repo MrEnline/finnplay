@@ -15,5 +15,6 @@
         width: inherit;
         margin-left: 0;
         margin-top: 24px;
+        position: relative;
     }
 }

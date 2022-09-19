@@ -7,13 +7,6 @@
 
     max-width: 844px;
     height: 785px;
-
-    border: 1px solid green;
-
-    /* 
-        position: absolute;
-    left: 82px;
-    top: 145px; */
 }
 
 .games__grid {
@@ -33,8 +26,13 @@
 
 @media (max-width: 768px) {
     .games__list {
-        margin-top: 32px;
         width: 90vw;
-        border: 1px solid red;
+        position: absolute;
+        z-index: 1;
+        top: 210px;
+    }
+
+    .games__grid {
+        grid-template-columns: repeat(var(--columns), 1fr);
     }
 }

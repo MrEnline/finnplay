@@ -29,11 +29,11 @@ class authController {
         const { username, password } = req.body;
         const user = await Users[username];
         if (!user) {
-            throw ApiError.UnauthorizedError();
+            return res.status(400).json({ message: `User ${user} not found` });
         }
         const validPassword = password === user.password;
         if (!validPassword) {
-            throw ApiError.UnauthorizedError();
+            return res.status(400).json({ message: `Wrong password for user ${user}` });
         }
         const tokens = generateTokens(user.id, user.adminRole);
         const adminRole = user.adminRole;
@@ -49,14 +49,12 @@ class authController {
         const { refreshToken } = req.cookies;
         if (!refreshToken) {
             fs.writeFileSync('refreshToken.txt', '');
-            throw ApiError.UnauthorizedError();
         }
         const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
         const refreshTokenFromDB = fs.readFileSync('refreshToken.txt', 'utf-8');
         const isTokensEquals = refreshToken === refreshTokenFromDB;
         if (!user || !isTokensEquals) {
             fs.writeFileSync('refreshToken.txt', '');
-            throw ApiError.UnauthorizedError();
         }
         const tokens = generateTokens(user.id, user.adminRole);
         const adminRole = user.adminRole;
@@ -70,9 +68,6 @@ class authController {
 
     async getData(req, res) {
         try {
-            // if (data) {
-            //     return res.json(data);
-            // }
             if (dataJSON) {
                 return res.json(dataJSON);
             }
@@ -112,11 +107,6 @@ class authController {
 
     async addGroup(req, res) {
         const { nameAddGroup, idsGames } = req.body;
-        // if (dataJSON.groups.length === 0) {
-        //     dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames });
-        // } else {
-        //     dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });
-        // }
         dataJSON.groups.length === 0
             ? dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames })
             : dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });

@@ -13,6 +13,7 @@ export default class Store {
     adminRole = false;
     isAuth = false;
     isLoading = false;
+    isWrongInputData = false;
     dataJSON = {};
 
     constructor() {
@@ -35,8 +36,13 @@ export default class Store {
         this.dataJSON = data;
     }
 
+    setIsWrongInputData(value: boolean) {
+        this.isWrongInputData = value;
+    }
+
     async login(username: string, password: string) {
         this.setLoading(true);
+        this.setIsWrongInputData(false);
         try {
             const response = await AuthService.login(username, password);
             localStorage.setItem('token', response.data.accessToken);
@@ -44,6 +50,7 @@ export default class Store {
             this.setAdminRole(response.data.adminRole);
         } catch (error: any) {
             console.log(error.response?.data?.message);
+            this.setIsWrongInputData(true);
         } finally {
             this.setLoading(false);
         }

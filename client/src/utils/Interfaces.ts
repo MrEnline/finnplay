@@ -22,4 +22,16 @@ export interface TypeObject {
     [index: string]: boolean;
 }
 
+export interface TypeGames {
+    games: [TypeGame];
+}
+
+export interface TypeProviders {
+    providers: [TypeProvider];
+}
+
+export interface TypeGroups {
+    groups: [TypeGroup];
+}
+
 export interface TypeFilter extends TypeObject {}

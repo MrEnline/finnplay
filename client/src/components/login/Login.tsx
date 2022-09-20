@@ -1,24 +1,22 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useRef } from 'react';
 import styles from './Login.module.css';
 import Logo from '../../assets/img/finnplay-logo.svg';
 import VisiblePassword from '../../assets/img/visible-password.svg';
 import Spinner from '../../assets/img/spinner.svg';
+import classNames from 'classnames';
 import { Context } from '../../index';
 import { observer } from 'mobx-react-lite';
 
 const Login = () => {
-    const [username, setUsername] = useState<string>('');
-    const [password, setPassword] = useState<string>('');
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const { store } = useContext(Context);
+    const refInput = useRef(null);
 
     const handleShowHidePassword = () => {
-        const input = document.querySelector('.password-input');
-        if (!input) return;
-        if (input.getAttribute('type') === 'password') {
-            input.setAttribute('type', 'text');
-        } else {
-            input.setAttribute('type', 'password');
-        }
+        if (refInput.current === null) return;
+        const input = refInput.current as HTMLInputElement;
+        input.getAttribute('type') === 'password' ? input.setAttribute('type', 'text') : input.setAttribute('type', 'password');
     };
 
     return (
@@ -34,6 +32,7 @@ const Login = () => {
                 <div className={styles.inputfield}>
                     <div className={styles.inputfield__content}>
                         <input
+                            ref={refInput}
                             className="password-input"
                             type="password"
                             name="password"
@@ -45,6 +44,14 @@ const Login = () => {
                         <label htmlFor="password">Password</label>
                     </div>
                     <img src={VisiblePassword} alt="visible-password" onClick={handleShowHidePassword} />
+                </div>
+                <div
+                    className={classNames(
+                        { [styles.loginform__error_hide]: !store.isWrongInputData },
+                        { [styles.loginform__error]: store.isWrongInputData }
+                    )}
+                >
+                    Wrong login or password
                 </div>
                 <button className={styles.loginform__button} onClick={() => store.login(username, password)}>
                     {store.isLoading ? <img src={Spinner} alt="download" className={styles.loginform__spinner_loading} /> : 'Login'}

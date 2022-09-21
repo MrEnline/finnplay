@@ -9,7 +9,7 @@
 
     max-width: 412px;
     width: 100%;
-    min-height: 709px;
+    min-height: 200px;
 
     background: #ffffff;
 
@@ -108,14 +108,15 @@
 
 @media (max-width: 768px) {
     .app__games {
-        padding: 0;
-        padding-top: 10px;
+        padding-top: 32px 0;
         width: 88vw;
+        align-items: center;
     }
 
     .games__rowgames {
-        width: inherit;
-        justify-content: space-evenly;
+        width: 73vw;
+        justify-content: flex-start;
+        gap: 10px;
     }
 
     .game__name,
@@ -127,12 +128,6 @@
     .game__image img {
         width: 100%;
         height: 100%;
-    }
-
-    .games__title {
-        width: 88vw;
-        box-sizing: border-box;
-        padding: 0 20px 0 20px;
     }
 
     .game {

@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo, FC } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, FC } from 'react';
 import AppHeader from '../../appHeader/AppHeader';
 import useJSONService from '../../../services/JSONService';
-import { TypeData, TypeGame, TypeProvider, TypeGroup } from '../../../utils/Interfaces';
+import { TypeData, TypeDataGroup, TypeOptions } from '../../../utils/Interfaces';
 import styles from './AdminPage.module.css';
 import './AdminPage.css';
 import Groups from './groups/Groups';
@@ -11,23 +11,11 @@ import Modal from '../../modal/Modal';
 import Button from '../../button/Button';
 import Games from './games/Games';
 import Providers from './providers/Providers';
-
-interface TypeDataGroup {
-    id: number;
-    options: Array<TypeOptions>;
-}
-
-interface TypeOptions {
-    value: string;
-    label: string;
-}
+import { useAllData } from '../../../hooks/data.hook';
 
 const AdminPage: FC = () => {
-    const { getAllGames, getAllProviders, getAllGroups, deleteGroup, editGroup, addGroup } = useJSONService();
-
-    const [games, setGames] = useState(Array<TypeGame>());
-    const [providers, setProviders] = useState(Array<TypeProvider>());
-    const [groups, setGroups] = useState(Array<TypeGroup>());
+    const { deleteGroup, editGroup, addGroup } = useJSONService();
+    const { getAllData, games, providers, groups, setGroups } = useAllData();
 
     const [selectedGroup, setSelectedGroup] = useState<string>('');
     const [selectedGames, setSelectedGames] = useState<Array<string>>([]);
@@ -50,11 +38,7 @@ const AdminPage: FC = () => {
     const mapGames = useMemo(() => getMapGames(), [games]);
 
     useEffect(() => {
-        getAllGames().then((games) => {
-            setGames(games);
-        });
-        getAllProviders().then((providers) => setProviders(providers));
-        getAllGroups().then((groups) => setGroups(groups));
+        getAllData();
     }, []);
 
     const handleFormListGroup = (id: number) => {
@@ -189,11 +173,7 @@ const AdminPage: FC = () => {
     const handleChangeAddGames = (newSelectedGames: OnChangeValue<TypeOptions, boolean>) => {
         const arrNewSelectedGames = (newSelectedGames as TypeOptions[]).map((game) => game.value);
         setSelectedGames(arrNewSelectedGames);
-        if (nameGroup !== '' && arrNewSelectedGames.length > 0) {
-            setIsAddGroup(true);
-        } else {
-            setIsAddGroup(false);
-        }
+        nameGroup !== '' && arrNewSelectedGames.length > 0 ? setIsAddGroup(true) : setIsAddGroup(false);
     };
 
     const handleChangeNameGroup = (e: HTMLInputElement) => {
@@ -207,11 +187,7 @@ const AdminPage: FC = () => {
 
     const handleSetNewNameGroup = (e: HTMLInputElement) => {
         setNameGroup(e.value);
-        if (e.value !== '' && selectedGames.length > 0) {
-            setIsAddGroup(true);
-        } else {
-            setIsAddGroup(false);
-        }
+        e.value !== '' && selectedGames.length > 0 ? setIsAddGroup(true) : setIsAddGroup(false);
     };
 
     const handleGetSelectedGroup = () => {

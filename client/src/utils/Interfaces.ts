@@ -35,3 +35,13 @@ export interface TypeGroups {
 }
 
 export interface TypeFilter extends TypeObject {}
+
+export interface TypeDataGroup {
+    id: number;
+    options: Array<TypeOptions>;
+}
+
+export interface TypeOptions {
+    value: string;
+    label: string;
+}

@@ -1,11 +1,11 @@
-import React, { FC, useRef, useState, useMemo, useEffect, useCallback } from 'react';
-import styles from './Filters.module.css';
-import classNames from 'classnames';
-import IconSearch from '../../../../assets/img/icon-search.svg';
-import IconFilters from '../../../../assets/img/icon-filters.svg';
-import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX, INIT_COLUMNS_COUNTER } from '../../../../utils/Constants';
-import { TypeData, TypeGame, TypeProvider, TypeGroup, TypeFilter } from '../../../../utils/Interfaces';
-import { NumberColumns } from '../../../../utils/Enums';
+import React, { FC, useRef, useState, useMemo, useEffect, useCallback } from "react";
+import styles from "./Filters.module.css";
+import classNames from "classnames";
+import IconSearch from "../../../../assets/img/icon-search.svg";
+import IconFilters from "../../../../assets/img/icon-filters.svg";
+import { NUMBER_ELEMENT_PROVIDERS_FLEX, NUMBER_ELEMENT_GROUPS_FLEX, INIT_COLUMNS_COUNTER, DATA_SORTING } from "../../../../utils/Constants";
+import { TypeData, TypeGame, TypeProvider, TypeGroup, TypeFilter } from "../../../../utils/Interfaces";
+import { NumberColumns } from "../../../../utils/Enums";
 
 interface TypeProp {
     games: Array<TypeGame>;
@@ -17,14 +17,8 @@ interface TypeProp {
     handleColumnsCounter: (colunmns: number) => void;
 }
 
-const dataSorting = [
-    { id: 1, name: 'A-Z' },
-    { id: 2, name: 'Z-A' },
-    { id: 3, name: 'Newest' },
-];
-
 const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, providers, groups, columnsCounter, handleColumnsCounter }) => {
-    const [search, setSearch] = useState('');
+    const [search, setSearch] = useState("");
     const [filterProviders, setFilterProviders] = useState<TypeFilter>({});
     const [filterGroups, setFilterGroups] = useState<TypeFilter>({});
     const [sorting, setSorting] = useState<TypeFilter>({});
@@ -50,7 +44,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
         arr: Array<TypeData | TypeProvider | TypeGroup>,
         countElementInFlex: number,
         currFilter: TypeFilter,
-        onSetValues: (id: number) => void
+        onSetValues: (id: number) => void,
     ) => {
         const divItemsArr = arr.map((item) => {
             return (
@@ -77,7 +71,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
         });
     };
 
-    const onChangeColorBox = (numColumns: number) => {
+    const handleChangeColorBox = (numColumns: number) => {
         switch (numColumns) {
             case NumberColumns.Two:
                 handleColumnsCounter(NumberColumns.Two);
@@ -91,7 +85,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
         }
     };
 
-    const onResetAllFilters = () => {
+    const handleResetAllFilters = () => {
         setFilterProviders({});
         setFilterGroups({});
         setSorting({});
@@ -102,12 +96,11 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
 
     const onSetValuesFilter = (id: number, currFilter: TypeFilter) => {
         const newFilter = { ...currFilter };
-        //setFilter({ ...currFilter, [name]: !currFilter[name] });
         newFilter[id] ? delete newFilter[id] : (newFilter[id] = true);
         return newFilter;
     };
 
-    const onSetValuesSorting = (id: number, currFilter: TypeFilter) => {
+    const handleSetValuesSorting = (id: number, currFilter: TypeFilter) => {
         return currFilter[id] ? {} : { [id]: true };
     };
 
@@ -128,7 +121,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
     };
 
     const getNewArrSearchGame = (currSearch: string) => {
-        if (currSearch === '') return [];
+        if (currSearch === "") return [];
         //поиск по названию игры
         const newArrGames = getFilterArr(games, currSearch) as Array<TypeGame>;
         //поиск по имени провайдера
@@ -138,7 +131,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                 ...arrProvidersGames.reduce((result, provider) => {
                     result = [...result, ...games.filter((game) => provider.id === game.provider)];
                     return result;
-                }, Array<TypeGame>())
+                }, Array<TypeGame>()),
             );
         }
         //поиск по названию группы
@@ -152,7 +145,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                 ...idArrGames.reduce((result, id) => {
                     result = [...result, ...games.filter((game) => game.id === id)];
                     return result;
-                }, Array<TypeGame>())
+                }, Array<TypeGame>()),
             );
         }
         return Array.from(new Set(newArrGames).values()); //получим только уникальные объекты
@@ -229,7 +222,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
 
     const checkFilters = (filterProviders: TypeFilter, filterGroups: TypeFilter) => {
         return (
-            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ''
+            Object.keys(filterProviders).length === 0 && Object.keys(filterGroups).length === 0 && Object.keys(sorting).length === 0 && search === ""
         );
     };
 
@@ -301,7 +294,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
     };
 
     const handleSorting = (id: number) => {
-        const newSorting = onSetValuesSorting(id, sorting);
+        const newSorting = handleSetValuesSorting(id, sorting);
         setSorting(newSorting);
         if (Object.keys(newSorting).length === 0) return;
         handleFiltersGames(getNewArrSort(id, [...filtersGames]));
@@ -309,7 +302,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
 
     const listProviders = createListElements(providers, NUMBER_ELEMENT_PROVIDERS_FLEX, filterProviders, handleFilterProviders);
     const listGroups = createListElements(groups, NUMBER_ELEMENT_GROUPS_FLEX, filterGroups, handleFilterGroup);
-    const listSorting = createListElements(dataSorting, dataSorting.length, sorting, handleSorting);
+    const listSorting = createListElements(DATA_SORTING, DATA_SORTING.length, sorting, handleSorting);
 
     return (
         <div className={styles.app__filters}>
@@ -337,7 +330,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                         <label
                             htmlFor="radio-2"
                             className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter })}
-                            onClick={() => onChangeColorBox(NumberColumns.Two)}
+                            onClick={() => handleChangeColorBox(NumberColumns.Two)}
                         >
                             <span>2</span>
                         </label>
@@ -352,7 +345,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                         <label
                             htmlFor="radio-3"
                             className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter > 2 })}
-                            onClick={() => onChangeColorBox(NumberColumns.Three)}
+                            onClick={() => handleChangeColorBox(NumberColumns.Three)}
                         >
                             <span>3</span>
                         </label>
@@ -367,7 +360,7 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
                         <label
                             htmlFor="radio-4"
                             className={classNames(styles.filters__label, { [styles.filters__radio_color]: columnsCounter > 3 })}
-                            onClick={() => onChangeColorBox(NumberColumns.Four)}
+                            onClick={() => handleChangeColorBox(NumberColumns.Four)}
                         >
                             <span>4</span>
                         </label>
@@ -376,13 +369,13 @@ const Filters: FC<TypeProp> = ({ games, filtersGames, handleFiltersGames, provid
             </div>
             <div className={classNames(styles.filters__control, { [styles.filter_invisiblity]: isInvisibleFilters })}>
                 <div className={styles.filters__title}>Games amount: {filtersGames.length}</div>
-                <div className={classNames(styles.filters__button, styles.filters__button_reset)} onClick={onResetAllFilters}>
+                <div className={classNames(styles.filters__button, styles.filters__button_reset)} onClick={handleResetAllFilters}>
                     <div className={styles.filters__buttontext}>Reset</div>
                 </div>
             </div>
             <div className={styles.filters__options} onClick={() => setIsInvisibleFilters(!isInvisibleFilters)}>
                 <img src={IconFilters} alt="filters" />
-                <span className={styles.filter__text}>{isInvisibleFilters ? 'Show filters' : 'Hide filters'}</span>
+                <span className={styles.filter__text}>{isInvisibleFilters ? "Show filters" : "Hide filters"}</span>
             </div>
         </div>
     );

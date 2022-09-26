@@ -2,12 +2,7 @@ import axios from 'axios';
 import { makeAutoObservable } from 'mobx';
 import { AuthResponse } from '../models/response/AuthResponse';
 import AuthService from '../services/AuthService';
-
-// interface TypeJSONData {
-//     games: [];
-//     providers: [];
-//     groups: [];
-// }
+import { API_URL } from '../utils/Constants';
 
 export default class Store {
     adminRole = false;
@@ -70,7 +65,7 @@ export default class Store {
     async checkAuth() {
         this.setLoading(true);
         try {
-            const response = await axios.get<AuthResponse>(`http://localhost:5000/checkAuth`, {
+            const response = await axios.get<AuthResponse>(`${API_URL}/checkAuth`, {
                 withCredentials: true,
             });
             localStorage.setItem('token', response.data.accessToken);

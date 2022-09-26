@@ -194,7 +194,7 @@ const AdminPage: FC = () => {
         return dataDelete.options.filter((group) => group.value.toLowerCase() === selectedGroup.toLowerCase());
     };
 
-    const handleGetSelectedGames = (data: Array<TypeOptions>) => {
+    const handleFilterSelectedGames = (data: Array<TypeOptions>) => {
         return data.filter((game) => selectedGames.indexOf(game.value) >= 0);
     };
 
@@ -313,7 +313,7 @@ const AdminPage: FC = () => {
                         <Select
                             classNamePrefix="input"
                             onChange={handleChangeEditGames}
-                            value={handleGetSelectedGames(dataEdit.options)}
+                            value={handleFilterSelectedGames(dataEdit.options)}
                             options={dataEdit.options}
                             placeholder="Games"
                             isMulti
@@ -355,7 +355,7 @@ const AdminPage: FC = () => {
                         <Select
                             classNamePrefix="input"
                             onChange={handleChangeAddGames}
-                            value={handleGetSelectedGames(dataAdd)}
+                            value={handleFilterSelectedGames(dataAdd)}
                             options={dataAdd}
                             placeholder="Games"
                             isMulti

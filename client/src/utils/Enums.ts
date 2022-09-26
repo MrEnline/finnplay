@@ -3,3 +3,9 @@ export enum NumberColumns {
     Three = 3,
     Four = 4,
 }
+
+export enum IdSort {
+    AZ = 1,
+    ZA = 2,
+    Newest = 3,
+}

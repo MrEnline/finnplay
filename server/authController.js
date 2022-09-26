@@ -2,7 +2,6 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { Users } = require('./Users');
 const fs = require('fs');
-const ApiError = require('./api-error');
 const data = require('./data.json');
 
 const generateTokens = (id, adminRole) => {

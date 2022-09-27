@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const { Users } = require('./Users');
+const fs = require('fs');
+const data = require('./data.json');
 
 const generateTokens = (id, adminRole) => {
     const payLoad = {
@@ -8,10 +10,10 @@ const generateTokens = (id, adminRole) => {
         adminRole,
     };
     const accessToken = jwt.sign(payLoad, process.env.JWT_ACCESS_SECRET, {
-        expiresIn: '15s',
+        expiresIn: '12h',
     });
     const refreshToken = jwt.sign(payLoad, process.env.JWT_REFRESH_SECRET, {
-        expiresIn: '30s',
+        expiresIn: '72h',
     });
     return {
         accessToken,
@@ -19,69 +21,101 @@ const generateTokens = (id, adminRole) => {
     };
 };
 
-let refreshTokenFromDB = '';
+let dataJSON = { ...data };
 
 class authController {
     async login(req, res) {
-        try {
-            const { username, password } = req.body;
-            const user = await Users[username];
-            if (!user) {
-                return res
-                    .status(400)
-                    .json({ message: `${user} with this name not found` });
-            }
-            const validPassword = password === user.password;
-            if (!validPassword) {
-                return res
-                    .status(400)
-                    .json({ message: 'Wrong password entered' });
-            }
-            const tokens = generateTokens(user.id, user.adminRole);
-            const adminRole = user.adminRole;
-            res.cookie('refreshToken', tokens.refreshToken, {
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-            });
-            const token = tokens.accessToken;
-            refreshTokenFromDB = tokens.refreshToken;
-            return res.json({ token, adminRole });
-        } catch (error) {
-            res.status(400).json({ message: 'Login error', e: error.message });
+        const { username, password } = req.body;
+        const user = await Users[username];
+        if (!user) {
+            return res.status(400).json({ message: `User ${user} not found` });
         }
+        const validPassword = password === user.password;
+        if (!validPassword) {
+            return res.status(400).json({ message: `Wrong password for user ${user}` });
+        }
+        const tokens = generateTokens(user.id, user.adminRole);
+        const adminRole = user.adminRole;
+        res.cookie('refreshToken', tokens.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+        });
+        fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
+        return res.json({ ...tokens, adminRole });
     }
 
     async checkAuth(req, res) {
-        try {
-            const { refreshToken } = req.cookies;
-            const user = jwt.verify(
-                refreshToken,
-                process.env.JWT_REFRESH_SECRET
-            );
-            const tokenFromDb = refreshToken === refreshTokenFromDB;
-            if (!user || !tokenFromDb) {
-                return res
-                    .status(400)
-                    .json({ message: 'Login error', e: error.message });
-            }
-            const tokens = generateTokens(user.id, user.adminRole);
-            const adminRole = user.adminRole;
-            res.cookie('refreshToken', tokens.refreshToken, {
-                maxAge: 30 * 24 * 60 * 60 * 1000,
-                httpOnly: true,
-            });
-            const token = tokens.accessToken;
-            refreshTokenFromDB = tokens.refreshToken;
-            return res.json({ token, adminRole });
-        } catch (e) {
-            res.status(400).json({ message: 'Login error', e: error.message });
+        const { refreshToken } = req.cookies;
+        if (!refreshToken) {
+            fs.writeFileSync('refreshToken.txt', '');
         }
+        const user = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+        const refreshTokenFromDB = fs.readFileSync('refreshToken.txt', 'utf-8');
+        const isTokensEquals = refreshToken === refreshTokenFromDB;
+        if (!user || !isTokensEquals) {
+            fs.writeFileSync('refreshToken.txt', '');
+        }
+        const tokens = generateTokens(user.id, user.adminRole);
+        const adminRole = user.adminRole;
+        res.cookie('refreshToken', tokens.refreshToken, {
+            maxAge: 30 * 24 * 60 * 60 * 1000,
+            httpOnly: true,
+        });
+        fs.writeFileSync('refreshToken.txt', tokens.refreshToken);
+        return res.json({ ...tokens, adminRole });
+    }
+
+    async getData(req, res) {
+        try {
+            if (dataJSON) {
+                return res.json(dataJSON);
+            }
+        } catch (error) {
+            res.status(400).json({ message: 'Get data error', e: error.message });
+        }
+    }
+
+    async deleteGroup(req, res) {
+        const { idDeleteGroup, idMoveGroup } = req.body;
+        if (idMoveGroup > 0) {
+            const indexDeleteGroup = dataJSON.groups.findIndex((group) => group.id === idDeleteGroup);
+            const indexMoveGroup = dataJSON.groups.findIndex((group) => group.id === idMoveGroup);
+            dataJSON.groups[indexMoveGroup].games.push(...dataJSON.groups[indexDeleteGroup].games);
+        }
+        dataJSON.groups = dataJSON.groups.filter((group) => group.id !== idDeleteGroup);
+        return res.json(dataJSON);
+    }
+
+    async editGroup(req, res) {
+        const { idEditGroup, nameEditGroup, idsGames } = req.body;
+        const indexEditGroup = dataJSON.groups.findIndex((group) => group.id === idEditGroup);
+        if (idsGames.length > 0) {
+            dataJSON.groups = dataJSON.groups.map((group, index) => {
+                if (index === indexEditGroup) {
+                    group.games = idsGames;
+                    group.name = nameEditGroup;
+                    return group;
+                }
+                return group;
+            });
+        } else {
+            dataJSON.groups = dataJSON.groups.filter((group) => group.id !== idEditGroup);
+        }
+        return res.json(dataJSON);
+    }
+
+    async addGroup(req, res) {
+        const { nameAddGroup, idsGames } = req.body;
+        dataJSON.groups.length === 0
+            ? dataJSON.groups.push({ id: 1, name: nameAddGroup, games: idsGames })
+            : dataJSON.groups.push({ id: dataJSON.groups[dataJSON.groups.length - 1].id + 1, name: nameAddGroup, games: idsGames });
+        return res.json(dataJSON);
     }
 
     async logout(req, res) {
         try {
             const { refreshToken } = req.cookies;
-            refreshTokenFromDB = '';
+            fs.writeFileSync('refreshToken.txt', '');
             res.clearCookie('refreshToken');
             const token = '';
             return res.json(token);

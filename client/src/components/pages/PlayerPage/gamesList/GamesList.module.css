@@ -1,0 +1,38 @@
+.games__list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0px;
+    gap: 20px;
+
+    max-width: 844px;
+    height: 785px;
+}
+
+.games__grid {
+    --columns: 2;
+    --sliderValue: 2;
+    grid-template-columns: repeat(max(var(--columns), var(--sliderValue)), 1fr);
+    min-width: 270px;
+    display: grid;
+    gap: 20px;
+    padding-bottom: 20px;
+}
+
+.games__img {
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+@media (max-width: 768px) {
+    .games__list {
+        width: 90vw;
+        position: absolute;
+        z-index: 1;
+        top: 210px;
+    }
+
+    .games__grid {
+        grid-template-columns: repeat(var(--columns), 1fr);
+    }
+}

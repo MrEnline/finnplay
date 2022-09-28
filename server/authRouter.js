@@ -1,13 +1,13 @@
 const Router = require('express');
-const authController = require('./authController');
+const Controller = require('./Controller');
 const router = Router();
 
-router.post('/login', authController.login);
-router.post('/logout', authController.logout);
-router.get('/checkAuth', authController.checkAuth);
-router.get('/getData', authController.getData);
-router.delete('/deleteGroup', authController.deleteGroup);
-router.post('/editGroup', authController.editGroup);
-router.post('/addGroup', authController.addGroup);
+router.post('/login', Controller.login);
+router.post('/logout', Controller.logout);
+router.get('/checkAuth', Controller.checkAuth);
+router.get('/getData', Controller.getData);
+router.delete('/deleteGroup', Controller.deleteGroup);
+router.post('/editGroup', Controller.editGroup);
+router.post('/addGroup', Controller.addGroup);
 
 module.exports = router;

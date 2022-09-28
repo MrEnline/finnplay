@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const authRouter = require('./authRouter');
+const adminRouter = require('./adminRouter');
+
 const PORT = process.env.PORT || 5000;
 
 const app = express();
@@ -16,6 +18,8 @@ app.use(
     })
 );
 app.use('/', authRouter);
+app.use('/', adminRouter);
+
 
 const start = async () => {
     try {

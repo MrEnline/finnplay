@@ -1,0 +1,20 @@
+.app__mainblock {
+    display: flex;
+    flex-direction: row;
+    max-width: 1276px;
+    min-height: 400px;
+    justify-content: space-between;
+    margin-top: 75px;
+    margin-left: 82px;
+}
+
+@media (max-width: 768px) {
+    .app__mainblock {
+        flex-direction: column-reverse;
+        align-items: center;
+        width: inherit;
+        margin-left: 0;
+        margin-top: 24px;
+        position: relative;
+    }
+}

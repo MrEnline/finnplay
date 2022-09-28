@@ -1,0 +1,53 @@
+.input__control {
+    max-width: 564px !important;
+    /* height: 64px !important; */
+    height: auto !important;
+    padding: 16px !important;
+    border: 1px solid #f2f2f2 !important;
+    border-radius: 4px !important;
+    margin-right: 32px !important;
+}
+
+.input__control--is-focused,
+.input__control--menu-is-open {
+    box-shadow: none !important;
+}
+
+.input__indicator-separator {
+    display: none !important;
+}
+
+.input__value-container {
+    padding: 0 !important;
+}
+
+.input__indicators {
+    cursor: pointer !important;
+}
+
+.input__placeholder,
+.input__single-value {
+    padding-left: 10px !important;
+    text-align: left !important;
+}
+
+.input__multi-value {
+    background: #fdbc11 !important;
+    border-radius: 4px !important;
+}
+
+.input__menu {
+    text-align: left !important;
+    max-width: 564px !important;
+}
+
+.input__option {
+    cursor: pointer !important;
+}
+
+@media (max-width: 768px) {
+    .input__menu {
+        width: 90% !important;
+        margin-right: 32px !important;
+    }
+}

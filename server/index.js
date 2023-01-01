@@ -1,9 +1,9 @@
-require('dotenv').config();
-const express = require('express');
-const cors = require('cors');
-const cookieParser = require('cookie-parser');
-const authRouter = require('./authRouter');
-const adminRouter = require('./adminRouter');
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const authRouter = require("./Routers/authRouter");
+const adminRouter = require("./Routers/adminRouter");
 
 const PORT = process.env.PORT || 5000;
 
@@ -15,11 +15,10 @@ app.use(
     cors({
         credentials: true,
         origin: process.env.CLIENT_URL,
-    })
+    }),
 );
-app.use('/', authRouter);
-app.use('/', adminRouter);
-
+app.use("/", authRouter);
+app.use("/", adminRouter);
 
 const start = async () => {
     try {
